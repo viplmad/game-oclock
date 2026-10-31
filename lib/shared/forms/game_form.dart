@@ -26,7 +26,7 @@ class UserGameExternalCreateForm extends StatelessWidget {
   final ExternalMediaIdDTO externalId;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -63,7 +63,7 @@ class UserGameExternalCreateForm extends StatelessWidget {
             UserGameCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: (final context, final formGroup, final readOnly) =>
+            fieldsBuilder: (context, formGroup, readOnly) =>
                 _fieldsCreateExternalBuilder(
                   context,
                   externalId,
@@ -76,10 +76,10 @@ class UserGameExternalCreateForm extends StatelessWidget {
 }
 
 Widget _fieldsCreateExternalBuilder(
-  final BuildContext context,
-  final ExternalMediaIdDTO externalId,
-  final UserGameExternalFormData formGroup,
-  final bool readOnly,
+  BuildContext context,
+  ExternalMediaIdDTO externalId,
+  UserGameExternalFormData formGroup,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[
@@ -121,7 +121,7 @@ class UserGameCreateForm extends StatelessWidget {
   final String? initialTitle;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -171,7 +171,7 @@ class UserGameEditForm extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -220,9 +220,9 @@ class UserGameEditForm extends StatelessWidget {
 }
 
 Widget _fieldsBuilder(
-  final BuildContext context,
-  final UserGameFormData formGroup,
-  final bool readOnly,
+  BuildContext context,
+  UserGameFormData formGroup,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[

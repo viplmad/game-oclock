@@ -30,12 +30,12 @@ class StatisticsBarChart<N extends num> extends StatelessWidget {
   final ValueChanged<int>? onDomainTap;
 
   @override
-  Widget build(final context) {
+  Widget build(context) {
     return StatisticsStackedBarChart<N>(
       id: id,
       values: values
           .map(
-            (final el) => SeriesEntry(
+            (el) => SeriesEntry(
               key: el.key,
               value: List<SeriesEntry<N>>.unmodifiable(<SeriesEntry<N>>[
                 SeriesEntry(key: 'val', value: el.value),
@@ -43,8 +43,7 @@ class StatisticsBarChart<N extends num> extends StatelessWidget {
             ),
           )
           .toList(growable: false),
-      colourGetter: (final domain, _, final index, _) =>
-          colourGetter(domain, index),
+      colourGetter: (domain, _, index, _) => colourGetter(domain, index),
       vertical: vertical,
       hideDomainLabels: hideDomainLabels,
       hideValueLabels: hideValueLabels,
@@ -86,10 +85,10 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
   final ValueChanged<int>? onTap;
 
   @override
-  Widget build(final context) {
+  Widget build(context) {
     final String Function(N) labelAccessor = hideValueLabels
         ? (_) => ''
-        : valueFormatter ?? (final value) => value.toString();
+        : valueFormatter ?? (value) => value.toString();
 
     final charts.Color outsideTextColour = charts.ColorUtil.fromDartColor(
       defaultThemeTextColor(context),
@@ -97,8 +96,8 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
 
     final temp = <SeriesEntry<List<SeriesEntry<N>>>>[];
     final uniqueSubLabels = values
-        .map((final e) => e.value.map((final e) => e.key))
-        .fold(<String>{}, (final prev, final el) => prev..addAll(el))
+        .map((e) => e.value.map((e) => e.key))
+        .fold(<String>{}, (prev, el) => prev..addAll(el))
         .toList(growable: false);
     // Normalise
     for (final subLabel in uniqueSubLabels) {
@@ -113,7 +112,7 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
       // Normalise
       for (final subLabel in uniqueSubLabels) {
         temp
-            .firstWhere((final el) => el.key == subLabel)
+            .firstWhere((el) => el.key == subLabel)
             .value
             .add(SeriesEntry(key: currentLabel, value: 0 as N));
       }
@@ -123,7 +122,7 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
         final currentSubLabel = subEntry.key;
         final currentSubValue = subEntry.value;
 
-        temp.firstWhere((final el) => el.key == currentSubLabel).value.setAll(
+        temp.firstWhere((el) => el.key == currentSubLabel).value.setAll(
           indexed.$1,
           [SeriesEntry(key: currentLabel, value: currentSubValue)],
         );
@@ -131,13 +130,13 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
     }
 
     final seriesList = temp.indexed
-        .map((final indexed) {
+        .map((indexed) {
           final entry = indexed.$2;
           final currentLabel = entry.key; // id
           final currentValue = entry.value;
 
           final data = currentValue.indexed
-              .map((final subIndexed) {
+              .map((subIndexed) {
                 final subEntry = subIndexed.$2;
                 final currentSubLabel = subEntry.key;
                 final currentSubValue = subEntry.value;
@@ -152,7 +151,7 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
 
           return charts.Series<SeriesElement<N>, String>(
             id: currentLabel,
-            colorFn: (final element, _) => charts.ColorUtil.fromDartColor(
+            colorFn: (element, _) => charts.ColorUtil.fromDartColor(
               colourGetter(
                 element.domainLabel,
                 currentLabel,
@@ -160,10 +159,10 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
                 uniqueSubLabels.indexOf(currentLabel),
               ),
             ),
-            domainFn: (final element, _) => element.domainLabel,
-            measureFn: (final element, _) => element.value,
+            domainFn: (element, _) => element.domainLabel,
+            measureFn: (element, _) => element.value,
             data: data,
-            labelAccessorFn: (final element, _) =>
+            labelAccessorFn: (element, _) =>
                 element.value > 0 ? labelAccessor(element.value) : '',
             outsideLabelStyleAccessorFn: (_, _) =>
                 charts.TextStyleSpec(color: outsideTextColour),
@@ -201,7 +200,7 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
       selectionModels: onTap != null
           ? <charts.SelectionModelConfig<String>>[
               charts.SelectionModelConfig<String>(
-                updatedListener: (final model) {
+                updatedListener: (model) {
                   final firstDatum = model.selectedDatum.firstOrNull;
                   if (firstDatum != null && firstDatum.index != null) {
                     final domainIndex = firstDatum.index!;

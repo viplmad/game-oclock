@@ -21,7 +21,7 @@ class LocationCreateForm extends StatelessWidget {
   final String? initialName;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -62,7 +62,7 @@ class LocationEditForm extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -104,9 +104,9 @@ class LocationEditForm extends StatelessWidget {
 }
 
 Widget _fieldsBuilder(
-  final BuildContext context,
-  final LocationFormData formGroup,
-  final bool readOnly,
+  BuildContext context,
+  LocationFormData formGroup,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[

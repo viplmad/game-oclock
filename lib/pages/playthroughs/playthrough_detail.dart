@@ -37,7 +37,7 @@ class PlaythroughDetailPage extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
 
     return MultiBlocProvider(
@@ -63,18 +63,16 @@ class PlaythroughDetailPage extends StatelessWidget {
       child: DetailBuilder<Playthrough, PlaythroughGetBloc>(
         onBackPressed: () =>
             goBack(context, defaultPath: CommonPaths.playthroughsPath),
-        builder: (final context, final data, final onBackPressed) =>
-            PlaythroughDetail(
-              data: data,
-              fromPage: true,
-              extended: layoutTier != LayoutTier.compact,
-              onBackPressed: onBackPressed,
-              onEditSucceeded: (final context) => context
-                  .read<PlaythroughGetBloc>()
-                  .add(const ActionRestarted()),
-              onDeleteSucceeded: (final context) =>
-                  goBack(context, defaultPath: CommonPaths.playthroughsPath),
-            ),
+        builder: (context, data, onBackPressed) => PlaythroughDetail(
+          data: data,
+          fromPage: true,
+          extended: layoutTier != LayoutTier.compact,
+          onBackPressed: onBackPressed,
+          onEditSucceeded: (context) =>
+              context.read<PlaythroughGetBloc>().add(const ActionRestarted()),
+          onDeleteSucceeded: (context) =>
+              goBack(context, defaultPath: CommonPaths.playthroughsPath),
+        ),
       ),
     );
   }
@@ -99,10 +97,10 @@ class PlaythroughDetail extends StatelessWidget {
   final ValueChanged<BuildContext> onDeleteSucceeded;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final mainTab = TabDestination(
       icon: CommonIcons.detail,
-      labelBuilder: (final context) => context.localize().detailLabel,
+      labelBuilder: (context) => context.localize().detailLabel,
       onTap: (_) {},
       child: _info(context),
     );
@@ -110,17 +108,17 @@ class PlaythroughDetail extends StatelessWidget {
     final List<TabDestination> tabs = List.unmodifiable(<TabDestination>[
       TabDestination(
         icon: CommonIcons.games,
-        labelBuilder: (final context) => context.localize().gamesTitle,
-        onTap: (final context) =>
+        labelBuilder: (context) => context.localize().gamesTitle,
+        onTap: (context) =>
             _loadOnlyInitial<UserGameWithPlaythroughListBloc>(context),
         child: RelationListBuilder<MediaDTO, UserGameWithPlaythroughListBloc>(
-          createFormBuilder: ([final quicksearch]) => GamePlaythroughCreateForm(
+          createFormBuilder: ([quicksearch]) => GamePlaythroughCreateForm(
             gameId: quicksearch,
             playthroughId: data.id,
           ),
-          searchCreateFormBuilder: (final quicksearch) =>
+          searchCreateFormBuilder: (quicksearch) =>
               UserGameCreateForm(initialTitle: quicksearch),
-          itemBuilder: (final context, final data) => UserGameTileListItem(
+          itemBuilder: (context, data) => UserGameTileListItem(
             data: data,
             onTap: () =>
                 go(context, path: CommonPaths.buildGamePath(data.media.id)),
@@ -130,7 +128,7 @@ class PlaythroughDetail extends StatelessWidget {
     ]);
 
     return BlocListener<PlaythroughDeleteBloc, ActionState<void>>(
-      listener: (final context, final state) {
+      listener: (context, state) {
         if (state is ActionSuccess<void, Playthrough>) {
           showSnackBar(
             context,
@@ -153,38 +151,37 @@ class PlaythroughDetail extends StatelessWidget {
           if (!fromPage)
             ActionDestination(
               icon: CommonIcons.view,
-              labelBuilder: (final context) => context.localize().viewLabel,
-              onTap: (final context) =>
+              labelBuilder: (context) => context.localize().viewLabel,
+              onTap: (context) =>
                   go(context, path: CommonPaths.buildPlaythroughPath(data.id)),
             ),
           ActionDestination(
             icon: CommonIcons.reload,
-            labelBuilder: (final context) => context.localize().reloadLabel,
-            onTap: (final context) => onEditSucceeded(context),
+            labelBuilder: (context) => context.localize().reloadLabel,
+            onTap: (context) => onEditSucceeded(context),
           ),
           ActionDestination(
             icon: CommonIcons.edit,
-            labelBuilder: (final context) => context.localize().editLabel,
-            onTap: (final context) async => showReturningDialog(
+            labelBuilder: (context) => context.localize().editLabel,
+            onTap: (context) async => showReturningDialog(
               context,
-              builder: (final context) => PlaythroughEditForm(id: data.id),
-              onSuccess: (final context, _) => onEditSucceeded(context),
+              builder: (context) => PlaythroughEditForm(id: data.id),
+              onSuccess: (context, _) => onEditSucceeded(context),
             ),
           ),
           ActionDestination(
             icon: CommonIcons.delete,
-            labelBuilder: (final context) => context.localize().deleteLabel,
-            onTap: (final context) async => showConfirmationDialog(
+            labelBuilder: (context) => context.localize().deleteLabel,
+            onTap: (context) async => showConfirmationDialog(
               context,
-              builder: (final context) => ConfirmationDialog(
+              builder: (context) => ConfirmationDialog(
                 title: context.localize().deleteDialogTitle,
                 subtitle: context.localize().deleteDialogSubtitle,
                 message: context.localize().deleteDialogDataTitle(data.name),
-                acceptLabel: MaterialLocalizations.of(
-                  context,
-                ).deleteButtonTooltip,
+                acceptLabel: MaterialLocalizations.of(context)
+                    .deleteButtonTooltip,
               ),
-              onSuccess: (final context) {
+              onSuccess: (context) {
                 context.read<PlaythroughDeleteBloc>().add(
                   ActionStarted(data: data),
                 );
@@ -199,7 +196,7 @@ class PlaythroughDetail extends StatelessWidget {
     );
   }
 
-  Widget _info(final BuildContext context) {
+  Widget _info(BuildContext context) {
     return SingleChildScrollView(
       child: LabelsContainer(
         children: [
@@ -218,7 +215,7 @@ class PlaythroughDetail extends StatelessWidget {
     );
   }
 
-  void _loadOnlyInitial<LB extends ListLoadBloc>(final BuildContext context) {
+  void _loadOnlyInitial<LB extends ListLoadBloc>(BuildContext context) {
     final lb = context.read<LB>();
     if (lb.state is ListInitial) {
       lb.add(ListSearchChanged(search: ListSearchDTO()));

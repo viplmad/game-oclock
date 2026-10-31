@@ -8,7 +8,7 @@ class LocationFormBloc
   LocationFormBloc({required super.data});
 
   @override
-  NewLocationDTO fromFormData(final LocationFormData data) {
+  NewLocationDTO fromFormData(LocationFormData data) {
     return NewLocationDTO(
       name: data.name.value!,
       imageUrl: data.imageUrl.value,
@@ -16,7 +16,7 @@ class LocationFormBloc
   }
 
   @override
-  void setFormValue(final LocationFormData data, final LocationDTO? value) {
+  void setFormValue(LocationFormData data, LocationDTO? value) {
     data.name.value = value?.name;
   }
 }

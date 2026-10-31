@@ -14,8 +14,8 @@ class SearchListBloc extends ListLoadBloc<ListSearch> {
 
   @override
   Future<PageResultDTO<ListSearch>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     final data = await getAllOrEmpty();
     final defaultData = defaultListSearch[space] ?? [];
@@ -34,8 +34,5 @@ class SearchListBloc extends ListLoadBloc<ListSearch> {
   }
 
   @override
-  Future<int?> doCount(
-    final ListSearchDTO search,
-    final String? quicksearch,
-  ) async => null;
+  Future<int?> doCount(ListSearchDTO search, String? quicksearch) async => null;
 }

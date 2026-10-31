@@ -16,7 +16,7 @@ class TileListSkeletonItem extends StatelessWidget {
   final bool hasImage;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListTile(
       leading: hasImage
           ? ConstrainedBox(
@@ -40,7 +40,7 @@ class GridListSkeletonItem extends StatelessWidget {
   final int order;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return GridTile(child: Skeleton(order: order));
   }
 }
@@ -51,7 +51,7 @@ class CenteredGridListSkeletonItem extends StatelessWidget {
   final int order;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Skeleton(order: order);
   }
 }
@@ -62,7 +62,7 @@ class SideHeaderSkeletonItem extends StatelessWidget {
   final int order;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 4.0, left: 4.0),
       child: Align(

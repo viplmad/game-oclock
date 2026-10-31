@@ -16,7 +16,7 @@ class RatingLabel extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListTile(
       leading: icon,
       title: Text(label, style: Theme.of(context).textTheme.titleSmall),

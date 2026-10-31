@@ -24,7 +24,7 @@ class SearchCreateForm extends StatelessWidget {
   final String space;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -54,13 +54,12 @@ class SearchCreateForm extends StatelessWidget {
             ListSearchCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: (final context, final formGroup, final readOnly) =>
-                _fieldsBuilder(
-                  context,
-                  getSpaceFieldOptions(space),
-                  formGroup,
-                  readOnly,
-                ),
+            fieldsBuilder: (context, formGroup, readOnly) => _fieldsBuilder(
+              context,
+              getSpaceFieldOptions(space),
+              formGroup,
+              readOnly,
+            ),
           ),
     );
   }
@@ -73,7 +72,7 @@ class SearchEditForm extends StatelessWidget {
   final String name;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -111,23 +110,22 @@ class SearchEditForm extends StatelessWidget {
             ListSearchUpdateBloc
           >(
             title: context.localize().editingTitle,
-            fieldsBuilder: (final context, final formGroup, final readOnly) =>
-                _fieldsBuilder(
-                  context,
-                  getSpaceFieldOptions(space),
-                  formGroup,
-                  readOnly,
-                ),
+            fieldsBuilder: (context, formGroup, readOnly) => _fieldsBuilder(
+              context,
+              getSpaceFieldOptions(space),
+              formGroup,
+              readOnly,
+            ),
           ),
     );
   }
 }
 
 Widget _fieldsBuilder(
-  final BuildContext context,
-  final List<OptionTextField<String>> options,
-  final SearchFormData formData,
-  final bool readOnly,
+  BuildContext context,
+  List<OptionTextField<String>> options,
+  SearchFormData formData,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[
@@ -138,15 +136,15 @@ Widget _fieldsBuilder(
       ),
       ReactiveFormArray(
         formArray: formData.filters,
-        builder: (final context, final formArray, final child) {
+        builder: (context, formArray, child) {
           return ReorderableTileList(
             readOnly: readOnly,
             items: formArray.controls,
-            onReorder: (final oldIndex, final newIndex) {
+            onReorder: (oldIndex, newIndex) {
               final temp = formArray.removeAt(oldIndex);
               formArray.insert(newIndex, temp);
             },
-            itemBuilder: (final context, final data, final index) {
+            itemBuilder: (context, data, index) {
               final formGroup = data as FormGroup;
               return ListTile(
                 key: Key('${formGroup.hashCode}'),

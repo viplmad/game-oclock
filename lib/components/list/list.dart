@@ -15,7 +15,7 @@ import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
 
-int countWithTrailing(final List items, final Widget? trailing) =>
+int countWithTrailing(List items, Widget? trailing) =>
     items.length + (trailing == null ? 0 : 1);
 
 abstract class PaginatedListBuilder<
@@ -33,12 +33,12 @@ abstract class PaginatedListBuilder<
   final ScrollController? controller;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ScrollController controller = this.controller ?? ScrollController();
     controller.addListener(_paginateListener(context, controller));
 
     return BlocConsumer<LB, ListState<T>>(
-      listener: (final context, final state) {
+      listener: (context, state) {
         if (state is ListLoadFailure<T>) {
           showErrorSnackBar(
             context,
@@ -47,7 +47,7 @@ abstract class PaginatedListBuilder<
           );
         }
       },
-      builder: (final context, final state) => Scrollbar(
+      builder: (context, state) => Scrollbar(
         controller: controller,
         child: _list(context, state: state, controller: controller),
       ),
@@ -55,9 +55,9 @@ abstract class PaginatedListBuilder<
   }
 
   Widget _list(
-    final BuildContext context, {
-    required final ListState<T> state,
-    required final ScrollController controller,
+    BuildContext context, {
+    required ListState<T> state,
+    required ScrollController controller,
   }) {
     List<T> items = [];
     Widget? trailing;
@@ -107,8 +107,8 @@ abstract class PaginatedListBuilder<
   }
 
   VoidCallback _paginateListener(
-    final BuildContext context,
-    final ScrollController scrollController,
+    BuildContext context,
+    ScrollController scrollController,
   ) {
     return () {
       if (scrollController.position.pixels ==
@@ -119,14 +119,14 @@ abstract class PaginatedListBuilder<
   }
 
   Widget listView({
-    required final List<T> items,
-    required final Widget Function(BuildContext context, T item, int index)
+    required List<T> items,
+    required Widget Function(BuildContext context, T item, int index)
     itemBuilder,
-    final Widget? trailing,
-    required final ScrollController controller,
+    Widget? trailing,
+    required ScrollController controller,
   });
 
-  Widget errorItemBuilder(final BuildContext context, final VoidCallback onTap);
-  Widget skeletonItemBuilder({final int order = 0});
+  Widget errorItemBuilder(BuildContext context, VoidCallback onTap);
+  Widget skeletonItemBuilder({int order = 0});
   Widget skeletonListView();
 }

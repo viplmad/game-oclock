@@ -10,7 +10,7 @@ class UserGameGetBloc extends FunctionActionBloc<String, MediaDTO> {
   final GameService service;
 
   @override
-  Future<MediaDTO> doAction(final String event, final MediaDTO? lastData) =>
+  Future<MediaDTO> doAction(String event, MediaDTO? lastData) =>
       service.get(event);
 }
 
@@ -24,7 +24,7 @@ class UserGameCreateBloc extends FunctionActionBloc<NewMediaDTO, String> {
   final GameService service;
 
   @override
-  Future<String> doAction(final NewMediaDTO event, final String? lastData) =>
+  Future<String> doAction(NewMediaDTO event, String? lastData) =>
       service.create(event);
 }
 
@@ -35,7 +35,7 @@ class UserGameUpdateBloc extends ConsumerActionBloc<NewMediaDTO> {
   final String id;
 
   @override
-  Future<void> doAction(final NewMediaDTO event, final void lastData) =>
+  Future<void> doAction(NewMediaDTO event, void lastData) =>
       service.update(id, event);
 }
 
@@ -45,7 +45,7 @@ class UserGameDeleteBloc extends ConsumerActionBloc<MediaDTO> {
   final GameService service;
 
   @override
-  Future<void> doAction(final MediaDTO event, final void lastData) =>
+  Future<void> doAction(MediaDTO event, void lastData) =>
       service.delete(event.media.id);
 }
 
@@ -55,7 +55,7 @@ class UserGameSyncBloc extends ConsumerActionBloc<MediaDTO> {
   final GameService service;
 
   @override
-  Future<void> doAction(final MediaDTO event, final void lastData) =>
+  Future<void> doAction(MediaDTO event, void lastData) =>
       service.sync(event.media.id);
 }
 
@@ -65,14 +65,12 @@ class UserGameUnsyncBloc extends ConsumerActionBloc<MediaDTO> {
   final GameService service;
 
   @override
-  Future<void> doAction(final MediaDTO event, final void lastData) =>
+  Future<void> doAction(MediaDTO event, void lastData) =>
       service.unsync(event.media.id);
 }
 
 class UserGameSelectBloc extends IdentityActionBloc<MediaDTO?> {
   @override
-  Future<MediaDTO?> doAction(
-    final MediaDTO? event,
-    final MediaDTO? lastData,
-  ) async => event;
+  Future<MediaDTO?> doAction(MediaDTO? event, MediaDTO? lastData) async =>
+      event;
 }

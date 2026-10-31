@@ -24,7 +24,7 @@ class TileListItem extends StatelessWidget {
   final bool hasImage;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return _ListItemListTile(
       title: title,
       subtitle: subtitle,
@@ -47,7 +47,7 @@ class TileListErrorItem extends StatelessWidget {
   final VoidCallback? onRetryTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListTile(
       title: Text(
         title,
@@ -81,7 +81,7 @@ class GridListItem extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Stack(
       children: [
         Positioned.fill(
@@ -109,7 +109,7 @@ class GridListErrorItem extends StatelessWidget {
   final VoidCallback? onRetryTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return GridTile(
       child: Container(
         color: CommonColors.black,
@@ -163,7 +163,7 @@ class _ListItemListTile extends StatelessWidget {
   final bool hasImage;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListTile(
       leading: hasImage
           ? ConstrainedBox(
@@ -196,7 +196,7 @@ class _ListItemGridTile extends StatelessWidget {
   final String? imageURL;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Tooltip(
       message: title,
       child: GridTile(
@@ -226,7 +226,7 @@ class CachedImage extends StatelessWidget {
   final bool applyGradient;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return imageURL.isNotEmpty
         ? applyGradient
               ? _getGradientImage()

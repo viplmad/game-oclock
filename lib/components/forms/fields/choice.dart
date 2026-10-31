@@ -17,18 +17,18 @@ class SimpleChoiceFormField extends StatelessWidget {
   final List<OptionTextField<String>> options;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ReactiveValueListenableBuilder(
       formControl: formControl,
-      builder: (final context, _, _) => Row(
+      builder: (context, _, _) => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: options
             .map(
-              (final field) => ChoiceChip(
+              (field) => ChoiceChip(
                 label: Text(field.labelBuilder(context)),
                 selected: field.value == formControl.value,
-                onSelected: (final newChoice) {
+                onSelected: (newChoice) {
                   if (newChoice) {
                     formControl.value = field.value;
                   }

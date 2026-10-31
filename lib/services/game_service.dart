@@ -6,19 +6,16 @@ import 'utils.dart';
 class GameService {
   final MediasApi _api;
 
-  GameService(final ApiClient apiClient) : _api = MediasApi(apiClient);
+  GameService(ApiClient apiClient) : _api = MediasApi(apiClient);
 
   Future<PageResultDTO<MediaDTO>> search(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     return _api.getMedias(search, q: quicksearch);
   }
 
-  Future<int> count(
-    final AggregateSearch search,
-    final String? quicksearch,
-  ) async {
+  Future<int> count(AggregateSearch search, String? quicksearch) async {
     final response = await _api.aggregateMediasWithHttpInfo(
       AggregateSearchDTO(
         aggr: AggregateMetricDTO(
@@ -33,17 +30,17 @@ class GameService {
   }
 
   Future<PageResultDTO<MediaAvailableDTO>> searchAvailable(
-    final String locationId,
-    final ListSearchDTO search,
-    final String? quicksearch,
+    String locationId,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     return _api.getLocationMedias(locationId, search, q: quicksearch);
   }
 
   Future<int> countAvailable(
-    final String locationId,
-    final AggregateSearch search,
-    final String? quicksearch,
+    String locationId,
+    AggregateSearch search,
+    String? quicksearch,
   ) async {
     final response = await _api.aggregateLocationMediasWithHttpInfo(
       locationId,
@@ -60,17 +57,17 @@ class GameService {
   }
 
   Future<PageResultDTO<MediaTagDTO>> searchWithTag(
-    final String tagId,
-    final ListSearchDTO search,
-    final String? quicksearch,
+    String tagId,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     return _api.getTagMedias(tagId, search, q: quicksearch);
   }
 
   Future<int> countWithTag(
-    final String tagId,
-    final AggregateSearch search,
-    final String? quicksearch,
+    String tagId,
+    AggregateSearch search,
+    String? quicksearch,
   ) async {
     final response = await _api.aggregateTagMediasWithHttpInfo(
       tagId,
@@ -87,17 +84,17 @@ class GameService {
   }
 
   Future<PageResultDTO<MediaDTO>> searchPlayedOnDevice(
-    final String deviceId,
-    final ListSearchDTO search,
-    final String? quicksearch,
+    String deviceId,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     return _api.getDeviceMedias(deviceId, search, q: quicksearch);
   }
 
   Future<int> countPlayedOnDevice(
-    final String deviceId,
-    final AggregateSearch search,
-    final String? quicksearch,
+    String deviceId,
+    AggregateSearch search,
+    String? quicksearch,
   ) async {
     final response = await _api.aggregateDeviceMediasWithHttpInfo(
       deviceId,
@@ -114,25 +111,25 @@ class GameService {
   }
 
   Future<PageResultDTO<MediaDTO>> searchWithPlaythrough(
-    final String playthroughId,
-    final ListSearchDTO search,
-    final String? quicksearch,
+    String playthroughId,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     throw UnsupportedError('');
   }
 
   Future<int> countWithPlaythrough(
-    final String playthroughId,
-    final ListSearchDTO search,
-    final String? quicksearch,
+    String playthroughId,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     throw UnsupportedError('');
   }
 
   Future<void> addAvailability(
-    final String gameId,
-    final String locationId,
-    final DateTime date,
+    String gameId,
+    String locationId,
+    DateTime date,
   ) async {
     return _api.linkMediaLocation(
       gameId,
@@ -141,38 +138,35 @@ class GameService {
     );
   }
 
-  Future<void> addTag(final String gameId, final String tagId) async {
+  Future<void> addTag(String gameId, String tagId) async {
     return _api.linkMediaTag(gameId, tagId, OrderDTO());
   }
 
-  Future<void> addPlaythrough(
-    final String gameId,
-    final String playthroughId,
-  ) async {
+  Future<void> addPlaythrough(String gameId, String playthroughId) async {
     throw UnsupportedError('');
   }
 
-  Future<MediaDTO> get(final String id) async {
+  Future<MediaDTO> get(String id) async {
     return _api.getMedia(id);
   }
 
-  Future<String> create(final NewMediaDTO game) async {
+  Future<String> create(NewMediaDTO game) async {
     return _api.createMedia(game);
   }
 
-  Future<void> update(final String id, final NewMediaDTO game) async {
+  Future<void> update(String id, NewMediaDTO game) async {
     return _api.updateMedia(id, game);
   }
 
-  Future<void> delete(final String id) async {
+  Future<void> delete(String id) async {
     return _api.deleteMedia(id);
   }
 
-  Future<void> sync(final String id) async {
+  Future<void> sync(String id) async {
     return _api.syncMedia(id);
   }
 
-  Future<void> unsync(final String id) async {
+  Future<void> unsync(String id) async {
     return _api.unsyncMedia(id);
   }
 }

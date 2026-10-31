@@ -6,7 +6,7 @@ class FormFieldsContainer extends StatelessWidget {
   final List<Widget> children;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Column(spacing: 24.0, children: children);
   }
 }

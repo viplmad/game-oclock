@@ -65,7 +65,7 @@ class _SimpleYearPickerState extends State<SimpleYearPicker> {
     scrollController = ScrollController(initialScrollOffset: scrollOffset);
   }
 
-  Widget _buildYearItem(final BuildContext context, final int index) {
+  Widget _buildYearItem(BuildContext context, int index) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
 
@@ -125,7 +125,7 @@ class _SimpleYearPickerState extends State<SimpleYearPicker> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         const Divider(height: 0.0),
@@ -148,7 +148,7 @@ class _YearPickerGridDelegate extends SliverGridDelegate {
   const _YearPickerGridDelegate();
 
   @override
-  SliverGridLayout getLayout(final SliverConstraints constraints) {
+  SliverGridLayout getLayout(SliverConstraints constraints) {
     final double tileWidth =
         (constraints.crossAxisExtent -
             (_yearPickerColumnCount - 1) * _yearPickerRowSpacing) /
@@ -164,7 +164,7 @@ class _YearPickerGridDelegate extends SliverGridDelegate {
   }
 
   @override
-  bool shouldRelayout(final _YearPickerGridDelegate oldDelegate) => false;
+  bool shouldRelayout(_YearPickerGridDelegate oldDelegate) => false;
 }
 
 const _YearPickerGridDelegate _yearPickerGridDelegate =

@@ -12,7 +12,7 @@ class UserGetBloc extends FunctionActionBloc<String, UserDTO> {
   final UserService service;
 
   @override
-  Future<UserDTO> doAction(final String event, final UserDTO? lastData) =>
+  Future<UserDTO> doAction(String event, UserDTO? lastData) =>
       service.get(event);
 }
 
@@ -22,7 +22,7 @@ class UserCreateBloc extends FunctionActionBloc<NewUser, String> {
   final UserService service;
 
   @override
-  Future<String> doAction(final NewUser event, final String? lastData) =>
+  Future<String> doAction(NewUser event, String? lastData) =>
       service.create(event as NewUserDTO, event.password);
 }
 
@@ -33,7 +33,7 @@ class UserUpdateBloc extends ConsumerActionBloc<NewUserDTO> {
   final String id;
 
   @override
-  Future<void> doAction(final NewUserDTO event, final void lastData) =>
+  Future<void> doAction(NewUserDTO event, void lastData) =>
       service.update(id, event);
 }
 
@@ -43,16 +43,13 @@ class UserDeleteBloc extends ConsumerActionBloc<UserDTO> {
   final UserService service;
 
   @override
-  Future<void> doAction(final UserDTO event, final void lastData) =>
+  Future<void> doAction(UserDTO event, void lastData) =>
       service.delete(event.id);
 }
 
 class UserSelectBloc extends IdentityActionBloc<UserDTO?> {
   @override
-  Future<UserDTO?> doAction(
-    final UserDTO? event,
-    final UserDTO? lastData,
-  ) async => event;
+  Future<UserDTO?> doAction(UserDTO? event, UserDTO? lastData) async => event;
 }
 
 class UserChangePasswordBloc extends ConsumerActionBloc<UserChangePassword> {
@@ -62,6 +59,6 @@ class UserChangePasswordBloc extends ConsumerActionBloc<UserChangePassword> {
   final String id;
 
   @override
-  Future<void> doAction(final UserChangePassword event, final void lastData) =>
+  Future<void> doAction(UserChangePassword event, void lastData) =>
       service.changePassword(id, event.currentPassword, event.newPassword);
 }

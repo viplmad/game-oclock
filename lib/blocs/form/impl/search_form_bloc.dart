@@ -8,13 +8,13 @@ class SearchFormBloc extends FormBloc<SearchFormData, ListSearch, ListSearch> {
   SearchFormBloc({required super.data});
 
   @override
-  ListSearch fromFormData(final SearchFormData data) {
+  ListSearch fromFormData(SearchFormData data) {
     return ListSearch.manual(
       id: '', // TODO
       name: data.name.value!,
       filter: (data.filters.controls as List<FormGroup>)
           .map(
-            (final filterValues) => FilterDTO(
+            (filterValues) => FilterDTO(
               field: (filterValues.controls['field'] as FormControl<String>)
                   .value!,
               operator_: OperatorType.fromJson(
@@ -37,11 +37,11 @@ class SearchFormBloc extends FormBloc<SearchFormData, ListSearch, ListSearch> {
   }
 
   @override
-  void setFormValue(final SearchFormData data, final ListSearch? value) {
+  void setFormValue(SearchFormData data, ListSearch? value) {
     data.name.value = value?.name;
     data.filters.value = value?.filter
         ?.map(
-          (final filter) => FormGroup({
+          (filter) => FormGroup({
             'field': FormControl<String>(value: filter.field),
             'operator': FormControl<String>(value: filter.operator_.toJson()),
             'value': FormControl<String>(value: filter.value!.value), // TODO

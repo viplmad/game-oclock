@@ -12,8 +12,8 @@ class GameChildCreateBloc
 
   @override
   Future<(String, String, int?)> doAction(
-    final GameChild event,
-    final (String, String, int?)? lastData,
+    GameChild event,
+    (String, String, int?)? lastData,
   ) => service
       .update(
         event.childGameId,

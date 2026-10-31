@@ -5,14 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPreferencesRepository {
   final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
 
-  Future<String> getString(final String key) =>
-      get(key, (final value) => value);
+  Future<String> getString(String key) => get(key, (value) => value);
 
-  Future<void> setString(final String key, final String value) =>
-      set(key, value, (final value) => value);
+  Future<void> setString(String key, String value) =>
+      set(key, value, (value) => value);
 
-  Future<T> get<T>(final String key, final T Function(String value) map) =>
-      asyncPrefs.getString(key).then((final value) {
+  Future<T> get<T>(String key, T Function(String value) map) =>
+      asyncPrefs.getString(key).then((value) {
         if (value == null) {
           throw GameOClockException(
             code: errorCodeNotFound,
@@ -22,13 +21,10 @@ class SharedPreferencesRepository {
         return map(value);
       });
 
-  Future<void> set<T>(
-    final String key,
-    final T data,
-    final String Function(T value) map,
-  ) => asyncPrefs.setString(key, map(data));
+  Future<void> set<T>(String key, T data, String Function(T value) map) =>
+      asyncPrefs.setString(key, map(data));
 
-  Future<void> remove(final String key) => asyncPrefs.remove(key);
+  Future<void> remove(String key) => asyncPrefs.remove(key);
 
-  Future<bool> exists(final String key) => asyncPrefs.containsKey(key);
+  Future<bool> exists(String key) => asyncPrefs.containsKey(key);
 }

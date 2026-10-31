@@ -28,7 +28,7 @@ class LocationListPage extends StatelessWidget {
   const LocationListPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => LocationSelectBloc()),
@@ -74,7 +74,7 @@ class _LocationListDetailBuilder extends StatelessWidget {
   const _LocationListDetailBuilder();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListCreateDetailBuilder<
       LocationDTO,
       LocationSelectBloc,
@@ -82,10 +82,10 @@ class _LocationListDetailBuilder extends StatelessWidget {
     >(
       title: context.localize().locationsTitle,
       searchSpace: _space,
-      createFormBuilder: ([final quicksearch]) =>
+      createFormBuilder: ([quicksearch]) =>
           LocationCreateForm(initialName: quicksearch),
-      idGetter: (final data) => data.id,
-      detailBuilder: (final context, final data, final onClosed) {
+      idGetter: (data) => data.id,
+      detailBuilder: (context, data, onClosed) {
         return MultiBlocProvider(
           // Recreate on selection change
           key: Key(data.id),
@@ -101,10 +101,10 @@ class _LocationListDetailBuilder extends StatelessWidget {
             data: data,
             extended: false,
             onBackPressed: onClosed,
-            onEditSucceeded: (final context) {
+            onEditSucceeded: (context) {
               context.read<LocationListBloc>().add(const ListReloaded());
             },
-            onDeleteSucceeded: (final context) {
+            onDeleteSucceeded: (context) {
               context.read<LocationListBloc>().add(const ListReloaded());
               context.read<LocationSelectBloc>().add(
                 const ActionStarted(data: null),
@@ -113,8 +113,7 @@ class _LocationListDetailBuilder extends StatelessWidget {
           ),
         );
       },
-      listItemBuilder: (final context, final style, final data, final onTap) =>
-          style == ListStyle.grid
+      listItemBuilder: (context, style, data, onTap) => style == ListStyle.grid
           ? LocationGridListItem(data: data, onTap: onTap)
           : LocationTileListItem(data: data, onTap: onTap),
       itemAspectRatio: 1, // Square aspect ratio

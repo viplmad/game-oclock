@@ -9,7 +9,7 @@ class TagTileListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TileListItem(title: data.name, onTap: onTap, hasImage: false);
   }
 }

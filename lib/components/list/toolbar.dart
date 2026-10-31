@@ -38,7 +38,7 @@ class ListLayout extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (toolbar == null && statusbar == null) {
       return child;
     }
@@ -58,9 +58,9 @@ class ListTotalStatusbarBuilder<T extends Object, LB extends ListLoadBloc<T>>
   const ListTotalStatusbarBuilder({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return BlocBuilder<LB, ListState<T>>(
-      builder: (final context, final state) {
+      builder: (context, state) {
         int total;
         if (state is ListLoadInProgress<T>) {
           return const ListTotalStatusbarSkeleton();
@@ -82,7 +82,7 @@ class ListTotalStatusbar extends StatelessWidget {
   final int total;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
       height: kStatusbarHeight,
@@ -108,9 +108,9 @@ class ListFilterToolbarBuilder<T extends Object, LB extends ListLoadBloc<T>>
   final String space;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return BlocBuilder<CurrentListSearchGetBloc, ActionState<ListSearch>>(
-      builder: (final context, final state) {
+      builder: (context, state) {
         ListSearch currentSearch;
         if (state is ActionInProgress<ListSearch>) {
           return const ListFilterToolbarSkeleton();
@@ -126,7 +126,7 @@ class ListFilterToolbarBuilder<T extends Object, LB extends ListLoadBloc<T>>
           space: space,
           search: currentSearch,
           options: getSpaceFieldOptions(space),
-          onSearchChanged: (final context, final selectedSearch) {
+          onSearchChanged: (context, selectedSearch) {
             context.read<CurrentListSearchSaveBloc>().add(
               ActionStarted(data: selectedSearch),
             );
@@ -153,7 +153,7 @@ class ListFilterToolbar extends StatelessWidget {
   onSearchChanged;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final filter = search.filter ?? [];
     final sort = search.sort ?? [];
 
@@ -177,9 +177,9 @@ class ListFilterToolbar extends StatelessWidget {
       onTap: () async =>
           showModalBottomSheet<ListSearch>(
             context: context,
-            builder: (final context) =>
+            builder: (context) =>
                 SearchListPage(space: space, currentSearch: search),
-          ).then((final selectedSearch) {
+          ).then((selectedSearch) {
             if (selectedSearch != null && context.mounted) {
               onSearchChanged(context, selectedSearch);
             }
@@ -188,8 +188,8 @@ class ListFilterToolbar extends StatelessWidget {
   }
 
   List<Widget> _buildFilterChips(
-    final BuildContext context,
-    final List<FilterDTO> filters,
+    BuildContext context,
+    List<FilterDTO> filters,
   ) {
     final widgets = <Widget>[];
     for (var i = 0; i < filters.length; i++) {
@@ -217,10 +217,7 @@ class ListFilterToolbar extends StatelessWidget {
     return widgets;
   }
 
-  List<Widget> _buildSortChips(
-    final BuildContext context,
-    final List<SortDTO> sorts,
-  ) {
+  List<Widget> _buildSortChips(BuildContext context, List<SortDTO> sorts) {
     final widgets = <Widget>[];
     for (var i = 0; i < sorts.length; i++) {
       final sort = sorts.elementAt(i);
@@ -238,7 +235,7 @@ class ListFilterToolbar extends StatelessWidget {
     return widgets;
   }
 
-  Widget _buildSortIcon(final SortDTO sort) {
+  Widget _buildSortIcon(SortDTO sort) {
     switch (sort.order.value) {
       case r'Desc':
         return CommonIcons.descending;
@@ -249,16 +246,14 @@ class ListFilterToolbar extends StatelessWidget {
   }
 
   String Function(BuildContext) _buildFilterFieldLabel(
-    final List<OptionTextField<String>> options,
-    final String field,
+    List<OptionTextField<String>> options,
+    String field,
   ) {
     return options
         .firstWhere(
-          (final option) => option.value == field,
-          orElse: () => OptionTextField(
-            value: field,
-            labelBuilder: (final context) => field,
-          ),
+          (option) => option.value == field,
+          orElse: () =>
+              OptionTextField(value: field, labelBuilder: (context) => field),
         )
         .labelBuilder;
   }
@@ -270,7 +265,7 @@ class ListToolbar extends StatelessWidget {
   final List<Widget> actions;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
       height: kMinInteractiveDimension,
@@ -307,7 +302,7 @@ class _ListFullSearchToolbarState extends State<ListFullSearchToolbar> {
   bool inSearch = false;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
       height: kMinInteractiveDimension,

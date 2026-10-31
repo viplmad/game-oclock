@@ -4,8 +4,8 @@ import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock_client/api.dart';
 
 List<FilterDTO> buildStartDateBetweenFilters(
-  final DateTime startDate,
-  final DateTime endDate,
+  DateTime startDate,
+  DateTime endDate,
 ) {
   return List.unmodifiable(<FilterDTO>[
     FilterDTO(
@@ -32,7 +32,7 @@ FilterDTO buildFinishedFilter() {
   );
 }
 
-FetchMode calculateOnCurrentYear(final DateTime startDate) {
+FetchMode calculateOnCurrentYear(DateTime startDate) {
   final currentYear = DateTime.now().year;
   return currentYear == startDate.year
       ? FetchMode.onlyCalculate

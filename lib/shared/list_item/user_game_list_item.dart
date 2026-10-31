@@ -24,7 +24,7 @@ class UserGameTileListItem extends StatelessWidget {
   final ValueChanged<BuildContext>? onAddSessionSucceeded;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final listItem = TileListItem(
       title: data.media.edition.isEmpty
           ? data.media.title
@@ -34,9 +34,8 @@ class UserGameTileListItem extends StatelessWidget {
             ),
       subtitle: data.media.releaseDate == null
           ? null
-          : MaterialLocalizations.of(
-              context,
-            ).formatYear(data.media.releaseDate!),
+          : MaterialLocalizations.of(context)
+                .formatYear(data.media.releaseDate!),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         spacing: 8.0,
@@ -48,10 +47,9 @@ class UserGameTileListItem extends StatelessWidget {
               tooltip: context.localize().addSessionLabel,
               onPressed: () => showReturningDialog(
                 context,
-                builder: (final context) =>
+                builder: (context) =>
                     GameSessionCreateForm(gameId: data.media.id),
-                onSuccess: (final context, _) =>
-                    onAddSessionSucceeded!(context),
+                onSuccess: (context, _) => onAddSessionSucceeded!(context),
               ),
             ),
           LabelChoiceChip(
@@ -81,7 +79,7 @@ class UserGameWithOrderTileListItem extends StatelessWidget {
   final int? order;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final listItem = TileListItem(
       title: data.media.edition.isEmpty
           ? data.media.title
@@ -120,7 +118,7 @@ class UserGameGridListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final listItem = GridListItem(
       title: data.media.edition.isEmpty
           ? data.media.title
@@ -136,7 +134,7 @@ class UserGameGridListItem extends StatelessWidget {
   }
 }
 
-Widget addRatingBanner(final Widget listItem, final int rating) {
+Widget addRatingBanner(Widget listItem, int rating) {
   return rating > 0
       ? TriangleBanner(
           message: rating.toString(),

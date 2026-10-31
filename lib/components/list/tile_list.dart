@@ -18,11 +18,11 @@ class TileListBuilder<T extends Object, LB extends ListLoadBloc<T>>
 
   @override
   Widget listView({
-    required final List<T> items,
-    required final Widget Function(BuildContext context, T item, int index)
+    required List<T> items,
+    required Widget Function(BuildContext context, T item, int index)
     itemBuilder,
-    final Widget? trailing,
-    required final ScrollController controller,
+    Widget? trailing,
+    required ScrollController controller,
   }) {
     return TileList(
       items: items,
@@ -34,10 +34,7 @@ class TileListBuilder<T extends Object, LB extends ListLoadBloc<T>>
   }
 
   @override
-  Widget errorItemBuilder(
-    final BuildContext context,
-    final VoidCallback onTap,
-  ) {
+  Widget errorItemBuilder(BuildContext context, VoidCallback onTap) {
     return TileListErrorItem(
       title: context.localize().errorListPageLoadTitle,
       onRetryTap: onTap,
@@ -45,14 +42,14 @@ class TileListBuilder<T extends Object, LB extends ListLoadBloc<T>>
   }
 
   @override
-  Widget skeletonItemBuilder({final int order = 0}) {
+  Widget skeletonItemBuilder({int order = 0}) {
     return TileListSkeletonItem(order: order, hasImage: true);
   }
 
   @override
   Widget skeletonListView() {
     return TileListSkeleton(
-      itemBuilder: (final index) => skeletonItemBuilder(order: index),
+      itemBuilder: (index) => skeletonItemBuilder(order: index),
       borderRadius: borderRadius,
     );
   }
@@ -73,11 +70,11 @@ class ReorderableListBuilder<T extends Object, LB extends ListLoadBloc<T>>
 
   @override
   Widget listView({
-    required final List<T> items,
-    required final Widget Function(BuildContext context, T item, int index)
+    required List<T> items,
+    required Widget Function(BuildContext context, T item, int index)
     itemBuilder,
-    final Widget? trailing,
-    required final ScrollController controller,
+    Widget? trailing,
+    required ScrollController controller,
   }) {
     return ReorderableTileList<T>(
       items: items,
@@ -108,7 +105,7 @@ class TileList<T> extends StatelessWidget {
   final ScrollController? controller;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final count = countWithTrailing(items, trailing);
 
     return ListView.builder(
@@ -116,7 +113,7 @@ class TileList<T> extends StatelessWidget {
       shrinkWrap: true,
       itemCount: count,
       controller: controller,
-      itemBuilder: (final context, final index) {
+      itemBuilder: (context, index) {
         Widget itemWidget;
         if (index == count - 1 && trailing != null) {
           itemWidget = trailing!;
@@ -157,7 +154,7 @@ class ReorderableTileList<T> extends StatelessWidget {
   final bool readOnly;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final count = countWithTrailing(items, trailing);
 
     return ReorderableListView.builder(
@@ -166,7 +163,7 @@ class ReorderableTileList<T> extends StatelessWidget {
       onReorderItem: onReorder,
       itemCount: count,
       scrollController: controller,
-      itemBuilder: (final context, final index) {
+      itemBuilder: (context, index) {
         Widget itemWidget;
         if (index == count - 1 && trailing != null) {
           itemWidget = trailing!;

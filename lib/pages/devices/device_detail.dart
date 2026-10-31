@@ -36,7 +36,7 @@ class DeviceDetailPage extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
 
     return MultiBlocProvider(
@@ -62,17 +62,16 @@ class DeviceDetailPage extends StatelessWidget {
       child: DetailBuilder<DeviceDTO, DeviceGetBloc>(
         onBackPressed: () =>
             goBack(context, defaultPath: CommonPaths.devicesPath),
-        builder: (final context, final data, final onBackPressed) =>
-            DeviceDetail(
-              data: data,
-              fromPage: true,
-              extended: layoutTier != LayoutTier.compact,
-              onBackPressed: onBackPressed,
-              onEditSucceeded: (final context) =>
-                  context.read<DeviceGetBloc>().add(const ActionRestarted()),
-              onDeleteSucceeded: (final context) =>
-                  goBack(context, defaultPath: CommonPaths.devicesPath),
-            ),
+        builder: (context, data, onBackPressed) => DeviceDetail(
+          data: data,
+          fromPage: true,
+          extended: layoutTier != LayoutTier.compact,
+          onBackPressed: onBackPressed,
+          onEditSucceeded: (context) =>
+              context.read<DeviceGetBloc>().add(const ActionRestarted()),
+          onDeleteSucceeded: (context) =>
+              goBack(context, defaultPath: CommonPaths.devicesPath),
+        ),
       ),
     );
   }
@@ -97,10 +96,10 @@ class DeviceDetail extends StatelessWidget {
   final ValueChanged<BuildContext> onDeleteSucceeded;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final mainTab = TabDestination(
       icon: CommonIcons.detail,
-      labelBuilder: (final context) => context.localize().detailLabel,
+      labelBuilder: (context) => context.localize().detailLabel,
       onTap: (_) {},
       child: _info(context),
     );
@@ -108,11 +107,11 @@ class DeviceDetail extends StatelessWidget {
     final List<TabDestination> tabs = List.unmodifiable(<TabDestination>[
       TabDestination(
         icon: CommonIcons.games,
-        labelBuilder: (final context) => context.localize().gamesTitle,
-        onTap: (final context) =>
+        labelBuilder: (context) => context.localize().gamesTitle,
+        onTap: (context) =>
             _loadOnlyInitial<UserGamePlayedOnDeviceListBloc>(context),
         child: RelationListBuilder<MediaDTO, UserGamePlayedOnDeviceListBloc>(
-          itemBuilder: (final context, final data) => UserGameTileListItem(
+          itemBuilder: (context, data) => UserGameTileListItem(
             data: data,
             onTap: () =>
                 go(context, path: CommonPaths.buildGamePath(data.media.id)),
@@ -122,7 +121,7 @@ class DeviceDetail extends StatelessWidget {
     ]);
 
     return BlocListener<DeviceDeleteBloc, ActionState<void>>(
-      listener: (final context, final state) {
+      listener: (context, state) {
         if (state is ActionSuccess<void, DeviceDTO>) {
           showSnackBar(
             context,
@@ -152,38 +151,37 @@ class DeviceDetail extends StatelessWidget {
           if (!fromPage)
             ActionDestination(
               icon: CommonIcons.view,
-              labelBuilder: (final context) => context.localize().viewLabel,
-              onTap: (final context) =>
+              labelBuilder: (context) => context.localize().viewLabel,
+              onTap: (context) =>
                   go(context, path: CommonPaths.buildDevicePath(data.id)),
             ),
           ActionDestination(
             icon: CommonIcons.reload,
-            labelBuilder: (final context) => context.localize().reloadLabel,
-            onTap: (final context) => onEditSucceeded(context),
+            labelBuilder: (context) => context.localize().reloadLabel,
+            onTap: (context) => onEditSucceeded(context),
           ),
           ActionDestination(
             icon: CommonIcons.edit,
-            labelBuilder: (final context) => context.localize().editLabel,
-            onTap: (final context) async => showReturningDialog(
+            labelBuilder: (context) => context.localize().editLabel,
+            onTap: (context) async => showReturningDialog(
               context,
-              builder: (final context) => DeviceEditForm(id: data.id),
-              onSuccess: (final context, _) => onEditSucceeded(context),
+              builder: (context) => DeviceEditForm(id: data.id),
+              onSuccess: (context, _) => onEditSucceeded(context),
             ),
           ),
           ActionDestination(
             icon: CommonIcons.delete,
-            labelBuilder: (final context) => context.localize().deleteLabel,
-            onTap: (final context) async => showConfirmationDialog(
+            labelBuilder: (context) => context.localize().deleteLabel,
+            onTap: (context) async => showConfirmationDialog(
               context,
-              builder: (final context) => ConfirmationDialog(
+              builder: (context) => ConfirmationDialog(
                 title: context.localize().deleteDialogTitle,
                 subtitle: context.localize().deleteDialogSubtitle,
                 message: context.localize().deleteDialogDataTitle(data.name),
-                acceptLabel: MaterialLocalizations.of(
-                  context,
-                ).deleteButtonTooltip,
+                acceptLabel: MaterialLocalizations.of(context)
+                    .deleteButtonTooltip,
               ),
-              onSuccess: (final context) {
+              onSuccess: (context) {
                 context.read<DeviceDeleteBloc>().add(ActionStarted(data: data));
               },
             ),
@@ -196,7 +194,7 @@ class DeviceDetail extends StatelessWidget {
     );
   }
 
-  Widget _info(final BuildContext context) {
+  Widget _info(BuildContext context) {
     return SingleChildScrollView(
       child: LabelsContainer(
         children: [
@@ -215,7 +213,7 @@ class DeviceDetail extends StatelessWidget {
     );
   }
 
-  void _loadOnlyInitial<LB extends ListLoadBloc>(final BuildContext context) {
+  void _loadOnlyInitial<LB extends ListLoadBloc>(BuildContext context) {
     final lb = context.read<LB>();
     if (lb.state is ListInitial) {
       lb.add(ListSearchChanged(search: ListSearchDTO()));

@@ -20,6 +20,6 @@ class SeriesEntry<T> {
   String toString() => '$key : $value';
 }
 
-Color defaultThemeTextColor(final BuildContext context) {
+Color defaultThemeTextColor(BuildContext context) {
   return isThemeDark(context) ? CommonColors.white : CommonColors.black;
 }

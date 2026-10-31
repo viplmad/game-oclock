@@ -24,7 +24,7 @@ class SearchListPage extends StatelessWidget {
   final ListSearch currentSearch;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) =>
           SearchListBloc(service: RepositoryProvider.of(context), space: space)
@@ -41,7 +41,7 @@ class _SearchListBuilder extends StatelessWidget {
   final ListSearch currentSearch;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListLayout(
       toolbar: ListToolbar(
         actions: [
@@ -50,8 +50,8 @@ class _SearchListBuilder extends StatelessWidget {
             tooltip: context.localize().createLabel,
             onPressed: () async => showReturningDialog(
               context,
-              builder: (final context) => SearchCreateForm(space: space),
-              onSuccess: (final context, _) =>
+              builder: (context) => SearchCreateForm(space: space),
+              onSuccess: (context, _) =>
                   context.read<SearchListBloc>().add(const ListReloaded()),
             ),
           ),
@@ -67,13 +67,12 @@ class _SearchListBuilder extends StatelessWidget {
       child: GridListBuilder<ListSearch, SearchListBloc>(
         itemAspectRatio: 3.5,
         columns: (MediaQuery.sizeOf(context).width / 600).ceil(),
-        itemBuilder: (final context, final data, final index) =>
-            SearchGridListItem(
-              space: space,
-              data: data,
-              selected: currentSearch.id == data.id,
-              onTap: () => Navigator.pop(context, data),
-            ),
+        itemBuilder: (context, data, index) => SearchGridListItem(
+          space: space,
+          data: data,
+          selected: currentSearch.id == data.id,
+          onTap: () => Navigator.pop(context, data),
+        ),
       ),
     );
   }
@@ -94,7 +93,7 @@ class SearchGridListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TileListItem(
       hasImage: false,
       title: data.labelBuilder(context),
@@ -119,9 +118,9 @@ class SearchGridListItem extends StatelessWidget {
               tooltip: context.localize().editLabel,
               onPressed: () async => showReturningDialog(
                 context,
-                builder: (final context) =>
+                builder: (context) =>
                     SearchEditForm(space: space, name: data.name),
-                onSuccess: (final context, _) =>
+                onSuccess: (context, _) =>
                     context.read<SearchListBloc>().add(const ListReloaded()),
               ),
             ),

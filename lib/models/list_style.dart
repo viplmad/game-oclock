@@ -2,7 +2,7 @@ enum ListStyle { tile, grid }
 
 const defaultListStyle = ListStyle.tile;
 
-ListStyle parseListStyle(final String value) =>
-    ListStyle.values.firstWhere((final element) => element.name == value);
+ListStyle parseListStyle(String value) =>
+    ListStyle.values.firstWhere((element) => element.name == value);
 
-String listStyleToString(final ListStyle value) => value.name;
+String listStyleToString(ListStyle value) => value.name;

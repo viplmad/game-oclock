@@ -54,7 +54,7 @@ class GameOClockApp extends StatelessWidget {
   const GameOClockApp({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final sharedPrefsRepository = SharedPreferencesRepository();
     final authService = AuthService(sharedPrefsRepository);
     final settingsService = SettingsService(sharedPrefsRepository);
@@ -145,21 +145,21 @@ class GameOClockApp extends StatelessWidget {
     return MultiBlocListener(
       listeners: [
         BlocListener<ThemeModeSaveBloc, ActionState<void>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionSuccess<void, ThemeMode?>) {
               context.read<ThemeModeGetBloc>().add(const ActionRestarted());
             }
           },
         ),
         BlocListener<LocaleSaveBloc, ActionState<void>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionSuccess<void, Locale?>) {
               context.read<LocaleGetBloc>().add(const ActionRestarted());
             }
           },
         ),
         BlocListener<DateLocaleConfigSaveBloc, ActionState<void>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionSuccess<void, DateLocaleConfig?>) {
               context.read<DateLocaleConfigGetBloc>().add(
                 const ActionRestarted(),
@@ -169,13 +169,13 @@ class GameOClockApp extends StatelessWidget {
         ),
       ],
       child: BlocBuilder<ThemeModeGetBloc, ActionState<ThemeMode>>(
-        builder: (final context, final themeState) {
+        builder: (context, themeState) {
           final themeMode = (themeState is ActionSuccess<ThemeMode, void>)
               ? themeState.data
               : null;
 
           return BlocBuilder<LocaleGetBloc, ActionState<Locale>>(
-            builder: (final context, final localeState) {
+            builder: (context, localeState) {
               final locale = (localeState is ActionSuccess<Locale, void>)
                   ? localeState.data
                   : null;
@@ -184,7 +184,7 @@ class GameOClockApp extends StatelessWidget {
                 DateLocaleConfigGetBloc,
                 ActionState<DateLocaleConfig>
               >(
-                builder: (final context, final state) {
+                builder: (context, state) {
                   final dateConfig =
                       (state is ActionSuccess<DateLocaleConfig, void>)
                       ? state.data

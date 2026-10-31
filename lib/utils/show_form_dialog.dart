@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 Future<void> showReturningDialog<T>(
-  final BuildContext context, {
-  required final WidgetBuilder builder,
-  required final void Function(BuildContext context, T data) onSuccess,
-  final ValueChanged<BuildContext>? onFailure,
+  BuildContext context, {
+  required WidgetBuilder builder,
+  required void Function(BuildContext context, T data) onSuccess,
+  ValueChanged<BuildContext>? onFailure,
 }) async {
   return showDialog<T>(context: context, builder: builder).then<void>((
-    final T? result,
+    T? result,
   ) {
     if (result != null) {
       if (context.mounted) {

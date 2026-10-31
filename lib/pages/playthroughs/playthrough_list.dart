@@ -27,7 +27,7 @@ class PlaythroughListPage extends StatelessWidget {
   const PlaythroughListPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => PlaythroughSelectBloc()),
@@ -73,7 +73,7 @@ class _PlaythroughListDetailBuilder extends StatelessWidget {
   const _PlaythroughListDetailBuilder();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListCreateDetailBuilder<
       Playthrough,
       PlaythroughSelectBloc,
@@ -82,10 +82,10 @@ class _PlaythroughListDetailBuilder extends StatelessWidget {
       title: context.localize().playthroughsTitle,
       searchSpace: _space,
       availableStyles: [ListStyle.tile],
-      createFormBuilder: ([final quicksearch]) =>
+      createFormBuilder: ([quicksearch]) =>
           PlaythroughCreateForm(initialName: quicksearch),
-      idGetter: (final data) => data.id,
-      detailBuilder: (final context, final data, final onClosed) {
+      idGetter: (data) => data.id,
+      detailBuilder: (context, data, onClosed) {
         return MultiBlocProvider(
           // Recreate on selection change
           key: Key(data.id),
@@ -101,10 +101,10 @@ class _PlaythroughListDetailBuilder extends StatelessWidget {
             data: data,
             extended: false,
             onBackPressed: onClosed,
-            onEditSucceeded: (final context) {
+            onEditSucceeded: (context) {
               context.read<PlaythroughListBloc>().add(const ListReloaded());
             },
-            onDeleteSucceeded: (final context) {
+            onDeleteSucceeded: (context) {
               context.read<PlaythroughListBloc>().add(const ListReloaded());
               context.read<PlaythroughSelectBloc>().add(
                 const ActionStarted(data: null),
@@ -113,7 +113,7 @@ class _PlaythroughListDetailBuilder extends StatelessWidget {
           ),
         );
       },
-      listItemBuilder: (final context, final style, final data, final onTap) =>
+      listItemBuilder: (context, style, data, onTap) =>
           PlaythroughTileListItem(data: data, onTap: onTap),
       itemAspectRatio: 1, // Square aspect ratio
     );

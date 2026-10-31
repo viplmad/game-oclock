@@ -10,17 +10,17 @@ class CustomMaterialLocalizationsDelegate
   CustomMaterialLocalizationsDelegate(this.delegate, this.dateConfig);
 
   @override
-  Future<MaterialLocalizations> load(final Locale locale) async {
+  Future<MaterialLocalizations> load(Locale locale) async {
     return SynchronousFuture<MaterialLocalizations>(
       _CustomMaterialLocalizations(await delegate.load(locale), dateConfig),
     );
   }
 
   @override
-  bool isSupported(final Locale locale) => delegate.isSupported(locale);
+  bool isSupported(Locale locale) => delegate.isSupported(locale);
 
   @override
-  bool shouldReload(final CustomMaterialLocalizationsDelegate old) =>
+  bool shouldReload(CustomMaterialLocalizationsDelegate old) =>
       old.dateConfig != dateConfig;
 
   @override
@@ -45,7 +45,7 @@ class _CustomMaterialLocalizations extends _DelegateMaterialLocalizations {
   //String get dateSeparator => super.dateSeparator;
 
   @override
-  String formatCompactDate(final DateTime date) => dateConfig.dateFormat != null
+  String formatCompactDate(DateTime date) => dateConfig.dateFormat != null
       ? dateConfig.dateFormat!.format(date)
       : super.formatCompactDate(date);
 
@@ -57,8 +57,8 @@ class _CustomMaterialLocalizations extends _DelegateMaterialLocalizations {
 
   @override
   String formatTimeOfDay(
-    final TimeOfDay timeOfDay, {
-    final bool alwaysUse24HourFormat = false,
+    TimeOfDay timeOfDay, {
+    bool alwaysUse24HourFormat = false,
   }) => dateConfig.timeFormat != null
       ? dateConfig.timeFormat!.format(
           DateTime(2020, 1, 1, timeOfDay.hour, timeOfDay.minute),
@@ -496,78 +496,73 @@ abstract class _DelegateMaterialLocalizations extends MaterialLocalizations {
   String get viewLicensesButtonLabel => _delegate.viewLicensesButtonLabel;
 
   @override
-  String aboutListTileTitle(final String applicationName) =>
+  String aboutListTileTitle(String applicationName) =>
       _delegate.aboutListTileTitle(applicationName);
 
   @override
-  String dateRangeEndDateSemanticLabel(final String formattedDate) =>
+  String dateRangeEndDateSemanticLabel(String formattedDate) =>
       _delegate.dateRangeEndDateSemanticLabel(formattedDate);
 
   @override
-  String dateRangeStartDateSemanticLabel(final String formattedDate) =>
+  String dateRangeStartDateSemanticLabel(String formattedDate) =>
       _delegate.dateRangeStartDateSemanticLabel(formattedDate);
 
   @override
-  String formatDecimal(final int number) => _delegate.formatDecimal(number);
+  String formatDecimal(int number) => _delegate.formatDecimal(number);
 
   @override
-  String formatCompactDate(final DateTime date) =>
-      _delegate.formatCompactDate(date);
+  String formatCompactDate(DateTime date) => _delegate.formatCompactDate(date);
 
   @override
-  String formatFullDate(final DateTime date) => _delegate.formatFullDate(date);
+  String formatFullDate(DateTime date) => _delegate.formatFullDate(date);
 
   @override
   String formatHour(
-    final TimeOfDay timeOfDay, {
-    final bool alwaysUse24HourFormat = false,
+    TimeOfDay timeOfDay, {
+    bool alwaysUse24HourFormat = false,
   }) => _delegate.formatHour(
     timeOfDay,
     alwaysUse24HourFormat: alwaysUse24HourFormat,
   );
 
   @override
-  String formatMediumDate(final DateTime date) =>
-      _delegate.formatMediumDate(date);
+  String formatMediumDate(DateTime date) => _delegate.formatMediumDate(date);
 
   @override
-  String formatMinute(final TimeOfDay timeOfDay) =>
-      _delegate.formatMinute(timeOfDay);
+  String formatMinute(TimeOfDay timeOfDay) => _delegate.formatMinute(timeOfDay);
 
   @override
-  String formatMonthYear(final DateTime date) =>
-      _delegate.formatMonthYear(date);
+  String formatMonthYear(DateTime date) => _delegate.formatMonthYear(date);
 
   @override
-  String formatShortDate(final DateTime date) =>
-      _delegate.formatShortDate(date);
+  String formatShortDate(DateTime date) => _delegate.formatShortDate(date);
 
   @override
-  String formatShortMonthDay(final DateTime date) =>
+  String formatShortMonthDay(DateTime date) =>
       _delegate.formatShortMonthDay(date);
 
   @override
   String formatTimeOfDay(
-    final TimeOfDay timeOfDay, {
-    final bool alwaysUse24HourFormat = false,
+    TimeOfDay timeOfDay, {
+    bool alwaysUse24HourFormat = false,
   }) => _delegate.formatTimeOfDay(
     timeOfDay,
     alwaysUse24HourFormat: alwaysUse24HourFormat,
   );
 
   @override
-  String formatYear(final DateTime date) => _delegate.formatYear(date);
+  String formatYear(DateTime date) => _delegate.formatYear(date);
 
   @override
-  String licensesPackageDetailText(final int licenseCount) =>
+  String licensesPackageDetailText(int licenseCount) =>
       _delegate.licensesPackageDetailText(licenseCount);
 
   @override
   String pageRowsInfoTitle(
-    final int firstRow,
-    final int lastRow,
-    final int rowCount,
-    final bool rowCountIsApproximate,
+    int firstRow,
+    int lastRow,
+    int rowCount,
+    bool rowCountIsApproximate,
   ) => _delegate.pageRowsInfoTitle(
     firstRow,
     lastRow,
@@ -576,26 +571,26 @@ abstract class _DelegateMaterialLocalizations extends MaterialLocalizations {
   );
 
   @override
-  DateTime? parseCompactDate(final String? inputString) =>
+  DateTime? parseCompactDate(String? inputString) =>
       _delegate.parseCompactDate(inputString);
 
   @override
-  String remainingTextFieldCharacterCount(final int remaining) =>
+  String remainingTextFieldCharacterCount(int remaining) =>
       _delegate.remainingTextFieldCharacterCount(remaining);
 
   @override
-  String scrimOnTapHint(final String modalRouteContentName) =>
+  String scrimOnTapHint(String modalRouteContentName) =>
       _delegate.scrimOnTapHint(modalRouteContentName);
 
   @override
-  String selectedRowCountTitle(final int selectedRowCount) =>
+  String selectedRowCountTitle(int selectedRowCount) =>
       _delegate.selectedRowCountTitle(selectedRowCount);
 
   @override
-  String tabLabel({required final int tabIndex, required final int tabCount}) =>
+  String tabLabel({required int tabIndex, required int tabCount}) =>
       _delegate.tabLabel(tabIndex: tabIndex, tabCount: tabCount);
 
   @override
-  TimeOfDayFormat timeOfDayFormat({final bool alwaysUse24HourFormat = false}) =>
+  TimeOfDayFormat timeOfDayFormat({bool alwaysUse24HourFormat = false}) =>
       _delegate.timeOfDayFormat(alwaysUse24HourFormat: alwaysUse24HourFormat);
 }

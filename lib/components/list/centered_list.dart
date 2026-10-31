@@ -31,7 +31,7 @@ class SliverGridDelegateWithFixedCrossAxisCountAndCenteredLast
   }
 
   @override
-  SliverGridLayout getLayout(final SliverConstraints constraints) {
+  SliverGridLayout getLayout(SliverConstraints constraints) {
     assert(_debugAssertIsValid());
     final double usableCrossAxisExtent = math.max(
       0.0,
@@ -54,7 +54,7 @@ class SliverGridDelegateWithFixedCrossAxisCountAndCenteredLast
 
   @override
   bool shouldRelayout(
-    final SliverGridDelegateWithFixedCrossAxisCountAndCenteredLast oldDelegate,
+    SliverGridDelegateWithFixedCrossAxisCountAndCenteredLast oldDelegate,
   ) {
     return oldDelegate.itemCount != itemCount ||
         super.shouldRelayout(oldDelegate);
@@ -81,7 +81,7 @@ class SliverGridCustomGeometryTileLayout extends SliverGridRegularTileLayout {
   final int itemCount;
 
   @override
-  SliverGridGeometry getGeometryForChildIndex(final int index) {
+  SliverGridGeometry getGeometryForChildIndex(int index) {
     double crossAxisOffset;
     final double initialCrossAxisStart =
         (index % crossAxisCount) * crossAxisStride;
@@ -109,7 +109,7 @@ class SliverGridCustomGeometryTileLayout extends SliverGridRegularTileLayout {
     );
   }
 
-  double _getOffsetFromStartInCrossAxis(final double crossAxisStart) {
+  double _getOffsetFromStartInCrossAxis(double crossAxisStart) {
     if (reverseCrossAxis) {
       return crossAxisCount * crossAxisStride -
           crossAxisStart -

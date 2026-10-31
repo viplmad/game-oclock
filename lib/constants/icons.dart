@@ -56,7 +56,7 @@ class CommonIcons {
   static const startDate = first;
   static const endDate = last;
   static const time = session;
-  static Icon colorStar(final Color? color) => Icon(Icons.star, color: color);
+  static Icon colorStar(Color? color) => Icon(Icons.star, color: color);
 
   static const games = Icon(Icons.videogame_asset);
   static const wishlists = Icon(Icons.shopping_bag);

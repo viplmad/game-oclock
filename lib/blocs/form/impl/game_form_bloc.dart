@@ -9,7 +9,7 @@ class UserGameExternalFormBloc
   UserGameExternalFormBloc({required super.data});
 
   @override
-  NewMediaDTO fromFormData(final UserGameExternalFormData data) {
+  NewMediaDTO fromFormData(UserGameExternalFormData data) {
     return NewMediaDTO(
       media: NewMediaValue(
         source_: data.extenalSource.value!,
@@ -24,10 +24,7 @@ class UserGameExternalFormBloc
   }
 
   @override
-  void setFormValue(
-    final UserGameExternalFormData data,
-    final MediaDTO? value,
-  ) {
+  void setFormValue(UserGameExternalFormData data, MediaDTO? value) {
     data.status.value = value?.state.status.toJson();
     data.rating.value = value?.state.rating;
     data.notes.value = value?.state.notes;
@@ -39,7 +36,7 @@ class UserGameFormBloc
   UserGameFormBloc({required super.data});
 
   @override
-  NewMediaDTO fromFormData(final UserGameFormData data) {
+  NewMediaDTO fromFormData(UserGameFormData data) {
     return NewMediaDTO(
       media: NewMediaValue(
         title: data.title.value!,
@@ -58,7 +55,7 @@ class UserGameFormBloc
   }
 
   @override
-  void setFormValue(final UserGameFormData data, final MediaDTO? value) {
+  void setFormValue(UserGameFormData data, MediaDTO? value) {
     data.title.value = value?.media.title;
     data.edition.value = value?.media.edition;
     data.releaseDate.value = value?.media.releaseDate;

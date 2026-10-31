@@ -16,7 +16,7 @@ class UserChangePasswordForm extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -56,9 +56,9 @@ class UserChangePasswordForm extends StatelessWidget {
 }
 
 Widget _fieldsCreateBuilder(
-  final BuildContext context,
-  final UserChangePasswordFormData formGroup,
-  final bool readOnly,
+  BuildContext context,
+  UserChangePasswordFormData formGroup,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[

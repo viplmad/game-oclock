@@ -19,7 +19,7 @@ class SavedLoginResponse {
     return json;
   }
 
-  static SavedLoginResponse fromJson(final dynamic value) {
+  static SavedLoginResponse fromJson(dynamic value) {
     final json = value.cast<String, dynamic>();
 
     return SavedLoginResponse(

@@ -11,8 +11,8 @@ class GamePlaythroughCreateBloc
 
   @override
   Future<(String, String)> doAction(
-    final GamePlaythrough event,
-    final (String, String)? lastData,
+    GamePlaythrough event,
+    (String, String)? lastData,
   ) => service
       .addPlaythrough(event.gameId, event.playthroughId)
       .then((_) => (event.gameId, event.playthroughId));

@@ -10,7 +10,7 @@ class LabelSkeleton extends StatelessWidget {
   final String? label;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListTile(
       leading: icon,
       title: label == null

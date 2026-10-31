@@ -5,7 +5,7 @@ class ProgressButtonIcon extends StatelessWidget {
   const ProgressButtonIcon({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Container(
       width: kIconSize,
       height: kIconSize,

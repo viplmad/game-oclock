@@ -24,7 +24,7 @@ class ExternalGameDetail extends StatelessWidget {
   final ValueChanged<BuildContext> onAddSucceeded;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Detail(
       title: Text(data.media.title),
       image: data.media.imageUrl == null
@@ -39,12 +39,12 @@ class ExternalGameDetail extends StatelessWidget {
         if (data.state == null)
           ActionDestination(
             icon: CommonIcons.add,
-            labelBuilder: (final context) => context.localize().addLabel,
-            onTap: (final context) => showReturningDialog(
+            labelBuilder: (context) => context.localize().addLabel,
+            onTap: (context) => showReturningDialog(
               context,
-              builder: (final context) =>
+              builder: (context) =>
                   UserGameExternalCreateForm(externalId: data.external_),
-              onSuccess: (final context, _) => onAddSucceeded(context),
+              onSuccess: (context, _) => onAddSucceeded(context),
             ),
           ),
       ],
@@ -52,7 +52,7 @@ class ExternalGameDetail extends StatelessWidget {
     );
   }
 
-  Widget _info(final BuildContext context) {
+  Widget _info(BuildContext context) {
     return SingleChildScrollView(
       child: LabelsContainer(
         children: [

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-bool isThemeDark(final BuildContext context) {
+bool isThemeDark(BuildContext context) {
   return isDark(Theme.of(context).brightness);
 }
 
-bool isDark(final Brightness brightness) {
+bool isDark(Brightness brightness) {
   return brightness == Brightness.dark;
 }

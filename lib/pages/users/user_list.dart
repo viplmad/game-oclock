@@ -27,7 +27,7 @@ class UserListPage extends StatelessWidget {
   const UserListPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => UserSelectBloc()),
@@ -72,30 +72,30 @@ class _UserListDetailBuilder extends StatelessWidget {
   const _UserListDetailBuilder();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListCreateDetailBuilder<UserDTO, UserSelectBloc, UserListBloc>(
       title: context.localize().usersTitle,
       searchSpace: _space,
       availableStyles: [ListStyle.tile],
-      createFormBuilder: ([final quicksearch]) =>
+      createFormBuilder: ([quicksearch]) =>
           UserCreateForm(initialName: quicksearch),
-      idGetter: (final data) => data.id,
-      detailBuilder: (final context, final data, final onClosed) {
+      idGetter: (data) => data.id,
+      detailBuilder: (context, data, onClosed) {
         return UserDetail(
           key: Key(data.id),
           data: data,
           extended: false,
           onBackPressed: onClosed,
-          onEditSucceeded: (final context) {
+          onEditSucceeded: (context) {
             context.read<UserListBloc>().add(const ListReloaded());
           },
-          onDeleteSucceeded: (final context) {
+          onDeleteSucceeded: (context) {
             context.read<UserListBloc>().add(const ListReloaded());
             context.read<UserSelectBloc>().add(const ActionStarted(data: null));
           },
         );
       },
-      listItemBuilder: (final context, final style, final data, final onTap) =>
+      listItemBuilder: (context, style, data, onTap) =>
           UserTileListItem(data: data, onTap: onTap),
       itemAspectRatio: 1, // Square aspect ratio
     );

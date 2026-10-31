@@ -16,7 +16,7 @@ class TagCreateForm extends StatelessWidget {
   final String? initialName;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -55,7 +55,7 @@ class TagEditForm extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -94,9 +94,9 @@ class TagEditForm extends StatelessWidget {
 }
 
 Widget _fieldsBuilder(
-  final BuildContext context,
-  final TagFormData formGroup,
-  final bool readOnly,
+  BuildContext context,
+  TagFormData formGroup,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[

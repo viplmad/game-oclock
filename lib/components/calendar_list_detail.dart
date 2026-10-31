@@ -64,13 +64,13 @@ class CalendarListDetailBuilder<
   listItemBuilder;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
 
     return MultiBlocListener(
       listeners: [
         BlocListener<LSB, ActionState<L?>>(
-          listener: (final context, final lastState) {
+          listener: (context, lastState) {
             if (lastState is ActionFinal<L?, void>) {
               final last = (lastState is ActionSuccess<L?, void>)
                   ? lastState.data
@@ -89,7 +89,7 @@ class CalendarListDetailBuilder<
           },
         ),
         BlocListener<CalendarDaySelectBloc, ActionState<DateTime>>(
-          listener: (final context, final selectDayState) {
+          listener: (context, selectDayState) {
             if (selectDayState is ActionSuccess<DateTime, DateTime>) {
               final DateTime selectedDay = selectDayState.data;
 
@@ -127,7 +127,7 @@ class CalendarListDetailBuilder<
           },
         ),
         BlocListener<CalendarDayFocusBloc, ActionState<DateTime>>(
-          listener: (final context, final focusDayState) {
+          listener: (context, focusDayState) {
             if (focusDayState is ActionSuccess<DateTime, DateTime>) {
               final DateTime focusedDay = focusDayState.data;
 
@@ -137,21 +137,21 @@ class CalendarListDetailBuilder<
         ),
       ],
       child: BlocBuilder<CalendarDaySelectBloc, ActionState<DateTime>>(
-        builder: (final context, final selectDayState) {
+        builder: (context, selectDayState) {
           final DateTime selectedDay =
               (selectDayState is ActionSuccess<DateTime, DateTime>)
               ? selectDayState.data
               : DateTime.now();
 
           return BlocBuilder<CalendarDayFocusBloc, ActionState<DateTime>>(
-            builder: (final context, final focusDayState) {
+            builder: (context, focusDayState) {
               final DateTime focusedDay =
                   (focusDayState is ActionSuccess<DateTime, DateTime>)
                   ? focusDayState.data
                   : DateTime.now();
 
               return BlocBuilder<SB, ActionState<T?>>(
-                builder: (final context, final selectState) {
+                builder: (context, selectState) {
                   final selectedData = (selectState is ActionSuccess<T?, T?>)
                       ? selectState.data
                       : null;
@@ -244,10 +244,7 @@ class CalendarListDetailBuilder<
     );
   }
 
-  List<Widget> _appBarBuilder(
-    final BuildContext context,
-    final bool innerBoxIsScrolled,
-  ) {
+  List<Widget> _appBarBuilder(BuildContext context, bool innerBoxIsScrolled) {
     return <Widget>[
       SimpleSliverAppBar(
         title: Text(title),
@@ -265,7 +262,7 @@ class CalendarListDetailBuilder<
               return await showYearPicker(
                 context,
                 year: focusedDay.year,
-                onSuccess: (final context, final data) {
+                onSuccess: (context, data) {
                   context.read<CalendarDayFocusBloc>().add(
                     ActionStarted(
                       data: DateTime(data, focusedDay.month, focusedDay.day),
@@ -286,9 +283,9 @@ class CalendarListDetailBuilder<
   }
 
   List<Widget> _appBarListBuilder(
-    final BuildContext context,
-    final bool innerBoxIsScrolled,
-    final DateTime selectedDay,
+    BuildContext context,
+    bool innerBoxIsScrolled,
+    DateTime selectedDay,
   ) {
     return <Widget>[
       SimpleSliverAppBar(
@@ -307,25 +304,22 @@ class CalendarListDetailBuilder<
     ];
   }
 
-  Widget _calendarHeader(
-    final BuildContext context, {
-    required final DateTime focusedDay,
-  }) {
+  Widget _calendarHeader(BuildContext context, {required DateTime focusedDay}) {
     return LogCalendarHeader(
       firstDay: firstDay,
       lastDay: lastDay,
       focusedDay: focusedDay,
-      onPageChanged: (final value) => onCalendarPageChanged(context, value),
+      onPageChanged: (value) => onCalendarPageChanged(context, value),
     );
   }
 
   Widget _calendar(
-    final BuildContext context, {
-    required final DateTime selectedDay,
-    required final DateTime focusedDay,
+    BuildContext context, {
+    required DateTime selectedDay,
+    required DateTime focusedDay,
   }) {
     return BlocBuilder<CB, ActionState<Set<DateTime>>>(
-      builder: (final context, final state) {
+      builder: (context, state) {
         final logs = (state is ActionSuccess<Set<DateTime>, DateTime>)
             ? state.data
             : <DateTime>{}; // TODO build based on state
@@ -336,23 +330,23 @@ class CalendarListDetailBuilder<
           lastDay: lastDay,
           focusedDay: focusedDay,
           selectedDay: selectedDay,
-          onDaySelected: (final value) => context
-              .read<CalendarDaySelectBloc>()
-              .add(ActionStarted(data: value)),
-          onPageChanged: (final value) => onCalendarPageChanged(context, value),
+          onDaySelected: (value) => context.read<CalendarDaySelectBloc>().add(
+            ActionStarted(data: value),
+          ),
+          onPageChanged: (value) => onCalendarPageChanged(context, value),
         );
       },
     );
   }
 
-  void onCalendarPageChanged(final BuildContext context, final DateTime date) {
+  void onCalendarPageChanged(BuildContext context, DateTime date) {
     context.read<CalendarDayFocusBloc>().add(ActionStarted(data: date));
   }
 
   Widget _detail(
-    final BuildContext context, {
-    required final T selectedData,
-    required final SB selectBloc,
+    BuildContext context, {
+    required T selectedData,
+    required SB selectBloc,
   }) {
     return detailBuilder(
       context,
@@ -362,12 +356,12 @@ class CalendarListDetailBuilder<
   }
 
   Widget _list(
-    final BuildContext context, {
-    required final DateTime selectedDay,
-    required final T? selectedData,
+    BuildContext context, {
+    required DateTime selectedDay,
+    required T? selectedData,
   }) {
     return NestedScrollView(
-      headerSliverBuilder: (final context, final innerBoxIsScrolled) =>
+      headerSliverBuilder: (context, innerBoxIsScrolled) =>
           _appBarListBuilder(context, innerBoxIsScrolled, selectedDay),
       body: Stack(
         alignment: Alignment.bottomRight,
@@ -377,18 +371,17 @@ class CalendarListDetailBuilder<
               Expanded(
                 child: TileListBuilder<T, LB>(
                   borderRadius: BorderRadius.zero,
-                  itemBuilder: (final context, final data, final index) =>
-                      listItemBuilder(
-                        context,
-                        data,
-                        selectedDay,
-                        () => _selectOrUnselectIfSame(
-                          context,
-                          selectBloc: context.read<SB>(),
-                          data: data,
-                          selectedData: selectedData,
-                        ),
-                      ),
+                  itemBuilder: (context, data, index) => listItemBuilder(
+                    context,
+                    data,
+                    selectedDay,
+                    () => _selectOrUnselectIfSame(
+                      context,
+                      selectBloc: context.read<SB>(),
+                      data: data,
+                      selectedData: selectedData,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -403,10 +396,10 @@ class CalendarListDetailBuilder<
   }
 
   void _selectOrUnselectIfSame(
-    final BuildContext context, {
-    required final SB selectBloc,
-    required final T? data,
-    required final T? selectedData,
+    BuildContext context, {
+    required SB selectBloc,
+    required T? data,
+    required T? selectedData,
   }) {
     _select(
       context,
@@ -418,9 +411,9 @@ class CalendarListDetailBuilder<
   }
 
   void _select(
-    final BuildContext context, {
-    required final SB selectBloc,
-    required final T? data,
+    BuildContext context, {
+    required SB selectBloc,
+    required T? data,
   }) {
     selectBloc.add(ActionStarted(data: data));
   }

@@ -39,21 +39,18 @@ class CreateFormBuilder<
   });
 
   @override
-  Widget buildForm(
-    final BuildContext context, {
-    required final bool fullscreen,
-  }) {
+  Widget buildForm(BuildContext context, {required bool fullscreen}) {
     return MultiBlocListener(
       listeners: [
         BlocListener<FB, FormState2<D, N>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is FormStateSubmitSuccess<D, N>) {
               context.read<CB>().add(ActionStarted(data: state.value));
             }
           },
         ),
         BlocListener<CB, ActionState<K>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionSuccess<K, N>) {
               showSnackBar(
                 context,
@@ -72,9 +69,9 @@ class CreateFormBuilder<
         ),
       ],
       child: BlocBuilder<FB, FormState2<D, N>>(
-        builder: (final context, final formState) {
+        builder: (context, formState) {
           return BlocBuilder<CB, ActionState<K>>(
-            builder: (final context, final createState) {
+            builder: (context, createState) {
               final inProgress =
                   formState is FormStateSubmitInProgress ||
                   createState is ActionInProgress;
@@ -114,21 +111,18 @@ class EditFormBuilder<
   });
 
   @override
-  Widget buildForm(
-    final BuildContext context, {
-    required final bool fullscreen,
-  }) {
+  Widget buildForm(BuildContext context, {required bool fullscreen}) {
     return MultiBlocListener(
       listeners: [
         BlocListener<FB, FormState2<D, N>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is FormStateSubmitSuccess<D, N>) {
               context.read<UB>().add(ActionStarted(data: state.value));
             }
           },
         ),
         BlocListener<UB, ActionState<void>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionSuccess<void, N>) {
               showSnackBar(
                 context,
@@ -146,7 +140,7 @@ class EditFormBuilder<
           },
         ),
         BlocListener<GB, ActionState<T>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionSuccess<T, String>) {
               final T? data = state.data;
               if (data != null) {
@@ -157,11 +151,11 @@ class EditFormBuilder<
         ),
       ],
       child: BlocBuilder<FB, FormState2<D, N>>(
-        builder: (final context, final formState) {
+        builder: (context, formState) {
           return BlocBuilder<GB, ActionState<T>>(
-            builder: (final context, final getState) {
+            builder: (context, getState) {
               return BlocBuilder<UB, ActionState<void>>(
-                builder: (final context, final createState) {
+                builder: (context, createState) {
                   final inProgress =
                       getState is ActionInProgress ||
                       formState is FormStateSubmitInProgress ||
@@ -206,7 +200,7 @@ abstract class _FormBuilder<T, D extends FormData<T>> extends StatelessWidget {
   fieldsBuilder;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
     final fullscreen = layoutTier == LayoutTier.compact;
 
@@ -221,10 +215,7 @@ abstract class _FormBuilder<T, D extends FormData<T>> extends StatelessWidget {
           );
   }
 
-  Widget buildForm(
-    final BuildContext context, {
-    required final bool fullscreen,
-  });
+  Widget buildForm(BuildContext context, {required bool fullscreen});
 }
 
 /// https://m3.material.io/components/dialogs/guidelines#9d723c7a-03d1-4e7c-95af-a20ed4b66533
@@ -245,7 +236,7 @@ class FullForm extends StatelessWidget {
   final VoidCallback? onSubmit;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final inProgress = onSubmit == null;
     final saveButton = TextButton.icon(
       icon: inProgress ? const ProgressButtonIcon() : null,
@@ -256,23 +247,22 @@ class FullForm extends StatelessWidget {
     final form = ReactiveForm(
       formGroup: formGroup,
       // Can pop only if it is pristine (not dirty)
-      canPop: (final formGroup) => formGroup.pristine,
-      onPopInvokedWithResult:
-          (final formGroup, final didPop, final result) async {
-            if (didPop) {
-              return;
-            }
-            if (inProgress) {
-              return;
-            }
+      canPop: (formGroup) => formGroup.pristine,
+      onPopInvokedWithResult: (formGroup, didPop, result) async {
+        if (didPop) {
+          return;
+        }
+        if (inProgress) {
+          return;
+        }
 
-            final bool shouldPop = formGroup.pristine
-                ? true
-                : await _showLeaveConfirmationDialog(context) ?? false;
-            if (shouldPop && context.mounted) {
-              Navigator.pop(context);
-            }
-          },
+        final bool shouldPop = formGroup.pristine
+            ? true
+            : await _showLeaveConfirmationDialog(context) ?? false;
+        if (shouldPop && context.mounted) {
+          Navigator.pop(context);
+        }
+      },
       child: child,
     );
 
@@ -347,10 +337,10 @@ class FullForm extends StatelessWidget {
           );
   }
 
-  Future<bool?> _showLeaveConfirmationDialog(final BuildContext context) {
+  Future<bool?> _showLeaveConfirmationDialog(BuildContext context) {
     return showDialog<bool>(
       context: context,
-      builder: (final context) {
+      builder: (context) {
         return AlertDialog(
           title: Text(context.localize().leaveDirtyFormConfirmationDialogTitle),
           content: Text(

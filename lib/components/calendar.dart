@@ -19,7 +19,7 @@ class LogCalendarHeader extends StatelessWidget {
   final ValueChanged<DateTime> onPageChanged;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListTile(
       leading: Row(
         mainAxisSize: MainAxisSize.min,
@@ -92,7 +92,7 @@ class LogCalendar extends StatelessWidget {
   static Color finishedColour = CommonColors.finished;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     final Color headerColor = colorScheme.onSurface.withValues(alpha: 0.60);
@@ -103,14 +103,14 @@ class LogCalendar extends StatelessWidget {
       firstDay: firstDay,
       lastDay: lastDay,
       focusedDay: focusedDay,
-      selectedDayPredicate: (final DateTime day) {
+      selectedDayPredicate: (DateTime day) {
         return day.isSameDay(selectedDay);
       },
-      onDaySelected: (final DateTime newSelectedDay, _) =>
+      onDaySelected: (DateTime newSelectedDay, _) =>
           onDaySelected(newSelectedDay),
-      eventLoader: (final DateTime day) {
+      eventLoader: (DateTime day) {
         return logDays
-            .where((final DateTime logDay) => day.isSameDay(logDay))
+            .where((DateTime logDay) => day.isSameDay(logDay))
             .toList(growable: false);
       },
       /* TODO holidayPredicate: finishes != null
@@ -173,7 +173,7 @@ class LogCalendar extends StatelessWidget {
   }
 }
 
-StartingDayOfWeek _intToStartingDayOfWeek(final int dayOfWeek) {
+StartingDayOfWeek _intToStartingDayOfWeek(int dayOfWeek) {
   return switch (dayOfWeek) {
     1 => StartingDayOfWeek.monday,
     2 => StartingDayOfWeek.tuesday,

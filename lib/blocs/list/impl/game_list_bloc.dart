@@ -12,12 +12,12 @@ class UserGameListBloc extends ListLoadBloc<MediaDTO> {
 
   @override
   Future<PageResultDTO<MediaDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.search(search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) =>
       service.count(AggregateSearch(filter: search.filter), quicksearch);
 }
 
@@ -29,8 +29,8 @@ class GameChildrenListBloc extends ListLoadBloc<MediaDTO> {
 
   @override
   Future<PageResultDTO<MediaDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.search(
     search.copyWith(
       filter: List.unmodifiable(<FilterDTO>[
@@ -42,7 +42,7 @@ class GameChildrenListBloc extends ListLoadBloc<MediaDTO> {
   );
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) =>
       service.count(
         AggregateSearch(
           filter: List.unmodifiable(<FilterDTO>[
@@ -71,12 +71,12 @@ class UserGameAvailableListBloc extends ListLoadBloc<MediaAvailableDTO> {
 
   @override
   Future<PageResultDTO<MediaAvailableDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.searchAvailable(locationId, search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) =>
       service.countAvailable(
         locationId,
         AggregateSearch(filter: search.filter),
@@ -92,17 +92,13 @@ class UserGameWithTagListBloc extends ListLoadBloc<MediaTagDTO> {
 
   @override
   Future<PageResultDTO<MediaTagDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.searchWithTag(tagId, search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.countWithTag(
-        tagId,
-        AggregateSearch(filter: search.filter),
-        quicksearch,
-      );
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) => service
+      .countWithTag(tagId, AggregateSearch(filter: search.filter), quicksearch);
 }
 
 class UserGamePlayedOnDeviceListBloc extends ListLoadBloc<MediaDTO> {
@@ -116,12 +112,12 @@ class UserGamePlayedOnDeviceListBloc extends ListLoadBloc<MediaDTO> {
 
   @override
   Future<PageResultDTO<MediaDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.searchPlayedOnDevice(deviceId, search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) =>
       service.countPlayedOnDevice(
         deviceId,
         AggregateSearch(filter: search.filter),
@@ -140,11 +136,11 @@ class UserGameWithPlaythroughListBloc extends ListLoadBloc<MediaDTO> {
 
   @override
   Future<PageResultDTO<MediaDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.searchWithPlaythrough(playthroughId, search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) =>
       service.countWithPlaythrough(playthroughId, search, quicksearch);
 }

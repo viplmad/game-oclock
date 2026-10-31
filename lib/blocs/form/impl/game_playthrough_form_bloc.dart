@@ -9,7 +9,7 @@ class GamePlaythroughFormBloc
   GamePlaythroughFormBloc({required super.data});
 
   @override
-  GamePlaythrough fromFormData(final GamePlaythroughFormData data) {
+  GamePlaythrough fromFormData(GamePlaythroughFormData data) {
     return GamePlaythrough(
       gameId: data.gameId.value!,
       playthroughId: data.playthroughId.value!,
@@ -17,10 +17,7 @@ class GamePlaythroughFormBloc
   }
 
   @override
-  void setFormValue(
-    final GamePlaythroughFormData data,
-    final GamePlaythrough? value,
-  ) {
+  void setFormValue(GamePlaythroughFormData data, GamePlaythrough? value) {
     data.gameId.value = value?.gameId;
     data.playthroughId.value = value?.playthroughId;
   }

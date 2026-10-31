@@ -4,46 +4,40 @@ import 'package:game_oclock_client/api.dart';
 
 class PlaythroughService {
   Future<PageResultDTO<Playthrough>> search(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     throw UnsupportedError('');
   }
 
-  Future<int> count(
-    final ListSearchDTO search,
-    final String? quicksearch,
-  ) async {
+  Future<int> count(ListSearchDTO search, String? quicksearch) async {
     throw UnsupportedError('');
   }
 
   Future<PageResultDTO<Playthrough>> searchForGame(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     throw UnsupportedError('');
   }
 
-  Future<int> countForGame(
-    final ListSearchDTO search,
-    final String? quicksearch,
-  ) async {
+  Future<int> countForGame(ListSearchDTO search, String? quicksearch) async {
     throw UnsupportedError('');
   }
 
-  Future<Playthrough> get(final String id) async {
+  Future<Playthrough> get(String id) async {
     throw UnsupportedError('');
   }
 
-  Future<String> create(final NewPlaythrough playthrough) async {
+  Future<String> create(NewPlaythrough playthrough) async {
     throw UnsupportedError('');
   }
 
-  Future<void> update(final String id, final NewPlaythrough playthrough) async {
+  Future<void> update(String id, NewPlaythrough playthrough) async {
     throw UnsupportedError('');
   }
 
-  Future<void> delete(final String id) async {
+  Future<void> delete(String id) async {
     throw UnsupportedError('');
   }
 }

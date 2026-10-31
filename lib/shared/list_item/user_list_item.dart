@@ -12,7 +12,7 @@ class UserTileListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TileListItem(
       title: data.username,
       trailing: data.role == roleAdmin

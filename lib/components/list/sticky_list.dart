@@ -29,10 +29,10 @@ class StickyTopListBuilder<K, T extends Object, LB extends ListLoadBloc<T>>
 
   @override
   Widget listView({
-    required final List<T> items,
-    required final Widget Function(BuildContext context, T item, int index)
+    required List<T> items,
+    required Widget Function(BuildContext context, T item, int index)
     itemBuilder,
-    required final ScrollController controller,
+    required ScrollController controller,
   }) {
     return StickyTopHeaderList(
       items: groupTransformer(items),
@@ -44,7 +44,7 @@ class StickyTopListBuilder<K, T extends Object, LB extends ListLoadBloc<T>>
   }
 
   @override
-  Widget skeletonHeaderBuilder({final int order = 0}) {
+  Widget skeletonHeaderBuilder({int order = 0}) {
     return TileListSkeletonItem(order: order);
   }
 
@@ -52,7 +52,7 @@ class StickyTopListBuilder<K, T extends Object, LB extends ListLoadBloc<T>>
   Widget skeletonListView() {
     return StickyTopHeaderListSkeleton(
       headerBuilder: () => skeletonHeaderBuilder(),
-      itemBuilder: (final index) => skeletonItemBuilder(order: index),
+      itemBuilder: (index) => skeletonItemBuilder(order: index),
       borderRadius: borderRadius,
     );
   }
@@ -78,11 +78,11 @@ abstract class StickyListBuilder<
   final Map<K, List<T>> Function(List<T> items) groupTransformer;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ScrollController controller = this.controller ?? ScrollController();
 
     return BlocConsumer<LB, ListState<T>>(
-      listener: (final context, final state) {
+      listener: (context, state) {
         if (state is ListLoadFailure<T>) {
           showErrorSnackBar(
             context,
@@ -91,7 +91,7 @@ abstract class StickyListBuilder<
           );
         }
       },
-      builder: (final context, final state) {
+      builder: (context, state) {
         return Scrollbar(
           child: list(context, state: state, controller: controller),
         );
@@ -100,9 +100,9 @@ abstract class StickyListBuilder<
   }
 
   Widget list(
-    final BuildContext context, {
-    required final ListState<T> state,
-    required final ScrollController controller,
+    BuildContext context, {
+    required ListState<T> state,
+    required ScrollController controller,
   }) {
     List<T> items = [];
     if (state is ListLoadInProgress<T>) {
@@ -140,17 +140,17 @@ abstract class StickyListBuilder<
   }
 
   Widget listView({
-    required final List<T> items,
-    required final Widget Function(BuildContext context, T item, int index)
+    required List<T> items,
+    required Widget Function(BuildContext context, T item, int index)
     itemBuilder,
-    required final ScrollController controller,
+    required ScrollController controller,
   });
 
-  Widget skeletonItemBuilder({final int order = 0}) {
+  Widget skeletonItemBuilder({int order = 0}) {
     return TileListSkeletonItem(order: order);
   }
 
-  Widget skeletonHeaderBuilder({final int order = 0});
+  Widget skeletonHeaderBuilder({int order = 0});
   Widget skeletonListView();
 }
 
@@ -171,12 +171,12 @@ class StickyTopHeaderList<K, T> extends StatelessWidget {
   final ScrollController? controller;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return CustomScrollView(
       shrinkWrap: true,
       controller: controller,
       slivers: items.entries
-          .map((final entry) {
+          .map((entry) {
             return SliverTopGroup<T>(
               items: entry.value,
               header: headerBuilder(entry.key),
@@ -204,7 +204,7 @@ class SliverTopGroup<T> extends StatelessWidget {
   final BorderRadiusGeometry? borderRadius;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final count = items.length;
 
     return SliverMainAxisGroup(
@@ -215,7 +215,7 @@ class SliverTopGroup<T> extends StatelessWidget {
         ),
         SliverList.builder(
           itemCount: count,
-          itemBuilder: (final context, final index) {
+          itemBuilder: (context, index) {
             final T item = items.elementAt(index);
             final Widget itemWidget = itemBuilder(context, item, index);
 
@@ -239,9 +239,9 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-    final BuildContext context,
-    final double shrinkOffset,
-    final bool overlapsContent,
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
   ) {
     return child;
   }
@@ -253,7 +253,6 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
   double get minExtent => 40.0;
 
   @override
-  bool shouldRebuild(
-    covariant final SliverPersistentHeaderDelegate oldDelegate,
-  ) => false;
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
 }

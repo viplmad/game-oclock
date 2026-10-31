@@ -10,7 +10,7 @@ class NotEmptyValidator extends Validator<dynamic> {
   final BuildContext context;
 
   @override
-  Map<String, dynamic>? validate(final AbstractControl<dynamic> control) {
+  Map<String, dynamic>? validate(AbstractControl<dynamic> control) {
     final error = <String, dynamic>{
       context.localize().notEmptyValidationError: true,
     };

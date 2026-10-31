@@ -26,7 +26,7 @@ class MultiCalendarPage extends StatelessWidget {
   const MultiCalendarPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => CalendarDaySelectBloc()),
@@ -66,21 +66,19 @@ class MultiCalendarPage extends StatelessWidget {
             title: context.localize().calendarTitle,
             firstDay: DateTime(1970),
             lastDay: DateTime.now(),
-            endDateGetter: (final data) => data.endDatetime,
-            detailBuilder: (final context, final data, final onClosed) =>
-                SessionWithMediaDetail(
-                  // Recreate on selection change
-                  key: Key(data.session.startDatetime.toIso8601String()),
+            endDateGetter: (data) => data.endDatetime,
+            detailBuilder: (context, data, onClosed) => SessionWithMediaDetail(
+              // Recreate on selection change
+              key: Key(data.session.startDatetime.toIso8601String()),
+              data: data,
+              onBackPressed: onClosed,
+            ),
+            listItemBuilder: (context, data, selectedDay, onTap) =>
+                SessionWithMediaTileListItem(
                   data: data,
-                  onBackPressed: onClosed,
+                  selectedDay: selectedDay,
+                  onTap: onTap,
                 ),
-            listItemBuilder:
-                (final context, final data, final selectedDay, final onTap) =>
-                    SessionWithMediaTileListItem(
-                      data: data,
-                      selectedDay: selectedDay,
-                      onTap: onTap,
-                    ),
           ),
     );
   }
@@ -99,13 +97,13 @@ class SessionWithMediaDetail extends StatelessWidget {
   final List<Widget>? actions;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     _loadOnlyInitial<DeviceDTO, DeviceGetBloc>(context, data.session.deviceId);
 
     return _info(context);
   }
 
-  Widget _info(final BuildContext context) {
+  Widget _info(BuildContext context) {
     return Column(
       children: [
         AppBar(
@@ -159,17 +157,17 @@ class SessionWithMediaDetail extends StatelessWidget {
                 ),
               if (data.session.deviceId != null)
                 GetBuilder<DeviceDTO, DeviceGetBloc>(
-                  skeletonBuilder: (final context) => LabelSkeleton(
+                  skeletonBuilder: (context) => LabelSkeleton(
                     order: 0,
                     label: context.localize().deviceLabel,
                   ),
-                  errorBuilder: (final context, final onRetryTap) => Center(
+                  errorBuilder: (context, onRetryTap) => Center(
                     child: LabelError(
                       label: context.localize().errorDetailLoadTitle,
                       onRetryTap: onRetryTap,
                     ),
                   ),
-                  builder: (final context, final device) => TextLabel(
+                  builder: (context, device) => TextLabel(
                     icon: CommonIcons.devices,
                     label: context.localize().deviceLabel,
                     value: device.name,
@@ -183,8 +181,8 @@ class SessionWithMediaDetail extends StatelessWidget {
   }
 
   void _loadOnlyInitial<T, GB extends FunctionActionBloc<String, T>>(
-    final BuildContext context,
-    final String? id,
+    BuildContext context,
+    String? id,
   ) {
     if (id == null) {
       return;

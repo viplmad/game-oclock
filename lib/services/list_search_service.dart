@@ -15,20 +15,16 @@ class ListSearchService {
 
   final SharedPreferencesRepository repository;
 
-  Future<List<String>> _getIds(final String space) => repository
-      .get(_buildIdsKey(space), (final value) {
+  Future<List<String>> _getIds(String space) => repository
+      .get(_buildIdsKey(space), (value) {
         return (json.decode(value) as List).cast<String>();
       })
-      .then((final value) => List.unmodifiable(value));
+      .then((value) => List.unmodifiable(value));
 
-  Future<void> _setIds(final String space, final List<String> keys) =>
-      repository.set(
-        _buildIdsKey(space),
-        keys,
-        (final value) => json.encode(value),
-      );
+  Future<void> _setIds(String space, List<String> keys) =>
+      repository.set(_buildIdsKey(space), keys, (value) => json.encode(value));
 
-  Future<List<ListSearch>> getAll(final String space) async {
+  Future<List<ListSearch>> getAll(String space) async {
     final ids = await _getIds(space);
 
     final result = <ListSearch>[];
@@ -39,27 +35,27 @@ class ListSearchService {
     return result;
   }
 
-  Future<String> getCurrentKey(final String space) {
+  Future<String> getCurrentKey(String space) {
     return repository.getString(_buildCurrentKey(space));
   }
 
-  Future<void> saveCurrent(final String space, final ListSearch search) {
+  Future<void> saveCurrent(String space, ListSearch search) {
     final id = search.id;
     return repository.setString(_buildCurrentKey(space), id);
   }
 
-  Future<void> removeCurrent(final String space) {
+  Future<void> removeCurrent(String space) {
     return repository.remove(_buildCurrentKey(space));
   }
 
-  Future<ListSearch> get(final String space, final String id) {
+  Future<ListSearch> get(String space, String id) {
     return repository.get(
       _buildElementKey(space, id),
-      (final value) => ListSearch.fromJson(json.decode(value)),
+      (value) => ListSearch.fromJson(json.decode(value)),
     );
   }
 
-  Future<String> create(final String space, final ListSearch search) async {
+  Future<String> create(String space, ListSearch search) async {
     final id = 'user-${Random().nextInt(100)}';
     if (await exists(space, id)) {
       throw GameOClockException(
@@ -77,7 +73,7 @@ class ListSearchService {
     await repository.set(
       _buildElementKey(space, id),
       createdListSearch,
-      (final value) => json.encode(value.toJson()),
+      (value) => json.encode(value.toJson()),
     );
 
     final ids = await _getIds(space);
@@ -85,7 +81,7 @@ class ListSearchService {
     return id;
   }
 
-  Future<void> update(final String space, final ListSearch search) async {
+  Future<void> update(String space, ListSearch search) async {
     final id = search.id;
     if (!await exists(space, id)) {
       throw GameOClockException(
@@ -97,26 +93,26 @@ class ListSearchService {
     return repository.set(
       _buildElementKey(space, id),
       search,
-      (final value) => json.encode(value.toJson()),
+      (value) => json.encode(value.toJson()),
     );
   }
 
-  Future<void> delete(final String space, final String id) async {
+  Future<void> delete(String space, String id) async {
     await repository.remove(_buildElementKey(space, id));
 
     final ids = await _getIds(space);
     return _setIds(
       space,
-      ids.takeWhile((final el) => el != id).toList(growable: false),
+      ids.takeWhile((el) => el != id).toList(growable: false),
     );
   }
 
-  Future<bool> exists(final String space, final String id) async =>
+  Future<bool> exists(String space, String id) async =>
       repository.exists(_buildElementKey(space, id));
 
-  String _buildKey(final String space) => 'list-search#$space';
-  String _buildCurrentKey(final String space) => '${_buildKey(space)}#current';
-  String _buildIdsKey(final String space) => '${_buildKey(space)}#ids';
-  String _buildElementKey(final String space, final String id) =>
+  String _buildKey(String space) => 'list-search#$space';
+  String _buildCurrentKey(String space) => '${_buildKey(space)}#current';
+  String _buildIdsKey(String space) => '${_buildKey(space)}#ids';
+  String _buildElementKey(String space, String id) =>
       '${_buildKey(space)}#el-$id';
 }

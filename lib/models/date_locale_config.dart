@@ -27,7 +27,7 @@ final class DateLocaleConfig extends Equatable {
     return json;
   }
 
-  static DateLocaleConfig fromJson(final dynamic value) {
+  static DateLocaleConfig fromJson(dynamic value) {
     final json = value.cast<String, dynamic>();
 
     return DateLocaleConfig(
@@ -45,7 +45,7 @@ final class DateLocaleConfig extends Equatable {
   ];
 }
 
-DateFormat? dateFormatFromJson(final dynamic value) =>
+DateFormat? dateFormatFromJson(dynamic value) =>
     value != null ? DateFormat(value) : null;
 
-String dateFormatToJson(final DateFormat value) => value.pattern ?? '';
+String dateFormatToJson(DateFormat value) => value.pattern ?? '';

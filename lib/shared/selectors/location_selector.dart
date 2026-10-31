@@ -21,7 +21,7 @@ class LocationSelectorBuilder extends StatelessWidget {
   final bool readOnly;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SingleAutocompleteSelectorBuilder<
       LocationDTO,
       LocationGetBloc,
@@ -30,16 +30,15 @@ class LocationSelectorBuilder extends StatelessWidget {
       formControl: formControl,
       label: label,
       readOnly: readOnly,
-      itemBuilder: (final context, final item, final index, final onSelected) =>
+      itemBuilder: (context, item, index, onSelected) =>
           LocationTileListItem(data: item, onTap: onSelected),
-      keyGetter: (final item) => item.id,
-      displayString: (final item) => item.name,
-      onAddPressed: (final quicksearch, final onSelected) async =>
+      keyGetter: (item) => item.id,
+      displayString: (item) => item.name,
+      onAddPressed: (quicksearch, onSelected) async =>
           showReturningDialog<String>(
             context,
-            builder: (final context) =>
-                LocationCreateForm(initialName: quicksearch),
-            onSuccess: (final context, final data) => onSelected(data),
+            builder: (context) => LocationCreateForm(initialName: quicksearch),
+            onSuccess: (context, data) => onSelected(data),
           ),
     );
   }

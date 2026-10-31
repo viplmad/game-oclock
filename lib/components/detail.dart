@@ -37,14 +37,11 @@ class Detail extends StatelessWidget {
   final List<ActionDestination>? moreActions;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return NestedScrollView(headerSliverBuilder: _appBarBuilder, body: child);
   }
 
-  List<Widget> _appBarBuilder(
-    final BuildContext context,
-    final bool innerBoxIsScrolled,
-  ) {
+  List<Widget> _appBarBuilder(BuildContext context, bool innerBoxIsScrolled) {
     return <Widget>[
       SliverAppBar(
         expandedHeight:
@@ -75,7 +72,7 @@ class Detail extends StatelessWidget {
             : <Widget>[
                 if (actions != null && actions!.isNotEmpty)
                   ...actions!.map(
-                    (final e) => IconButton(
+                    (e) => IconButton(
                       icon: e.icon,
                       tooltip: e.labelBuilder(context),
                       onPressed: () => e.onTap(context),
@@ -100,18 +97,18 @@ class MorePopupMenu extends StatefulWidget {
 
 class _MorePopupMenuState extends State<MorePopupMenu> {
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MenuAnchor(
       menuChildren: widget.actions
           .map(
-            (final e) => MenuItemButton(
+            (e) => MenuItemButton(
               leadingIcon: e.icon,
               onPressed: () => e.onTap(context),
               child: Text(e.labelBuilder(context)),
             ),
           )
           .toList(growable: false),
-      builder: (_, final controller, _) {
+      builder: (_, controller, _) {
         return IconButton(
           icon: CommonIcons.menu,
           tooltip: context.localize().moreLabel,
@@ -149,7 +146,7 @@ class DetailWithTabs extends StatelessWidget {
   final List<TabDestination> tabs;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     mainTab.onTap(context);
     if (extended && tabs.isNotEmpty) {
       tabs.first.onTap(context);
@@ -183,19 +180,18 @@ class DetailWithTabs extends StatelessWidget {
   }
 
   Widget _tabs(
-    final BuildContext context, {
-    required final List<TabDestination> destinations,
+    BuildContext context, {
+    required List<TabDestination> destinations,
   }) {
     return DefaultTabController(
       length: destinations.length,
       child: Column(
         children: [
           TabBar(
-            onTap: (final index) =>
-                destinations.elementAt(index).onTap(context),
+            onTap: (index) => destinations.elementAt(index).onTap(context),
             tabs: destinations
                 .map(
-                  (final dest) =>
+                  (dest) =>
                       Tab(icon: dest.icon, text: dest.labelBuilder(context)),
                 )
                 .toList(growable: false),
@@ -203,7 +199,7 @@ class DetailWithTabs extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: destinations
-                  .map((final dest) => dest.child)
+                  .map((dest) => dest.child)
                   .toList(growable: false),
             ),
           ),
@@ -230,17 +226,16 @@ class DetailBuilder<T, GB extends FunctionActionBloc<String, T>>
   builder;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return GetBuilder<T, GB>(
       skeletonBuilder: (_) => DetailSkeleton(onBackPressed: onBackPressed),
-      errorBuilder: (final context, final onRetryTap) => Center(
+      errorBuilder: (context, onRetryTap) => Center(
         child: DetailError(
           title: context.localize().errorDetailLoadTitle,
           onRetryTap: onRetryTap,
         ),
       ),
-      builder: (final context, final data) =>
-          builder(context, data, onBackPressed),
+      builder: (context, data) => builder(context, data, onBackPressed),
     );
   }
 }
@@ -260,9 +255,9 @@ class GetBuilder<T, GB extends FunctionActionBloc<String, T>>
   final Widget Function(BuildContext context) skeletonBuilder;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return BlocConsumer<GB, ActionState<T>>(
-      listener: (final context, final state) {
+      listener: (context, state) {
         if (state is ActionFailure<T, String>) {
           showErrorSnackBar(
             context,
@@ -271,7 +266,7 @@ class GetBuilder<T, GB extends FunctionActionBloc<String, T>>
           );
         }
       },
-      builder: (final context, final state) {
+      builder: (context, state) {
         T data;
         if (state is ActionInProgress<T>) {
           if (state.data == null) {

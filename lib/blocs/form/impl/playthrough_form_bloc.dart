@@ -8,12 +8,12 @@ class PlaythroughFormBloc
   PlaythroughFormBloc({required super.data});
 
   @override
-  NewPlaythrough fromFormData(final PlaythroughFormData data) {
+  NewPlaythrough fromFormData(PlaythroughFormData data) {
     return NewPlaythrough(name: data.name.value!);
   }
 
   @override
-  void setFormValue(final PlaythroughFormData data, final Playthrough? value) {
+  void setFormValue(PlaythroughFormData data, Playthrough? value) {
     data.name.value = value?.name;
   }
 }

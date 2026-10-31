@@ -29,7 +29,7 @@ class UserDetailPage extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
 
     return MultiBlocProvider(
@@ -49,14 +49,14 @@ class UserDetailPage extends StatelessWidget {
       child: DetailBuilder<UserDTO, UserGetBloc>(
         onBackPressed: () =>
             goBack(context, defaultPath: CommonPaths.usersPath),
-        builder: (final context, final data, final onBackPressed) => UserDetail(
+        builder: (context, data, onBackPressed) => UserDetail(
           data: data,
           fromPage: true,
           extended: layoutTier != LayoutTier.compact,
           onBackPressed: onBackPressed,
-          onEditSucceeded: (final context) =>
+          onEditSucceeded: (context) =>
               context.read<UserGetBloc>().add(const ActionRestarted()),
-          onDeleteSucceeded: (final context) =>
+          onDeleteSucceeded: (context) =>
               goBack(context, defaultPath: CommonPaths.usersPath),
         ),
       ),
@@ -83,10 +83,10 @@ class UserDetail extends StatelessWidget {
   final ValueChanged<BuildContext> onDeleteSucceeded;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final mainTab = TabDestination(
       icon: CommonIcons.detail,
-      labelBuilder: (final context) => context.localize().detailLabel,
+      labelBuilder: (context) => context.localize().detailLabel,
       onTap: (_) {},
       child: _info(context),
     );
@@ -94,7 +94,7 @@ class UserDetail extends StatelessWidget {
     final List<TabDestination> tabs = const [];
 
     return BlocListener<UserDeleteBloc, ActionState<void>>(
-      listener: (final context, final state) {
+      listener: (context, state) {
         if (state is ActionSuccess<void, UserDTO>) {
           showSnackBar(
             context,
@@ -117,40 +117,39 @@ class UserDetail extends StatelessWidget {
           if (!fromPage)
             ActionDestination(
               icon: CommonIcons.view,
-              labelBuilder: (final context) => context.localize().viewLabel,
-              onTap: (final context) =>
+              labelBuilder: (context) => context.localize().viewLabel,
+              onTap: (context) =>
                   go(context, path: CommonPaths.buildUserPath(data.id)),
             ),
           ActionDestination(
             icon: CommonIcons.reload,
-            labelBuilder: (final context) => context.localize().reloadLabel,
-            onTap: (final context) => onEditSucceeded(context),
+            labelBuilder: (context) => context.localize().reloadLabel,
+            onTap: (context) => onEditSucceeded(context),
           ),
           ActionDestination(
             icon: CommonIcons.edit,
-            labelBuilder: (final context) => context.localize().editLabel,
-            onTap: (final context) async => showReturningDialog(
+            labelBuilder: (context) => context.localize().editLabel,
+            onTap: (context) async => showReturningDialog(
               context,
-              builder: (final context) => UserEditForm(id: data.id),
-              onSuccess: (final context, _) => onEditSucceeded(context),
+              builder: (context) => UserEditForm(id: data.id),
+              onSuccess: (context, _) => onEditSucceeded(context),
             ),
           ),
           ActionDestination(
             icon: CommonIcons.delete,
-            labelBuilder: (final context) => context.localize().deleteLabel,
-            onTap: (final context) async => showConfirmationDialog(
+            labelBuilder: (context) => context.localize().deleteLabel,
+            onTap: (context) async => showConfirmationDialog(
               context,
-              builder: (final context) => ConfirmationDialog(
+              builder: (context) => ConfirmationDialog(
                 title: context.localize().deleteDialogTitle,
                 subtitle: context.localize().deleteDialogSubtitle,
                 message: context.localize().deleteDialogDataTitle(
                   data.username,
                 ),
-                acceptLabel: MaterialLocalizations.of(
-                  context,
-                ).deleteButtonTooltip,
+                acceptLabel: MaterialLocalizations.of(context)
+                    .deleteButtonTooltip,
               ),
-              onSuccess: (final context) {
+              onSuccess: (context) {
                 context.read<UserDeleteBloc>().add(ActionStarted(data: data));
               },
             ),
@@ -163,7 +162,7 @@ class UserDetail extends StatelessWidget {
     );
   }
 
-  Widget _info(final BuildContext context) {
+  Widget _info(BuildContext context) {
     return SingleChildScrollView(
       child: LabelsContainer(
         children: [

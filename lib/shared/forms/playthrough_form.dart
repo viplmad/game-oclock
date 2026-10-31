@@ -21,7 +21,7 @@ class PlaythroughCreateForm extends StatelessWidget {
   final String? initialName;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -61,7 +61,7 @@ class PlaythroughEditForm extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -102,9 +102,9 @@ class PlaythroughEditForm extends StatelessWidget {
 }
 
 Widget _fieldsBuilder(
-  final BuildContext context,
-  final PlaythroughFormData formGroup,
-  final bool readOnly,
+  BuildContext context,
+  PlaythroughFormData formGroup,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[

@@ -5,17 +5,15 @@ import '../action.dart'
     show ConsumerActionBloc, FunctionActionBloc, IdentityActionBloc;
 
 class DeviceGetBloc extends FunctionActionBloc<String, DeviceDTO> {
-  DeviceGetBloc({required this.service, final bool cache = false})
+  DeviceGetBloc({required this.service, bool cache = false})
     : cache = cache ? <String, DeviceDTO>{} : null;
 
   final DeviceService service;
   final Map<String, DeviceDTO>? cache;
 
   @override
-  Future<DeviceDTO> doAction(
-    final String event,
-    final DeviceDTO? lastData,
-  ) async => cache?[event] ?? service.get(event);
+  Future<DeviceDTO> doAction(String event, DeviceDTO? lastData) async =>
+      cache?[event] ?? service.get(event);
 }
 
 class DeviceCreateBloc extends FunctionActionBloc<NewDeviceDTO, String> {
@@ -24,7 +22,7 @@ class DeviceCreateBloc extends FunctionActionBloc<NewDeviceDTO, String> {
   final DeviceService service;
 
   @override
-  Future<String> doAction(final NewDeviceDTO event, final String? lastData) =>
+  Future<String> doAction(NewDeviceDTO event, String? lastData) =>
       service.create(event);
 }
 
@@ -35,7 +33,7 @@ class DeviceUpdateBloc extends ConsumerActionBloc<NewDeviceDTO> {
   final String id;
 
   @override
-  Future<void> doAction(final NewDeviceDTO event, final void lastData) =>
+  Future<void> doAction(NewDeviceDTO event, void lastData) =>
       service.update(id, event);
 }
 
@@ -45,14 +43,12 @@ class DeviceDeleteBloc extends ConsumerActionBloc<DeviceDTO> {
   final DeviceService service;
 
   @override
-  Future<void> doAction(final DeviceDTO event, final void lastData) =>
+  Future<void> doAction(DeviceDTO event, void lastData) =>
       service.delete(event.id);
 }
 
 class DeviceSelectBloc extends IdentityActionBloc<DeviceDTO?> {
   @override
-  Future<DeviceDTO?> doAction(
-    final DeviceDTO? event,
-    final DeviceDTO? lastData,
-  ) async => event;
+  Future<DeviceDTO?> doAction(DeviceDTO? event, DeviceDTO? lastData) async =>
+      event;
 }

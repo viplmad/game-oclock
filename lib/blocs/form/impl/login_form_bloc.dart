@@ -6,7 +6,7 @@ class LoginFormBloc extends FormBloc<LoginFormData, Login, Login> {
   LoginFormBloc({required super.data});
 
   @override
-  Login fromFormData(final LoginFormData data) {
+  Login fromFormData(LoginFormData data) {
     return Login(
       host: data.host.value!,
       username: data.username.value!,
@@ -15,7 +15,7 @@ class LoginFormBloc extends FormBloc<LoginFormData, Login, Login> {
   }
 
   @override
-  void setFormValue(final LoginFormData data, final Login? value) {
+  void setFormValue(LoginFormData data, Login? value) {
     data.host.value = value?.host;
     data.username.value = value?.username;
     data.password.value = value?.password;

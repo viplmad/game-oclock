@@ -14,8 +14,8 @@ class SessionCreateBloc
 
   @override
   Future<(String, DateTime)> doAction(
-    final NewMediaSession event,
-    final (String, DateTime)? lastData,
+    NewMediaSession event,
+    (String, DateTime)? lastData,
   ) => service
       .create(event.gameId, event as NewSessionDTO)
       .then((_) => (event.gameId, event.startDatetime));
@@ -27,7 +27,7 @@ class UserGameTotalTimeGetBloc extends FunctionActionBloc<String, Duration> {
   final SessionService service;
 
   @override
-  Future<Duration> doAction(final String event, final Duration? lastData) =>
+  Future<Duration> doAction(String event, Duration? lastData) =>
       service.sumTimeForGame(event, AggregateSearch(), null);
 }
 
@@ -39,8 +39,8 @@ class UserGameFinishesGetBloc
 
   @override
   Future<List<SessionDTO>> doAction(
-    final String event,
-    final List<SessionDTO>? lastData,
+    String event,
+    List<SessionDTO>? lastData,
   ) async {
     final data = await service.searchForGame(
       event,
@@ -59,16 +59,14 @@ class UserGameFinishesGetBloc
 
 class SessionSelectBloc extends IdentityActionBloc<SessionDTO?> {
   @override
-  Future<SessionDTO?> doAction(
-    final SessionDTO? event,
-    final SessionDTO? lastData,
-  ) async => event;
+  Future<SessionDTO?> doAction(SessionDTO? event, SessionDTO? lastData) async =>
+      event;
 }
 
 class SessionWithMediaSelectBloc extends IdentityActionBloc<MediaSessionDTO?> {
   @override
   Future<MediaSessionDTO?> doAction(
-    final MediaSessionDTO? event,
-    final MediaSessionDTO? lastData,
+    MediaSessionDTO? event,
+    MediaSessionDTO? lastData,
   ) async => event;
 }

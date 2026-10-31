@@ -30,7 +30,7 @@ class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -58,7 +58,7 @@ class LoginBuilder extends StatelessWidget {
   const LoginBuilder({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
 
     return Scaffold(
@@ -79,18 +79,18 @@ class LoginBuilder extends StatelessWidget {
     );
   }
 
-  Widget buildForm(final BuildContext context) {
+  Widget buildForm(BuildContext context) {
     return MultiBlocListener(
       listeners: [
         BlocListener<LoginFormBloc, FormState2<LoginFormData, Login>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is FormStateSubmitSuccess<LoginFormData, Login>) {
               context.read<LoginBloc>().add(ActionStarted(data: state.value));
             }
           },
         ),
         BlocListener<LoginBloc, ActionState<void>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionSuccess<void, Login>) {
               showSnackBar(
                 context,
@@ -111,7 +111,7 @@ class LoginBuilder extends StatelessWidget {
           CurrentLoginResponseGetBloc,
           ActionState<SavedLoginResponse>
         >(
-          listener: (final context, final state) {
+          listener: (context, state) {
             SavedLoginResponse currentLoginResponse;
             if (state is ActionSuccess<SavedLoginResponse, void>) {
               currentLoginResponse = state.data;
@@ -129,14 +129,14 @@ class LoginBuilder extends StatelessWidget {
         ),
       ],
       child: BlocBuilder<LoginFormBloc, FormState2<LoginFormData, Login>>(
-        builder: (final context, final formState) {
+        builder: (context, formState) {
           return BlocBuilder<
             CurrentLoginResponseGetBloc,
             ActionState<SavedLoginResponse>
           >(
-            builder: (final context, final getState) {
+            builder: (context, getState) {
               return BlocBuilder<LoginBloc, ActionState<void>>(
-                builder: (final context, final loginState) {
+                builder: (context, loginState) {
                   final inProgress =
                       getState is ActionInProgress ||
                       formState is FormStateSubmitInProgress ||
@@ -164,9 +164,9 @@ class LoginBuilder extends StatelessWidget {
 }
 
 Widget _fieldsBuilder(
-  final BuildContext context,
-  final LoginFormData formGroup,
-  final bool readOnly,
+  BuildContext context,
+  LoginFormData formGroup,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[
@@ -202,7 +202,7 @@ class SimpleForm extends StatelessWidget {
   final VoidCallback? onSubmit;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final inProgress = onSubmit == null;
     final saveButton = TextButton.icon(
       icon: inProgress ? const ProgressButtonIcon() : null,

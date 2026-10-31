@@ -15,7 +15,7 @@ class TextLabel extends StatelessWidget {
   final bool multiline;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListTile(
       leading: icon,
       title: Text(label, style: Theme.of(context).textTheme.titleSmall),
@@ -43,7 +43,7 @@ class MultipleTextLabel extends StatelessWidget {
   final separator = ',';
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TextLabel(
       icon: icon,
       label: label,

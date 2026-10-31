@@ -14,7 +14,7 @@ class TagMediaTileListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TileListItem(
       title: data.tag.name,
       subtitle: data.tagged.order?.toString(),
@@ -35,7 +35,7 @@ class MediaTagTileListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TileListItem(
       title: data.media.media.edition.isEmpty
           ? data.media.media.title

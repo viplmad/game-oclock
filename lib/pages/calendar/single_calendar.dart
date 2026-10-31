@@ -31,7 +31,7 @@ class SingleCalendarPage extends StatelessWidget {
   final String gameId;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => CalendarDaySelectBloc()),
@@ -74,33 +74,30 @@ class SingleCalendarPage extends StatelessWidget {
             title: context.localize().calendarTitle,
             firstDay: DateTime(1970),
             lastDay: DateTime.now(),
-            endDateGetter: (final data) => data.endDatetime,
+            endDateGetter: (data) => data.endDatetime,
             floatingActionButton: FloatingActionButton(
               tooltip: context.localize().addSessionLabel,
               onPressed: () => showReturningDialog(
                 context,
-                builder: (final context) =>
-                    GameSessionCreateForm(gameId: gameId),
-                onSuccess: (final context, _) => context
+                builder: (context) => GameSessionCreateForm(gameId: gameId),
+                onSuccess: (context, _) => context
                     .read<GameSessionListBloc>()
                     .add(const ListReloaded()),
               ),
               child: CommonIcons.addSession,
             ),
-            detailBuilder: (final context, final data, final onClosed) =>
-                SessionDetail(
-                  // Recreate on selection change
-                  key: Key(data.startDatetime.toIso8601String()),
+            detailBuilder: (context, data, onClosed) => SessionDetail(
+              // Recreate on selection change
+              key: Key(data.startDatetime.toIso8601String()),
+              data: data,
+              onBackPressed: onClosed,
+            ),
+            listItemBuilder: (context, data, selectedDay, onTap) =>
+                SessionTileListItem(
                   data: data,
-                  onBackPressed: onClosed,
+                  selectedDay: selectedDay,
+                  onTap: onTap,
                 ),
-            listItemBuilder:
-                (final context, final data, final selectedDay, final onTap) =>
-                    SessionTileListItem(
-                      data: data,
-                      selectedDay: selectedDay,
-                      onTap: onTap,
-                    ),
           ),
     );
   }
@@ -119,13 +116,13 @@ class SessionDetail extends StatelessWidget {
   final List<Widget>? actions;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     _loadOnlyInitial<DeviceDTO, DeviceGetBloc>(context, data.deviceId);
 
     return _info(context);
   }
 
-  Widget _info(final BuildContext context) {
+  Widget _info(BuildContext context) {
     return Column(
       children: [
         AppBar(
@@ -169,17 +166,17 @@ class SessionDetail extends StatelessWidget {
                 ),
               if (data.deviceId != null)
                 GetBuilder<DeviceDTO, DeviceGetBloc>(
-                  skeletonBuilder: (final context) => LabelSkeleton(
+                  skeletonBuilder: (context) => LabelSkeleton(
                     order: 0,
                     label: context.localize().deviceLabel,
                   ),
-                  errorBuilder: (final context, final onRetryTap) => Center(
+                  errorBuilder: (context, onRetryTap) => Center(
                     child: LabelError(
                       label: context.localize().errorDetailLoadTitle,
                       onRetryTap: onRetryTap,
                     ),
                   ),
-                  builder: (final context, final device) => TextLabel(
+                  builder: (context, device) => TextLabel(
                     icon: CommonIcons.devices,
                     label: context.localize().deviceLabel,
                     value: device.name,
@@ -193,8 +190,8 @@ class SessionDetail extends StatelessWidget {
   }
 
   void _loadOnlyInitial<T, GB extends FunctionActionBloc<String, T>>(
-    final BuildContext context,
-    final String? id,
+    BuildContext context,
+    String? id,
   ) {
     if (id == null) {
       return;

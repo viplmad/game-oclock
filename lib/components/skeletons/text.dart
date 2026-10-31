@@ -10,7 +10,7 @@ class TextSkeleton extends StatelessWidget {
   final int order;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [RoundSkeleton(width: width, height: height, order: order)],

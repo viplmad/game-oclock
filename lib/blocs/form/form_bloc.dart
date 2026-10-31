@@ -15,18 +15,14 @@ import 'form.dart'
 
 abstract class FormBloc<D extends FormData<N>, N, T>
     extends Bloc<FormEvent<N, T>, FormState2<D, N>> {
-  FormBloc({required final D data})
-    : super(FormStateInitial<D, N>(data: data)) {
-    on<FormSubmitted<N, T>>(
-      (final event, final emit) async => await onSubmitted(emit),
-    );
+  FormBloc({required D data}) : super(FormStateInitial<D, N>(data: data)) {
+    on<FormSubmitted<N, T>>((event, emit) async => await onSubmitted(emit));
     on<FormValueUpdated<N, T>>(
-      (final event, final emit) async =>
-          await onValueUpdated(event.value, emit),
+      (event, emit) async => await onValueUpdated(event.value, emit),
     );
   }
 
-  Future<void> onSubmitted(final Emitter<FormState2> emit) async {
+  Future<void> onSubmitted(Emitter<FormState2> emit) async {
     if (state is FormStateSubmitInProgress) {
       return;
     }
@@ -51,10 +47,7 @@ abstract class FormBloc<D extends FormData<N>, N, T>
     }
   }
 
-  Future<void> onValueUpdated(
-    final T? value,
-    final Emitter<FormState2> emit,
-  ) async {
+  Future<void> onValueUpdated(T? value, Emitter<FormState2> emit) async {
     if (state is FormStateSubmitInProgress) {
       return;
     }
@@ -64,7 +57,7 @@ abstract class FormBloc<D extends FormData<N>, N, T>
     emit(FormStateInitial<D, N>(data: data));
   }
 
-  N fromFormData(final D data);
+  N fromFormData(D data);
 
-  void setFormValue(final D data, final T? value);
+  void setFormValue(D data, T? value);
 }

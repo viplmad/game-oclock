@@ -5,7 +5,7 @@ import '../action.dart' show IdentityActionBloc;
 class ExternalGameSelectBloc extends IdentityActionBloc<PotentialMediaDTO?> {
   @override
   Future<PotentialMediaDTO?> doAction(
-    final PotentialMediaDTO? event,
-    final PotentialMediaDTO? lastData,
+    PotentialMediaDTO? event,
+    PotentialMediaDTO? lastData,
   ) async => event;
 }

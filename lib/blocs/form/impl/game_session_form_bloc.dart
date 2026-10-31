@@ -9,7 +9,7 @@ class GameSessionFormBloc
   GameSessionFormBloc({required super.data});
 
   @override
-  NewMediaSession fromFormData(final GameSessionFormData data) {
+  NewMediaSession fromFormData(GameSessionFormData data) {
     return NewMediaSession(
       gameId: data.gameId.value!,
       startDatetime: data.startDateTime.value!,
@@ -22,7 +22,7 @@ class GameSessionFormBloc
   }
 
   @override
-  void setFormValue(final GameSessionFormData data, final SessionDTO? value) {
+  void setFormValue(GameSessionFormData data, SessionDTO? value) {
     data.startDateTime.value = value?.startDatetime;
     data.endDateTime.value = value?.endDatetime;
     data.deviceId.value = value?.deviceId;

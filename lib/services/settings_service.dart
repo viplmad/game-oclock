@@ -13,15 +13,15 @@ class SettingsService {
   Future<ThemeMode> getCurrentTheme() {
     return repository.get(
       _buildCurrentThemeKey(),
-      (final value) => parseThemeMode(value),
+      (value) => parseThemeMode(value),
     );
   }
 
-  Future<void> saveCurrentTheme(final ThemeMode theme) {
+  Future<void> saveCurrentTheme(ThemeMode theme) {
     return repository.set(
       _buildCurrentThemeKey(),
       theme,
-      (final value) => themeModeToString(value),
+      (value) => themeModeToString(value),
     );
   }
 
@@ -32,15 +32,15 @@ class SettingsService {
   Future<Locale> getCurrentLocale() {
     return repository.get(
       _buildCurrentLocaleKey(),
-      (final value) => parseLocale(value),
+      (value) => parseLocale(value),
     );
   }
 
-  Future<void> saveCurrentLocale(final Locale locale) {
+  Future<void> saveCurrentLocale(Locale locale) {
     return repository.set(
       _buildCurrentLocaleKey(),
       locale,
-      (final value) => localeToString(value),
+      (value) => localeToString(value),
     );
   }
 
@@ -51,15 +51,15 @@ class SettingsService {
   Future<DateLocaleConfig> getCurrentDateConfig() {
     return repository.get(
       _buildCurrentDateConfigKey(),
-      (final value) => DateLocaleConfig.fromJson(json.decode(value)),
+      (value) => DateLocaleConfig.fromJson(json.decode(value)),
     );
   }
 
-  Future<void> saveCurrentDateConfig(final DateLocaleConfig dateConfig) {
+  Future<void> saveCurrentDateConfig(DateLocaleConfig dateConfig) {
     return repository.set(
       _buildCurrentDateConfigKey(),
       dateConfig,
-      (final value) => json.encode(value.toJson()),
+      (value) => json.encode(value.toJson()),
     );
   }
 
@@ -73,11 +73,11 @@ class SettingsService {
   String _buildCurrentDateConfigKey() => '${_buildKey()}#date-config#current';
 }
 
-ThemeMode parseThemeMode(final String value) =>
-    ThemeMode.values.firstWhere((final element) => element.name == value);
+ThemeMode parseThemeMode(String value) =>
+    ThemeMode.values.firstWhere((element) => element.name == value);
 
-String themeModeToString(final ThemeMode value) => value.name;
+String themeModeToString(ThemeMode value) => value.name;
 
-Locale parseLocale(final String value) => Locale(value);
+Locale parseLocale(String value) => Locale(value);
 
-String localeToString(final Locale value) => value.languageCode;
+String localeToString(Locale value) => value.languageCode;

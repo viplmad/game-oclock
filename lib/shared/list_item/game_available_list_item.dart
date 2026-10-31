@@ -14,12 +14,11 @@ class LocationWithDateTileListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TileListItem(
       title: data.location.name,
-      subtitle: MaterialLocalizations.of(
-        context,
-      ).formatCompactDate(data.available.datetime),
+      subtitle: MaterialLocalizations.of(context)
+          .formatCompactDate(data.available.datetime),
       imageURL: data.location.imageUrl,
       onTap: onTap,
     );
@@ -37,7 +36,7 @@ class GameWithDateTileListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TileListItem(
       title: data.media.media.edition.isEmpty
           ? data.media.media.title
@@ -45,9 +44,8 @@ class GameWithDateTileListItem extends StatelessWidget {
               data.media.media.title,
               data.media.media.edition,
             ),
-      subtitle: MaterialLocalizations.of(
-        context,
-      ).formatCompactDate(data.available.datetime),
+      subtitle: MaterialLocalizations.of(context)
+          .formatCompactDate(data.available.datetime),
       imageURL: data.media.media.imageUrl,
       onTap: onTap,
     );

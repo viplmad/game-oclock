@@ -31,21 +31,18 @@ class CommonPaths {
   static const String _idPath = ':$_idPathParam';
   static const String _idPathParam = 'id';
 
-  static String buildGamePath(final String id) =>
-      gamePath.replaceFirst(_idPath, id);
-  static String buildGameCalendarPath(final String id) =>
+  static String buildGamePath(String id) => gamePath.replaceFirst(_idPath, id);
+  static String buildGameCalendarPath(String id) =>
       gameCalendarPath.replaceFirst(_idPath, id);
-  static String buildLocationPath(final String id) =>
+  static String buildLocationPath(String id) =>
       locationPath.replaceFirst(_idPath, id);
-  static String buildDevicePath(final String id) =>
+  static String buildDevicePath(String id) =>
       devicePath.replaceFirst(_idPath, id);
-  static String buildTagPath(final String id) =>
-      tagPath.replaceFirst(_idPath, id);
-  static String buildPlaythroughPath(final String id) =>
+  static String buildTagPath(String id) => tagPath.replaceFirst(_idPath, id);
+  static String buildPlaythroughPath(String id) =>
       playthroughPath.replaceFirst(_idPath, id);
-  static String buildUserPath(final String id) =>
-      userPath.replaceFirst(_idPath, id);
+  static String buildUserPath(String id) => userPath.replaceFirst(_idPath, id);
 
-  static String getIdParameter(final GoRouterState state) =>
+  static String getIdParameter(GoRouterState state) =>
       state.pathParameters[CommonPaths._idPathParam]!;
 }

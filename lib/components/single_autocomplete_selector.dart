@@ -54,12 +54,12 @@ class SingleAutocompleteSelectorBuilder<
   onAddPressed;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final initialValue = formControl.defaultValue;
     if (initialValue != null) {
       context.read<GB>().add(ActionStarted(data: initialValue));
       return BlocConsumer<GB, ActionState<T>>(
-        listener: (final context, final state) {
+        listener: (context, state) {
           if (state is ActionFailure<T, String>) {
             showErrorSnackBar(
               context,
@@ -68,7 +68,7 @@ class SingleAutocompleteSelectorBuilder<
             );
           }
         },
-        builder: (final context, final state) {
+        builder: (context, state) {
           T? data;
           if (state is ActionInProgress<T>) {
             return SimpleTextFormField(
@@ -92,8 +92,8 @@ class SingleAutocompleteSelectorBuilder<
   }
 
   ReactiveRawAutocomplete<String, T> _rawAutocomplete(
-    final BuildContext context, {
-    final T? initialValue,
+    BuildContext context, {
+    T? initialValue,
   }) {
     return ReactiveRawAutocomplete<String, T>(
       formControl: formControl,
@@ -102,12 +102,7 @@ class SingleAutocompleteSelectorBuilder<
         getter: (_) => initialValue,
       ),
       fieldViewBuilder:
-          (
-            final context,
-            final textEditingController,
-            final focusNode,
-            final onFieldSubmitted,
-          ) {
+          (context, textEditingController, focusNode, onFieldSubmitted) {
             final queryFormControl = FormControl<String>(
               value: textEditingController.text,
             );
@@ -122,48 +117,45 @@ class SingleAutocompleteSelectorBuilder<
                     icon: CommonIcons.addInline,
                     onPressed: () => onAddPressed!(
                       formControl.value!,
-                      (final option) => formControl.value = option,
+                      (option) => formControl.value = option,
                     ),
                   ),
               ],
-              onChanged: (final value) => textEditingController.value =
+              onChanged: (value) => textEditingController.value =
                   textEditingController.value.copyWith(text: value),
               //
               focusNode: focusNode,
-              onFieldSubmitted: (final String value) {
+              onFieldSubmitted: (String value) {
                 onFieldSubmitted();
               },
             );
           },
-      optionsBuilder: (final textEditingValue) async {
+      optionsBuilder: (textEditingValue) async {
         final loadBloc = context.read<LB>();
         loadBloc.add(
           ListQuicksearchChanged(quicksearch: textEditingValue.text),
         );
 
-        final listState =
-            await loadBloc.stream.firstWhere(
-                  (final loadState) => loadState is ListFinal<T>,
-                )
-                as ListFinal<T>;
+        final listState = await loadBloc.stream.firstWhere(
+          (loadState) => loadState is ListFinal<T>,
+        ) as ListFinal<T>;
 
         return listState.data; // Using BlocBuilder to refresh data
       },
       displayStringForOption: displayString ?? keyGetter,
-      optionsViewBuilder: (final context, final onSelected, final options) =>
-          Align(
-            alignment: AlignmentDirectional.topStart,
-            child: Material(
-              elevation: 4.0,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 200.0),
-                child: TileListBuilder<T, LB>(
-                  itemBuilder: (final context, final item, final index) =>
-                      itemBuilder(context, item, index, () => onSelected(item)),
-                ),
-              ),
+      optionsViewBuilder: (context, onSelected, options) => Align(
+        alignment: AlignmentDirectional.topStart,
+        child: Material(
+          elevation: 4.0,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 200.0),
+            child: TileListBuilder<T, LB>(
+              itemBuilder: (context, item, index) =>
+                  itemBuilder(context, item, index, () => onSelected(item)),
             ),
           ),
+        ),
+      ),
     );
   }
 }
@@ -175,12 +167,12 @@ class _AutocompleteValueAccessor<T> extends ControlValueAccessor<String, T> {
   final T? Function(String id)? getter;
 
   @override
-  String viewToModelValue(final T? modelValue) {
+  String viewToModelValue(T? modelValue) {
     return modelValue == null ? '' : keyGetter(modelValue);
   }
 
   @override
-  T? modelToViewValue(final String? viewValue) {
+  T? modelToViewValue(String? viewValue) {
     return (viewValue == '' || viewValue == null)
         ? null
         : getter?.call(viewValue);

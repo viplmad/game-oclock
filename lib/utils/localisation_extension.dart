@@ -11,23 +11,23 @@ extension LocalizeContext on BuildContext {
 }
 
 extension AppLocalizationsExtension on AppLocalizations {
-  String formatHour(final int hour) {
+  String formatHour(int hour) {
     return hour.toString().padLeft(2, '0');
   }
 
-  String formatPercentage(final double value) {
+  String formatPercentage(double value) {
     return NumberFormat.decimalPercentPattern(decimalDigits: 0).format(value);
   }
 
-  String formatDay(final DateTime date) {
+  String formatDay(DateTime date) {
     return DateFormat.d().format(date);
   }
 
-  String formatDayMonth(final DateTime date) {
+  String formatDayMonth(DateTime date) {
     return DateFormat.MMMd().format(date);
   }
 
-  String formatLocale(final Locale locale) {
+  String formatLocale(Locale locale) {
     if (locale == const Locale('en')) {
       return englishLabel;
     }
@@ -35,7 +35,7 @@ extension AppLocalizationsExtension on AppLocalizations {
     return locale.toLanguageTag();
   }
 
-  String formatDuration(final Duration duration) {
+  String formatDuration(Duration duration) {
     if (duration.isZero()) {
       return '0';
     }
@@ -56,16 +56,16 @@ extension AppLocalizationsExtension on AppLocalizations {
     return '$hoursString $minutesString';
   }
 
-  String monthAbbr(final int month) {
+  String monthAbbr(int month) {
     return DateFormat.MMM().format(DateTime(2000, month, 1));
   }
 
-  String weekdayAbbr(final int weekday) {
+  String weekdayAbbr(int weekday) {
     // 2024 starts on monday == isoweekday 1
     return DateFormat.E().format(DateTime(2024, DateTime.january, weekday));
   }
 
-  String genreLabel(final String slug) {
+  String genreLabel(String slug) {
     return switch (slug) {
       'platform' => genrePlatformLabel,
       'puzzle' => genrePuzzleLabel,
@@ -78,7 +78,7 @@ extension AppLocalizationsExtension on AppLocalizations {
     };
   }
 
-  String filterValueLabel(final FilterDTO filter, final String field) {
+  String filterValueLabel(FilterDTO filter, String field) {
     return switch (filter.operator_) {
       OperatorType.eq => equalChipLabel(
         field,
@@ -142,11 +142,11 @@ extension AppLocalizationsExtension on AppLocalizations {
     };
   }
 
-  String _buildFilterValueLabel(final SearchValue value) {
+  String _buildFilterValueLabel(SearchValue value) {
     return value.value == null ? nullLabel : quote(value.value!);
   }
 
-  String _buildFilterValuesLabel(final SearchValue value) {
-    return (value.values ?? []).map((final val) => quote(val)).join(', ');
+  String _buildFilterValuesLabel(SearchValue value) {
+    return (value.values ?? []).map((val) => quote(val)).join(', ');
   }
 }

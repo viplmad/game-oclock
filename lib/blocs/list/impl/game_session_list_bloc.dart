@@ -13,15 +13,12 @@ class GameSessionListBloc extends ListLoadBloc<SessionDTO> {
 
   @override
   Future<PageResultDTO<SessionDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.searchForGame(gameId, search, quicksearch);
 
   @override
-  Future<int?> doCount(
-    final ListSearchDTO search,
-    final String? quicksearch,
-  ) async => null;
+  Future<int?> doCount(ListSearchDTO search, String? quicksearch) async => null;
   /*service.countForGame(
         gameId,
         AggregateSearch(filter: search.filter),
@@ -39,8 +36,8 @@ class SessionWithMediaListBloc extends ListLoadBloc<MediaSessionDTO> {
 
   @override
   Future<PageResultDTO<MediaSessionDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     final sessions = await service.search(search, quicksearch);
     await fetchMedias(sessions);
@@ -49,24 +46,20 @@ class SessionWithMediaListBloc extends ListLoadBloc<MediaSessionDTO> {
       size: sessions.size,
       data: sessions.data
           .map(
-            (final s) =>
-                MediaSessionDTO(media: mediaCache[s.mediaId]!, session: s),
+            (s) => MediaSessionDTO(media: mediaCache[s.mediaId]!, session: s),
           )
           .toList(growable: false),
     );
   }
 
   @override
-  Future<int?> doCount(
-    final ListSearchDTO search,
-    final String? quicksearch,
-  ) async => null;
+  Future<int?> doCount(ListSearchDTO search, String? quicksearch) async => null;
   /*service.count(AggregateSearch(filter: search.filter), quicksearch);*/
 
-  Future<void> fetchMedias(final PageResultDTO<SessionDTO> sessions) async {
+  Future<void> fetchMedias(PageResultDTO<SessionDTO> sessions) async {
     final mediaIds = sessions.data
-        .map((final el) => el.mediaId)
-        .where((final id) => !mediaCache.containsKey(id))
+        .map((el) => el.mediaId)
+        .where((id) => !mediaCache.containsKey(id))
         .toSet()
         .toList(growable: false);
     if (mediaIds.isEmpty) {

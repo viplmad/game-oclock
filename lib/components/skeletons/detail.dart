@@ -12,7 +12,7 @@ class DetailSkeleton extends StatelessWidget {
   final VoidCallback onBackPressed;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Detail(
       title: const AppBarTitleSkeleton(order: 0),
       image: const ImageSkeleton(order: 1),
@@ -36,7 +36,7 @@ class AppBarTitleSkeleton extends StatelessWidget {
   final int order;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TextSkeleton(width: 50.0, height: 14.0, order: order);
   }
 }

@@ -14,9 +14,9 @@ class RetryableApiClient extends ApiClient {
   Future<OAuth> Function(ApiClient, OAuth)? onRefresh;
 
   void update({
-    required final String basePath,
-    required final OAuth authentication,
-    required final Future<OAuth> Function(ApiClient, OAuth)? onRefresh,
+    required String basePath,
+    required OAuth authentication,
+    required Future<OAuth> Function(ApiClient, OAuth)? onRefresh,
   }) {
     apiClient = ApiClient(basePath: basePath, authentication: authentication);
     this.onRefresh = onRefresh;
@@ -26,13 +26,13 @@ class RetryableApiClient extends ApiClient {
   // If collectionFormat is 'multi', a key might appear multiple times.
   @override
   Future<Response> invokeAPI(
-    final String path,
-    final String method,
-    final List<QueryParam> queryParams,
-    final Object? body,
-    final Map<String, String> headerParams,
-    final Map<String, String> formParams,
-    final String? contentType,
+    String path,
+    String method,
+    List<QueryParam> queryParams,
+    Object? body,
+    Map<String, String> headerParams,
+    Map<String, String> formParams,
+    String? contentType,
   ) async {
     if (apiClient == null) {
       throw Error();
@@ -62,12 +62,10 @@ class RetryableApiClient extends ApiClient {
           );
         }
         if (response.statusCode >= HttpStatus.badRequest) {
-          final errorMessage =
-              await apiClient!.deserializeAsync(
-                    await decodeBodyBytes(response),
-                    'ErrorMessage',
-                  )
-                  as ErrorMessage;
+          final errorMessage = await apiClient!.deserializeAsync(
+            await decodeBodyBytes(response),
+            'ErrorMessage',
+          ) as ErrorMessage;
           throw ApiException.fromServer(
             response.statusCode,
             errorMessage.error,
@@ -77,13 +75,13 @@ class RetryableApiClient extends ApiClient {
 
         return response;
       },
-      retryIf: (final error) =>
+      retryIf: (error) =>
           // If it's unauthorized and this client has authentication (retrying to refresh)
           (error is UnauthorizedApiException &&
               apiClient!.authentication != null) ||
           // If it's a client error (retrying will not change response)
           (error is ClientApiException),
-      onRetry: (final error) async {
+      onRetry: (error) async {
         if (error is UnauthorizedApiException) {
           if (onRefresh != null) {
             final newAuth = await onRefresh!(

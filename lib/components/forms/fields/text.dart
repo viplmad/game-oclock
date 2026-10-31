@@ -40,7 +40,7 @@ class SimpleTextFormField extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ReactiveTextField(
       formControl: formControl,
       readOnly: readOnly,
@@ -48,7 +48,7 @@ class SimpleTextFormField extends StatelessWidget {
         label: FormFieldLabel(
           text: label,
           required: formControl.validators.any(
-            (final validator) => validator is NotEmptyValidator,
+            (validator) => validator is NotEmptyValidator,
           ),
         ),
         hintText: hint,
@@ -116,7 +116,7 @@ class _SimpleObscuredTextFormFieldState
   bool obscureText = true;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SimpleTextFormField(
       formControl: widget.formControl,
       label: widget.label,

@@ -7,12 +7,12 @@ const mediumBreakpointWidth = 840;
 const expandedBreakpointWidth = 1200;
 const largeBreakpointWidth = 1600;
 
-LayoutTier layoutTierFromContext(final BuildContext context) {
+LayoutTier layoutTierFromContext(BuildContext context) {
   final size = MediaQuery.sizeOf(context);
   return layoutTierFromSize(size);
 }
 
-LayoutTier layoutTierFromSize(final Size size) {
+LayoutTier layoutTierFromSize(Size size) {
   final LayoutTier tier;
   final width = size.width;
   if (width < compactBreakpointWidth) {

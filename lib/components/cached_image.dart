@@ -17,7 +17,7 @@ class SimpleCachedNetworkImage extends StatelessWidget {
   final bool applyGradient;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return applyGradient ? _getGradientImage() : _getCachedImage();
   }
 

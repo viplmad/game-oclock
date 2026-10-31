@@ -6,19 +6,16 @@ import 'utils.dart';
 class LocationService {
   final LocationsApi _api;
 
-  LocationService(final ApiClient apiClient) : _api = LocationsApi(apiClient);
+  LocationService(ApiClient apiClient) : _api = LocationsApi(apiClient);
 
   Future<PageResultDTO<LocationDTO>> search(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     return _api.getLocations(search, q: quicksearch);
   }
 
-  Future<int> count(
-    final AggregateSearch search,
-    final String? quicksearch,
-  ) async {
+  Future<int> count(AggregateSearch search, String? quicksearch) async {
     final response = await _api.aggregateLocationsWithHttpInfo(
       AggregateSearchDTO(
         aggr: AggregateMetricDTO(
@@ -33,17 +30,17 @@ class LocationService {
   }
 
   Future<PageResultDTO<LocationAvailableDTO>> searchAvailable(
-    final String gameId,
-    final ListSearchDTO search,
-    final String? quicksearch,
+    String gameId,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     return _api.getMediaLocations(gameId, search, q: quicksearch);
   }
 
   Future<int> countAvailable(
-    final String gameId,
-    final AggregateSearch search,
-    final String? quicksearch,
+    String gameId,
+    AggregateSearch search,
+    String? quicksearch,
   ) async {
     final response = await _api.aggregateMediaLocationsWithHttpInfo(
       gameId,
@@ -59,19 +56,19 @@ class LocationService {
     return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
-  Future<LocationDTO> get(final String id) async {
+  Future<LocationDTO> get(String id) async {
     return _api.getLocation(id);
   }
 
-  Future<String> create(final NewLocationDTO location) async {
+  Future<String> create(NewLocationDTO location) async {
     return _api.createLocation(location);
   }
 
-  Future<void> update(final String id, final NewLocationDTO location) async {
+  Future<void> update(String id, NewLocationDTO location) async {
     return _api.updateLocation(id, location);
   }
 
-  Future<void> delete(final String id) async {
+  Future<void> delete(String id) async {
     return _api.deleteLocation(id);
   }
 }

@@ -37,7 +37,7 @@ class UserGameListPage extends StatelessWidget {
   const UserGameListPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => UserGameSelectBloc()),
@@ -100,7 +100,7 @@ class _UserGameListDetailBuilder extends StatelessWidget {
   const _UserGameListDetailBuilder();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListCreateDetailBuilder<
       MediaDTO,
       UserGameSelectBloc,
@@ -108,10 +108,10 @@ class _UserGameListDetailBuilder extends StatelessWidget {
     >(
       title: context.localize().gamesTitle,
       searchSpace: _space,
-      createFormBuilder: ([final quicksearch]) =>
+      createFormBuilder: ([quicksearch]) =>
           UserGameCreateForm(initialTitle: quicksearch),
-      idGetter: (final data) => data.media.id,
-      detailBuilder: (final context, final data, final onClosed) {
+      idGetter: (data) => data.media.id,
+      detailBuilder: (context, data, onClosed) {
         // Load derived blocs
         context.read<UserGameTotalTimeGetBloc>().add(
           ActionStarted(data: data.media.id),
@@ -158,10 +158,10 @@ class _UserGameListDetailBuilder extends StatelessWidget {
             data: data,
             extended: false,
             onBackPressed: onClosed,
-            onEditSucceeded: (final context) {
+            onEditSucceeded: (context) {
               context.read<UserGameListBloc>().add(const ListReloaded());
             },
-            onDeleteSucceeded: (final context) {
+            onDeleteSucceeded: (context) {
               context.read<UserGameListBloc>().add(const ListReloaded());
               context.read<UserGameSelectBloc>().add(
                 const ActionStarted(data: null),
@@ -170,13 +170,12 @@ class _UserGameListDetailBuilder extends StatelessWidget {
           ),
         );
       },
-      listItemBuilder: (final context, final style, final data, final onTap) =>
-          style == ListStyle.grid
+      listItemBuilder: (context, style, data, onTap) => style == ListStyle.grid
           ? UserGameGridListItem(data: data, onTap: onTap)
           : UserGameTileListItem(
               data: data,
               onTap: onTap,
-              onAddSessionSucceeded: (final context) =>
+              onAddSessionSucceeded: (context) =>
                   context.read<UserGameListBloc>().add(const ListReloaded()),
             ),
       itemAspectRatio: 1.85, // Steam header aspect ratio

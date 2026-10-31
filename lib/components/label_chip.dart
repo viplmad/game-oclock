@@ -8,7 +8,7 @@ class LabelChip extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return IgnorePointer(
       child: ActionChip(
         avatar: icon,

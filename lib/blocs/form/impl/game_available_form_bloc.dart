@@ -8,7 +8,7 @@ class GameAvailableFormBloc
   GameAvailableFormBloc({required super.data});
 
   @override
-  GameAvailable fromFormData(final GameAvailableFormData data) {
+  GameAvailable fromFormData(GameAvailableFormData data) {
     return GameAvailable(
       gameId: data.gameId.value!,
       locationId: data.locationId.value!,
@@ -17,10 +17,7 @@ class GameAvailableFormBloc
   }
 
   @override
-  void setFormValue(
-    final GameAvailableFormData data,
-    final GameAvailable? value,
-  ) {
+  void setFormValue(GameAvailableFormData data, GameAvailable? value) {
     data.gameId.value = value?.gameId;
     data.locationId.value = value?.locationId;
     data.date.value = value?.date;

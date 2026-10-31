@@ -25,7 +25,7 @@ class SearchTextField extends StatefulWidget {
 
 class _SearchTextFieldState extends State<SearchTextField> {
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TextField(
       autofocus: true,
       controller: widget.controller,
@@ -60,7 +60,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
         ),
         border: const OutlineInputBorder(),
       ),
-      onChanged: (final value) {
+      onChanged: (value) {
         widget.onSearchChanged(value);
         setState(() {});
       },

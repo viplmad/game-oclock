@@ -19,7 +19,7 @@ class SimpleConfirmationTextFormField extends StatelessWidget {
   final bool readOnly;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(

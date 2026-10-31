@@ -6,19 +6,16 @@ import 'utils.dart';
 class TagService {
   final TagsApi _api;
 
-  TagService(final ApiClient apiClient) : _api = TagsApi(apiClient);
+  TagService(ApiClient apiClient) : _api = TagsApi(apiClient);
 
   Future<PageResultDTO<TagDTO>> search(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     return _api.getTags(search, q: quicksearch);
   }
 
-  Future<int> count(
-    final AggregateSearch search,
-    final String? quicksearch,
-  ) async {
+  Future<int> count(AggregateSearch search, String? quicksearch) async {
     final response = await _api.aggregateTagsWithHttpInfo(
       AggregateSearchDTO(
         aggr: AggregateMetricDTO(
@@ -33,17 +30,17 @@ class TagService {
   }
 
   Future<PageResultDTO<TagMediaDTO>> searchMediaTags(
-    final String gameId,
-    final ListSearchDTO search,
-    final String? quicksearch,
+    String gameId,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     return _api.getMediaTags(gameId, search, q: quicksearch);
   }
 
   Future<int> countMediaTags(
-    final String gameId,
-    final AggregateSearch search,
-    final String? quicksearch,
+    String gameId,
+    AggregateSearch search,
+    String? quicksearch,
   ) async {
     final response = await _api.aggregateMediaTagsWithHttpInfo(
       gameId,
@@ -59,19 +56,19 @@ class TagService {
     return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
-  Future<TagDTO> get(final String id) async {
+  Future<TagDTO> get(String id) async {
     return _api.getTag(id);
   }
 
-  Future<String> create(final NewTagDTO tag) async {
+  Future<String> create(NewTagDTO tag) async {
     return _api.createTag(tag);
   }
 
-  Future<void> update(final String id, final NewTagDTO tag) async {
+  Future<void> update(String id, NewTagDTO tag) async {
     return _api.updateTag(id, tag);
   }
 
-  Future<void> delete(final String id) async {
+  Future<void> delete(String id) async {
     return _api.deleteTag(id);
   }
 }

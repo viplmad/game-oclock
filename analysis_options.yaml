@@ -7,6 +7,8 @@
 
 # The following line activates a set of recommended lints for Flutter apps,
 # packages, and plugins designed to encourage good coding practices.
+include: package:flutter_lints/flutter.yaml
+
 analyzer:
   exclude:
     - build/**
@@ -16,7 +18,6 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
-include: package:flutter_lints/flutter.yaml
 
 linter:
   # The lint rules applied to this project can be customized in the
@@ -33,7 +34,7 @@ linter:
     - prefer_single_quotes
     - prefer_final_locals
     - prefer_final_fields
-    - prefer_final_parameters
+    - parameter_assignments
     - prefer_final_in_for_each
     - annotate_overrides
     - avoid_print

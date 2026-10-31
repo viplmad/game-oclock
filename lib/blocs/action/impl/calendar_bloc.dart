@@ -9,18 +9,12 @@ import '../action.dart'
 
 class CalendarDaySelectBloc extends IdentityActionBloc<DateTime> {
   @override
-  Future<DateTime> doAction(
-    final DateTime event,
-    final DateTime? lastData,
-  ) async => event;
+  Future<DateTime> doAction(DateTime event, DateTime? lastData) async => event;
 }
 
 class CalendarDayFocusBloc extends IdentityActionBloc<DateTime> {
   @override
-  Future<DateTime> doAction(
-    final DateTime event,
-    final DateTime? lastData,
-  ) async => event;
+  Future<DateTime> doAction(DateTime event, DateTime? lastData) async => event;
 }
 
 class LastSessionGetBloc extends ProducerActionBloc<SessionDTO?> {
@@ -29,10 +23,7 @@ class LastSessionGetBloc extends ProducerActionBloc<SessionDTO?> {
   final SessionService service;
 
   @override
-  Future<SessionDTO?> doAction(
-    final void event,
-    final SessionDTO? lastData,
-  ) async {
+  Future<SessionDTO?> doAction(void event, SessionDTO? lastData) async {
     final data = await service
         .search(
           ListSearchDTO(
@@ -43,7 +34,7 @@ class LastSessionGetBloc extends ProducerActionBloc<SessionDTO?> {
           ),
           null,
         )
-        .then((final pageResult) => pageResult.data);
+        .then((pageResult) => pageResult.data);
     return data.isEmpty ? null : data.first;
   }
 }
@@ -55,10 +46,7 @@ class LastGameSessionGetBloc extends ProducerActionBloc<SessionDTO?> {
   final String gameId;
 
   @override
-  Future<SessionDTO?> doAction(
-    final void event,
-    final SessionDTO? lastData,
-  ) async {
+  Future<SessionDTO?> doAction(void event, SessionDTO? lastData) async {
     final data = await service
         .searchForGame(
           gameId,
@@ -70,7 +58,7 @@ class LastGameSessionGetBloc extends ProducerActionBloc<SessionDTO?> {
           ),
           null,
         )
-        .then((final pageResult) => pageResult.data);
+        .then((pageResult) => pageResult.data);
     return data.isEmpty ? null : data.first;
   }
 }
@@ -85,8 +73,8 @@ class CalendarYearDatesBloc
 
   @override
   Future<Set<DateTime>> doAction(
-    final DateTime event,
-    final Set<DateTime>? lastData,
+    DateTime event,
+    Set<DateTime>? lastData,
   ) async {
     final year = event.year;
     if (cache.containsKey(year)) {
@@ -118,8 +106,8 @@ class CalendarGameYearDatesBloc
 
   @override
   Future<Set<DateTime>> doAction(
-    final DateTime event,
-    final Set<DateTime>? lastData,
+    DateTime event,
+    Set<DateTime>? lastData,
   ) async {
     final year = event.year;
     if (cache.containsKey(year)) {
@@ -151,10 +139,10 @@ class CalendarGameYearDatesBloc
 }
 
 Future<Set<DateTime>> _searchSessionDates(
-  final SessionService service,
-  final ListSearchDTO search,
-  final String? quicksearch,
-  final FetchMode? mode,
+  SessionService service,
+  ListSearchDTO search,
+  String? quicksearch,
+  FetchMode? mode,
 ) async {
   final dates = await service.searchDates(search, quicksearch, mode);
   return dates.toSet();

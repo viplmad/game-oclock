@@ -11,7 +11,7 @@ class FormFieldLabel extends StatelessWidget {
   final bool required;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Text.rich(
       TextSpan(text: text, children: required ? [requiredSuffix] : null),
     );
@@ -24,7 +24,7 @@ class ClearIconButton extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return IconButton(
       tooltip: context.localize().clearLabel,
       icon: CommonIcons.clearInline,

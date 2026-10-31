@@ -23,7 +23,7 @@ class ExternalGameTileListItem extends StatelessWidget {
   final ValueChanged<BuildContext> onAddSucceeded;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final listItem = TileListItem(
       title: data.media.edition.isEmpty
           ? data.media.title
@@ -33,9 +33,8 @@ class ExternalGameTileListItem extends StatelessWidget {
             ),
       subtitle: data.media.releaseDate == null
           ? null
-          : MaterialLocalizations.of(
-              context,
-            ).formatYear(data.media.releaseDate!),
+          : MaterialLocalizations.of(context)
+                .formatYear(data.media.releaseDate!),
       imageURL: data.media.imageUrl,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -48,9 +47,9 @@ class ExternalGameTileListItem extends StatelessWidget {
               tooltip: context.localize().addLabel,
               onPressed: () => showReturningDialog(
                 context,
-                builder: (final context) =>
+                builder: (context) =>
                     UserGameExternalCreateForm(externalId: data.external_),
-                onSuccess: (final context, _) => onAddSucceeded(context),
+                onSuccess: (context, _) => onAddSucceeded(context),
               ),
             ),
           if (data.state != null)

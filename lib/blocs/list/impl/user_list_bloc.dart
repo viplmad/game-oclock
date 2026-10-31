@@ -11,11 +11,11 @@ class UserListBloc extends ListLoadBloc<UserDTO> {
 
   @override
   Future<PageResultDTO<UserDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.search(search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) =>
       service.count(AggregateSearch(filter: search.filter), quicksearch);
 }

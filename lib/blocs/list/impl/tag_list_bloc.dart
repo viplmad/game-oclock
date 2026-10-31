@@ -11,12 +11,12 @@ class TagListBloc extends ListLoadBloc<TagDTO> {
 
   @override
   Future<PageResultDTO<TagDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.search(search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) =>
       service.count(AggregateSearch(filter: search.filter), quicksearch);
 }
 
@@ -28,12 +28,12 @@ class TagOfGameListBloc extends ListLoadBloc<TagMediaDTO> {
 
   @override
   Future<PageResultDTO<TagMediaDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.searchMediaTags(gameId, search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) =>
       service.countMediaTags(
         gameId,
         AggregateSearch(filter: search.filter),

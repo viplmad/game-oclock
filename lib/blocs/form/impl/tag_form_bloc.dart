@@ -7,12 +7,12 @@ class TagFormBloc extends FormBloc<TagFormData, NewTagDTO, TagDTO> {
   TagFormBloc({required super.data});
 
   @override
-  NewTagDTO fromFormData(final TagFormData data) {
+  NewTagDTO fromFormData(TagFormData data) {
     return NewTagDTO(name: data.name.value!);
   }
 
   @override
-  void setFormValue(final TagFormData data, final TagDTO? value) {
+  void setFormValue(TagFormData data, TagDTO? value) {
     data.name.value = value?.name;
   }
 }

@@ -27,7 +27,7 @@ class GameAvailableCreateForm extends StatelessWidget {
   final String? locationId;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -88,7 +88,7 @@ class GameAvailableCreateForm extends StatelessWidget {
             GameAvailableCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: (final context, final formGroup, final readOnly) =>
+            fieldsBuilder: (context, formGroup, readOnly) =>
                 _fieldsCreateBuilder(
                   context,
                   gameId,
@@ -102,11 +102,11 @@ class GameAvailableCreateForm extends StatelessWidget {
 }
 
 Widget _fieldsCreateBuilder(
-  final BuildContext context,
-  final String? gameId,
-  final String? locationId,
-  final GameAvailableFormData formData,
-  final bool readOnly,
+  BuildContext context,
+  String? gameId,
+  String? locationId,
+  GameAvailableFormData formData,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[

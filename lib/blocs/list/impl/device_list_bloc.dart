@@ -11,12 +11,12 @@ class DeviceListBloc extends ListLoadBloc<DeviceDTO> {
 
   @override
   Future<PageResultDTO<DeviceDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.search(search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) =>
       service.count(AggregateSearch(filter: search.filter), quicksearch);
 }
 
@@ -28,15 +28,11 @@ class DevicePlayedGameListBloc extends ListLoadBloc<DeviceDTO> {
 
   @override
   Future<PageResultDTO<DeviceDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.searchPlayed(gameId, search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.countPlayed(
-        gameId,
-        AggregateSearch(filter: search.filter),
-        quicksearch,
-      );
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) => service
+      .countPlayed(gameId, AggregateSearch(filter: search.filter), quicksearch);
 }

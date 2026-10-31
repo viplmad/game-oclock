@@ -10,8 +10,7 @@ class TagGetBloc extends FunctionActionBloc<String, TagDTO> {
   final TagService service;
 
   @override
-  Future<TagDTO> doAction(final String event, final TagDTO? lastData) =>
-      service.get(event);
+  Future<TagDTO> doAction(String event, TagDTO? lastData) => service.get(event);
 }
 
 class TagCreateBloc extends FunctionActionBloc<NewTagDTO, String> {
@@ -20,7 +19,7 @@ class TagCreateBloc extends FunctionActionBloc<NewTagDTO, String> {
   final TagService service;
 
   @override
-  Future<String> doAction(final NewTagDTO event, final String? lastData) =>
+  Future<String> doAction(NewTagDTO event, String? lastData) =>
       service.create(event);
 }
 
@@ -31,7 +30,7 @@ class TagUpdateBloc extends ConsumerActionBloc<NewTagDTO> {
   final String id;
 
   @override
-  Future<void> doAction(final NewTagDTO event, final void lastData) =>
+  Future<void> doAction(NewTagDTO event, void lastData) =>
       service.update(id, event);
 }
 
@@ -41,12 +40,11 @@ class TagDeleteBloc extends ConsumerActionBloc<TagDTO> {
   final TagService service;
 
   @override
-  Future<void> doAction(final TagDTO event, final void lastData) =>
+  Future<void> doAction(TagDTO event, void lastData) =>
       service.delete(event.id);
 }
 
 class TagSelectBloc extends IdentityActionBloc<TagDTO?> {
   @override
-  Future<TagDTO?> doAction(final TagDTO? event, final TagDTO? lastData) async =>
-      event;
+  Future<TagDTO?> doAction(TagDTO? event, TagDTO? lastData) async => event;
 }

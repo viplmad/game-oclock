@@ -3,12 +3,9 @@ import 'package:game_oclock_client/api.dart';
 class LoginService {
   final AuthApi _api;
 
-  LoginService(final ApiClient apiClient) : _api = AuthApi(apiClient);
+  LoginService(ApiClient apiClient) : _api = AuthApi(apiClient);
 
-  Future<TokenResponse> login(
-    final String username,
-    final String password,
-  ) async {
+  Future<TokenResponse> login(String username, String password) async {
     return _api.token(
       GrantType.password,
       username: username,
@@ -16,7 +13,7 @@ class LoginService {
     );
   }
 
-  Future<TokenResponse> refresh(final String refreshToken) async {
+  Future<TokenResponse> refresh(String refreshToken) async {
     return _api.token(GrantType.refreshToken, refreshToken: refreshToken);
   }
 }

@@ -47,7 +47,7 @@ class TriangleBanner extends StatelessWidget {
   final double? size;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return CustomPaint(
       foregroundPainter: _TriangleBannerPainter(
         message: message,
@@ -107,7 +107,7 @@ class _TriangleBannerPainter extends CustomPainter {
   }
 
   @override
-  void paint(final Canvas canvas, final Size size) {
+  void paint(Canvas canvas, Size size) {
     if (!_prepared) {
       _prepare();
     }
@@ -129,7 +129,7 @@ class _TriangleBannerPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(final _TriangleBannerPainter oldDelegate) {
+  bool shouldRepaint(_TriangleBannerPainter oldDelegate) {
     return message != oldDelegate.message ||
         location != oldDelegate.location ||
         color != oldDelegate.color ||
@@ -137,9 +137,9 @@ class _TriangleBannerPainter extends CustomPainter {
   }
 
   @override
-  bool hitTest(final Offset position) => false;
+  bool hitTest(Offset position) => false;
 
-  double _translationX(final double width) {
+  double _translationX(double width) {
     switch (layoutDirection) {
       case TextDirection.rtl:
         switch (location) {

@@ -16,7 +16,7 @@ class DurationLabel extends StatelessWidget {
   final Duration? value;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TextLabel(
       icon: icon,
       label: label,

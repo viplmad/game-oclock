@@ -28,7 +28,7 @@ class GameSessionCreateForm extends StatelessWidget {
   final String gameId;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -101,9 +101,9 @@ class GameSessionCreateForm extends StatelessWidget {
 }
 
 Widget _fieldsCreateBuilder(
-  final BuildContext context,
-  final GameSessionFormData formGroup,
-  final bool readOnly,
+  BuildContext context,
+  GameSessionFormData formGroup,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[

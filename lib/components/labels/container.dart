@@ -6,7 +6,7 @@ class LabelsContainer extends StatelessWidget {
   final List<Widget> children;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Column(spacing: 0.0, children: children);
   }
 }

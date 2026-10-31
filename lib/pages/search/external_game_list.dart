@@ -22,7 +22,7 @@ class ExternalGameListPage extends StatelessWidget {
   const ExternalGameListPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ExternalGameSelectBloc()),
@@ -65,7 +65,7 @@ class _ExternalGameListDetailBuilder extends StatelessWidget {
   const _ExternalGameListDetailBuilder();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListDetailBuilder<
       PotentialMediaDTO,
       ExternalGameSelectBloc,
@@ -74,23 +74,22 @@ class _ExternalGameListDetailBuilder extends StatelessWidget {
       title: 'Search', // TODO
       searchSpace: _space,
       availableStyles: [ListStyle.tile],
-      idGetter: (final data) => data.external_.id,
-      detailBuilder: (final context, final data, final onClosed) {
+      idGetter: (data) => data.external_.id,
+      detailBuilder: (context, data, onClosed) {
         return ExternalGameDetail(
           key: Key(data.external_.id),
           data: data,
           onBackPressed: onClosed,
-          onAddSucceeded: (final context) =>
-              context.read<ExternalGameListBloc>().add(
-                const ListReloaded(), // TODO Only reload user info
-              ),
+          onAddSucceeded: (context) => context.read<ExternalGameListBloc>().add(
+            const ListReloaded(), // TODO Only reload user info
+          ),
         );
       },
-      listItemBuilder: (final context, final style, final data, final onTap) =>
+      listItemBuilder: (context, style, data, onTap) =>
           ExternalGameTileListItem(
             data: data,
             onTap: onTap,
-            onAddSucceeded: (final context) =>
+            onAddSucceeded: (context) =>
                 context.read<ExternalGameListBloc>().add(
                   const ListReloaded(), // TODO Only reload user info
                 ),

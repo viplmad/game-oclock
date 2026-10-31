@@ -10,7 +10,7 @@ class DetailError extends StatelessWidget {
   final VoidCallback onRetryTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -38,7 +38,7 @@ class LabelError extends StatelessWidget {
   final VoidCallback onRetryTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListTile(
       title: Text(label, style: Theme.of(context).textTheme.titleSmall),
       trailing: OutlinedButton.icon(

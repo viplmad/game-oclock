@@ -10,7 +10,7 @@ class ThemeModeGetBloc extends ProducerActionBloc<ThemeMode> {
   final SettingsService service;
 
   @override
-  Future<ThemeMode> doAction(final void event, final ThemeMode? lastData) =>
+  Future<ThemeMode> doAction(void event, ThemeMode? lastData) =>
       service.getCurrentTheme();
 }
 
@@ -20,8 +20,7 @@ class ThemeModeSaveBloc extends ConsumerActionBloc<ThemeMode?> {
   final SettingsService service;
 
   @override
-  Future<void> doAction(final ThemeMode? event, final void lastData) =>
-      event == null
+  Future<void> doAction(ThemeMode? event, void lastData) => event == null
       ? service.removeCurrentTheme()
       : service.saveCurrentTheme(event);
 }
@@ -32,7 +31,7 @@ class LocaleGetBloc extends ProducerActionBloc<Locale> {
   final SettingsService service;
 
   @override
-  Future<Locale> doAction(final void event, final Locale? lastData) =>
+  Future<Locale> doAction(void event, Locale? lastData) =>
       service.getCurrentLocale();
 }
 
@@ -42,8 +41,7 @@ class LocaleSaveBloc extends ConsumerActionBloc<Locale?> {
   final SettingsService service;
 
   @override
-  Future<void> doAction(final Locale? event, final void lastData) =>
-      event == null
+  Future<void> doAction(Locale? event, void lastData) => event == null
       ? service.removeCurrentLocale()
       : service.saveCurrentLocale(event);
 }
@@ -54,10 +52,8 @@ class DateLocaleConfigGetBloc extends ProducerActionBloc<DateLocaleConfig> {
   final SettingsService service;
 
   @override
-  Future<DateLocaleConfig> doAction(
-    final void event,
-    final DateLocaleConfig? lastData,
-  ) => service.getCurrentDateConfig();
+  Future<DateLocaleConfig> doAction(void event, DateLocaleConfig? lastData) =>
+      service.getCurrentDateConfig();
 }
 
 class DateLocaleConfigSaveBloc extends ConsumerActionBloc<DateLocaleConfig?> {
@@ -66,8 +62,7 @@ class DateLocaleConfigSaveBloc extends ConsumerActionBloc<DateLocaleConfig?> {
   final SettingsService service;
 
   @override
-  Future<void> doAction(final DateLocaleConfig? event, final void lastData) =>
-      event == null
+  Future<void> doAction(DateLocaleConfig? event, void lastData) => event == null
       ? service.removeCurrentDateConfig()
       : service.saveCurrentDateConfig(event);
 }

@@ -10,97 +10,98 @@ const sourceIgdb = 'igdb';
 final mediaKindField = OptionDynamicField(
   value: 'kind',
   type: FieldType.options,
-  labelBuilder: (final context) => context.localize().kindLabel,
+  labelBuilder: (context) => context.localize().kindLabel,
 );
 
 final titleField = OptionDynamicField(
   value: 'title',
   type: FieldType.text,
-  labelBuilder: (final context) => context.localize().titleLabel,
+  labelBuilder: (context) => context.localize().titleLabel,
 );
 
 final editionField = OptionDynamicField(
   value: 'edition',
   type: FieldType.text,
-  labelBuilder: (final context) => context.localize().editionLabel,
+  labelBuilder: (context) => context.localize().editionLabel,
 );
 
 final releaseDateField = OptionDynamicField(
   value: 'release_date',
   type: FieldType.datetime,
-  labelBuilder: (final context) => context.localize().releaseDateLabel,
+  labelBuilder: (context) => context.localize().releaseDateLabel,
 );
 
 final parentIdField = OptionDynamicField(
   value: 'parent_id',
   type: FieldType.text,
-  labelBuilder: (final context) => context.localize().parentIdLabel,
+  labelBuilder: (context) => context.localize().parentIdLabel,
 );
 
 final parentOrderField = OptionDynamicField(
   value: 'parent_order',
   type: FieldType.integer,
-  labelBuilder: (final context) => context.localize().parentOrderLabel,
+  labelBuilder: (context) => context.localize().parentOrderLabel,
 );
 
 final statusField = OptionDynamicField(
   value: 'status',
   type: FieldType.options,
-  labelBuilder: (final context) => context.localize().statusLabel,
+  labelBuilder: (context) => context.localize().statusLabel,
 );
 
 final ratingField = OptionDynamicField(
   value: 'rating',
   type: FieldType.integer,
-  labelBuilder: (final context) => context.localize().ratingLabel,
+  labelBuilder: (context) => context.localize().ratingLabel,
 );
 
 final notesField = OptionDynamicField(
   value: 'notes',
   type: FieldType.text,
-  labelBuilder: (final context) => context.localize().notesLabel,
+  labelBuilder: (context) => context.localize().notesLabel,
 );
 
 final gameStatusNextUp = OptionTextField(
   value: MediaStatus.planning.toJson(),
-  labelBuilder: (final context) => context.localize().nextUpLabel,
+  labelBuilder: (context) => context.localize().nextUpLabel,
   color: CommonColors.planning,
 );
 
 final gameStatusPlaying = OptionTextField(
   value: MediaStatus.inProgress.toJson(),
-  labelBuilder: (final context) => context.localize().playingLabel,
+  labelBuilder: (context) => context.localize().playingLabel,
   color: CommonColors.inProgress,
 );
 
 final gameStatusCompleted = OptionTextField(
   value: MediaStatus.completed.toJson(),
-  labelBuilder: (final context) => context.localize().completedLabel,
+  labelBuilder: (context) => context.localize().completedLabel,
   color: CommonColors.completed,
 );
 
 final gameStatusDropped = OptionTextField(
   value: MediaStatus.dropped.toJson(),
-  labelBuilder: (final context) => context.localize().droppedLabel,
+  labelBuilder: (context) => context.localize().droppedLabel,
   color: CommonColors.dropped,
 );
 
-final List<OptionTextField<String>> gameFieldOptions =
-    List.unmodifiable(<OptionTextField<String>>[
-      idField,
-      mediaKindField,
-      titleField,
-      editionField,
-      releaseDateField,
-      imageField,
-      parentIdField,
-      parentOrderField,
-      statusField,
-      ratingField,
-      notesField,
-      addedDatetimeField,
-      updatedDatetimeField,
-    ]);
+final List<OptionTextField<String>> gameFieldOptions = List.unmodifiable(
+  <OptionTextField<String>>[
+    idField,
+    mediaKindField,
+    titleField,
+    editionField,
+    releaseDateField,
+    imageField,
+    parentIdField,
+    parentOrderField,
+    statusField,
+    ratingField,
+    notesField,
+    addedDatetimeField,
+    updatedDatetimeField,
+  ],
+);
 
 final List<OptionTextField<String>> gameStatusOptions = List.unmodifiable(
   <OptionTextField<String>>[

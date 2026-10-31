@@ -21,7 +21,7 @@ class UserCreateForm extends StatelessWidget {
   final String? initialName;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -65,7 +65,7 @@ class UserEditForm extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -106,9 +106,9 @@ class UserEditForm extends StatelessWidget {
 }
 
 Widget _fieldsCreateBuilder(
-  final BuildContext context,
-  final UserFormData formGroup,
-  final bool readOnly,
+  BuildContext context,
+  UserFormData formGroup,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[
@@ -128,9 +128,9 @@ Widget _fieldsCreateBuilder(
 }
 
 Widget _fieldsEditBuilder(
-  final BuildContext context,
-  final UserFormData formGroup,
-  final bool readOnly,
+  BuildContext context,
+  UserFormData formGroup,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[

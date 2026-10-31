@@ -61,7 +61,7 @@ class UserGameDetailPage extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
 
     return MultiBlocProvider(
@@ -127,17 +127,16 @@ class UserGameDetailPage extends StatelessWidget {
       child: DetailBuilder<MediaDTO, UserGameGetBloc>(
         onBackPressed: () =>
             goBack(context, defaultPath: CommonPaths.gamesPath),
-        builder: (final context, final data, final onBackPressed) =>
-            UserGameDetail(
-              data: data,
-              fromPage: true,
-              extended: layoutTier != LayoutTier.compact,
-              onBackPressed: onBackPressed,
-              onEditSucceeded: (final context) =>
-                  context.read<UserGameGetBloc>().add(const ActionRestarted()),
-              onDeleteSucceeded: (final context) =>
-                  goBack(context, defaultPath: CommonPaths.gamesPath),
-            ),
+        builder: (context, data, onBackPressed) => UserGameDetail(
+          data: data,
+          fromPage: true,
+          extended: layoutTier != LayoutTier.compact,
+          onBackPressed: onBackPressed,
+          onEditSucceeded: (context) =>
+              context.read<UserGameGetBloc>().add(const ActionRestarted()),
+          onDeleteSucceeded: (context) =>
+              goBack(context, defaultPath: CommonPaths.gamesPath),
+        ),
       ),
     );
   }
@@ -162,10 +161,10 @@ class UserGameDetail extends StatelessWidget {
   final ValueChanged<BuildContext> onDeleteSucceeded;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final mainTab = TabDestination(
       icon: CommonIcons.detail,
-      labelBuilder: (final context) => context.localize().detailLabel,
+      labelBuilder: (context) => context.localize().detailLabel,
       onTap: (_) {},
       child: _info(context),
     );
@@ -173,8 +172,8 @@ class UserGameDetail extends StatelessWidget {
     final List<TabDestination> tabs = List.unmodifiable(<TabDestination>[
       TabDestination(
         icon: CommonIcons.dlcs,
-        labelBuilder: (final context) => context.localize().dlcsTitle,
-        onTap: (final context) {
+        labelBuilder: (context) => context.localize().dlcsTitle,
+        onTap: (context) {
           if (data.media.parentId != null) {
             final gb = context.read<UserGameParentGetBloc>();
             if (gb.state is ActionInitial<MediaDTO>) {
@@ -200,42 +199,38 @@ class UserGameDetail extends StatelessWidget {
                     ],
                   ),
                   GetBuilder<MediaDTO, UserGameParentGetBloc>(
-                    skeletonBuilder: (final context) =>
-                        const TileListSkeletonItem(),
-                    errorBuilder: (final context, final onRetryTap) =>
-                        TileListErrorItem(
-                          title: context.localize().errorLoadParentGameTitle,
-                          onRetryTap: onRetryTap,
-                        ),
-                    builder: (final context, final parent) =>
-                        UserGameWithOrderTileListItem(
-                          data: parent,
-                          order: data.media.parentOrder,
-                          onTap: () => go(
-                            context,
-                            path: CommonPaths.buildGamePath(parent.media.id),
-                          ),
-                        ),
+                    skeletonBuilder: (context) => const TileListSkeletonItem(),
+                    errorBuilder: (context, onRetryTap) => TileListErrorItem(
+                      title: context.localize().errorLoadParentGameTitle,
+                      onRetryTap: onRetryTap,
+                    ),
+                    builder: (context, parent) => UserGameWithOrderTileListItem(
+                      data: parent,
+                      order: data.media.parentOrder,
+                      onTap: () => go(
+                        context,
+                        path: CommonPaths.buildGamePath(parent.media.id),
+                      ),
+                    ),
                   ),
                 ],
               ),
             Expanded(
               child: RelationListBuilder<MediaDTO, GameChildrenListBloc>(
-                createFormBuilder: ([final quicksearch]) => GameChildCreateForm(
+                createFormBuilder: ([quicksearch]) => GameChildCreateForm(
                   parentGameId: data.media.id,
                   childGameId: quicksearch,
                 ),
-                searchCreateFormBuilder: (final quicksearch) =>
+                searchCreateFormBuilder: (quicksearch) =>
                     UserGameCreateForm(initialTitle: quicksearch),
-                itemBuilder: (final context, final child) =>
-                    UserGameWithOrderTileListItem(
-                      data: child,
-                      order: child.media.parentOrder,
-                      onTap: () => go(
-                        context,
-                        path: CommonPaths.buildGamePath(child.media.id),
-                      ),
-                    ),
+                itemBuilder: (context, child) => UserGameWithOrderTileListItem(
+                  data: child,
+                  order: child.media.parentOrder,
+                  onTap: () => go(
+                    context,
+                    path: CommonPaths.buildGamePath(child.media.id),
+                  ),
+                ),
               ),
             ),
           ],
@@ -243,41 +238,39 @@ class UserGameDetail extends StatelessWidget {
       ),
       TabDestination(
         icon: CommonIcons.locations,
-        labelBuilder: (final context) => context.localize().locationsTitle,
-        onTap: (final context) =>
+        labelBuilder: (context) => context.localize().locationsTitle,
+        onTap: (context) =>
             _loadOnlyInitial<LocationAvailableListBloc>(context),
         child:
             RelationListBuilder<
               LocationAvailableDTO,
               LocationAvailableListBloc
             >(
-              createFormBuilder: ([final quicksearch]) =>
-                  GameAvailableCreateForm(
-                    gameId: data.media.id,
-                    locationId: quicksearch,
-                  ),
-              searchCreateFormBuilder: (final quicksearch) =>
+              createFormBuilder: ([quicksearch]) => GameAvailableCreateForm(
+                gameId: data.media.id,
+                locationId: quicksearch,
+              ),
+              searchCreateFormBuilder: (quicksearch) =>
                   LocationCreateForm(initialName: quicksearch),
-              itemBuilder: (final context, final data) =>
-                  LocationWithDateTileListItem(
-                    data: data,
-                    onTap: () => go(
-                      context,
-                      path: CommonPaths.buildLocationPath(data.location.id),
-                    ),
-                  ),
+              itemBuilder: (context, data) => LocationWithDateTileListItem(
+                data: data,
+                onTap: () => go(
+                  context,
+                  path: CommonPaths.buildLocationPath(data.location.id),
+                ),
+              ),
             ),
       ),
       TabDestination(
         icon: CommonIcons.tags,
-        labelBuilder: (final context) => context.localize().tagsTitle,
-        onTap: (final context) => _loadOnlyInitial<TagOfGameListBloc>(context),
+        labelBuilder: (context) => context.localize().tagsTitle,
+        onTap: (context) => _loadOnlyInitial<TagOfGameListBloc>(context),
         child: RelationListBuilder<TagMediaDTO, TagOfGameListBloc>(
-          createFormBuilder: ([final quicksearch]) =>
+          createFormBuilder: ([quicksearch]) =>
               GameTagCreateForm(gameId: data.media.id, tagId: quicksearch),
-          searchCreateFormBuilder: (final quicksearch) =>
+          searchCreateFormBuilder: (quicksearch) =>
               TagCreateForm(initialName: quicksearch),
-          itemBuilder: (final context, final data) => TagMediaTileListItem(
+          itemBuilder: (context, data) => TagMediaTileListItem(
             data: data,
             onTap: () =>
                 go(context, path: CommonPaths.buildTagPath(data.tag.id)),
@@ -286,11 +279,10 @@ class UserGameDetail extends StatelessWidget {
       ),
       TabDestination(
         icon: CommonIcons.devices,
-        labelBuilder: (final context) => context.localize().devicesTitle,
-        onTap: (final context) =>
-            _loadOnlyInitial<DevicePlayedGameListBloc>(context),
+        labelBuilder: (context) => context.localize().devicesTitle,
+        onTap: (context) => _loadOnlyInitial<DevicePlayedGameListBloc>(context),
         child: RelationListBuilder<DeviceDTO, DevicePlayedGameListBloc>(
-          itemBuilder: (final context, final data) => DeviceTileListItem(
+          itemBuilder: (context, data) => DeviceTileListItem(
             data: data,
             onTap: () =>
                 go(context, path: CommonPaths.buildDevicePath(data.id)),
@@ -302,7 +294,7 @@ class UserGameDetail extends StatelessWidget {
     return MultiBlocListener(
       listeners: [
         BlocListener<UserGameDeleteBloc, ActionState<void>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionSuccess<void, MediaDTO>) {
               showSnackBar(
                 context,
@@ -320,7 +312,7 @@ class UserGameDetail extends StatelessWidget {
           },
         ),
         BlocListener<UserGameSyncBloc, ActionState<void>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionInProgress<void>) {
               showSnackBar(
                 context,
@@ -344,7 +336,7 @@ class UserGameDetail extends StatelessWidget {
           },
         ),
         BlocListener<UserGameUnsyncBloc, ActionState<void>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionSuccess<void, MediaDTO>) {
               showSnackBar(
                 context,
@@ -376,61 +368,60 @@ class UserGameDetail extends StatelessWidget {
           if (!fromPage)
             ActionDestination(
               icon: CommonIcons.view,
-              labelBuilder: (final context) => context.localize().viewLabel,
-              onTap: (final context) =>
+              labelBuilder: (context) => context.localize().viewLabel,
+              onTap: (context) =>
                   go(context, path: CommonPaths.buildGamePath(data.media.id)),
             ),
           ActionDestination(
             icon: CommonIcons.reload,
-            labelBuilder: (final context) => context.localize().reloadLabel,
-            onTap: (final context) => onEditSucceeded(context),
+            labelBuilder: (context) => context.localize().reloadLabel,
+            onTap: (context) => onEditSucceeded(context),
           ),
           ActionDestination(
             icon: CommonIcons.calendar,
-            labelBuilder: (final context) => context.localize().calendarLabel,
-            onTap: (final context) => go(
+            labelBuilder: (context) => context.localize().calendarLabel,
+            onTap: (context) => go(
               context,
               path: CommonPaths.buildGameCalendarPath(data.media.id),
             ),
           ),
           ActionDestination(
             icon: CommonIcons.edit,
-            labelBuilder: (final context) => context.localize().editLabel,
-            onTap: (final context) async => showReturningDialog(
+            labelBuilder: (context) => context.localize().editLabel,
+            onTap: (context) async => showReturningDialog(
               context,
-              builder: (final context) => UserGameEditForm(id: data.media.id),
-              onSuccess: (final context, _) => onEditSucceeded(context),
+              builder: (context) => UserGameEditForm(id: data.media.id),
+              onSuccess: (context, _) => onEditSucceeded(context),
             ),
           ),
           ActionDestination(
             icon: CommonIcons.sync,
-            labelBuilder: (final context) => context.localize().syncLabel,
-            onTap: (final context) =>
+            labelBuilder: (context) => context.localize().syncLabel,
+            onTap: (context) =>
                 context.read<UserGameSyncBloc>().add(ActionStarted(data: data)),
           ),
           ActionDestination(
             icon: CommonIcons.unsync,
-            labelBuilder: (final context) => context.localize().unsyncLabel,
-            onTap: (final context) => context.read<UserGameUnsyncBloc>().add(
+            labelBuilder: (context) => context.localize().unsyncLabel,
+            onTap: (context) => context.read<UserGameUnsyncBloc>().add(
               ActionStarted(data: data),
             ),
           ),
           ActionDestination(
             icon: CommonIcons.delete,
-            labelBuilder: (final context) => context.localize().deleteLabel,
-            onTap: (final context) async => showConfirmationDialog(
+            labelBuilder: (context) => context.localize().deleteLabel,
+            onTap: (context) async => showConfirmationDialog(
               context,
-              builder: (final context) => ConfirmationDialog(
+              builder: (context) => ConfirmationDialog(
                 title: context.localize().deleteDialogTitle,
                 subtitle: context.localize().deleteDialogSubtitle,
                 message: context.localize().deleteDialogDataTitle(
                   data.media.title,
                 ),
-                acceptLabel: MaterialLocalizations.of(
-                  context,
-                ).deleteButtonTooltip,
+                acceptLabel: MaterialLocalizations.of(context)
+                    .deleteButtonTooltip,
               ),
-              onSuccess: (final context) {
+              onSuccess: (context) {
                 context.read<UserGameDeleteBloc>().add(
                   ActionStarted(data: data),
                 );
@@ -445,7 +436,7 @@ class UserGameDetail extends StatelessWidget {
     );
   }
 
-  Widget _info(final BuildContext context) {
+  Widget _info(BuildContext context) {
     return SingleChildScrollView(
       child: LabelsContainer(
         children: [
@@ -500,43 +491,42 @@ class UserGameDetail extends StatelessWidget {
             value: data.media.series,
           ),
           GetBuilder<Duration, UserGameTotalTimeGetBloc>(
-            skeletonBuilder: (final context) => LabelSkeleton(
+            skeletonBuilder: (context) => LabelSkeleton(
               order: 0,
               icon: CommonIcons.time,
               label: context.localize().totalTimeLabel,
             ),
-            errorBuilder: (final context, final onRetryTap) => Center(
+            errorBuilder: (context, onRetryTap) => Center(
               child: LabelError(
                 label: context.localize().errorTotalTimeLoadTitle,
                 onRetryTap: onRetryTap,
               ),
             ),
-            builder: (final context, final data) => DurationLabel(
+            builder: (context, data) => DurationLabel(
               icon: CommonIcons.time,
               label: context.localize().totalTimeLabel,
               value: data,
             ),
           ),
           GetBuilder<List<SessionDTO>, UserGameFinishesGetBloc>(
-            skeletonBuilder: (final context) => LabelSkeleton(
+            skeletonBuilder: (context) => LabelSkeleton(
               order: 1,
               icon: CommonIcons.finished,
               label: context.localize().finishedLabel,
             ),
-            errorBuilder: (final context, final onRetryTap) => Center(
+            errorBuilder: (context, onRetryTap) => Center(
               child: LabelError(
                 label: context.localize().errorFinishesLoadTitle,
                 onRetryTap: onRetryTap,
               ),
             ),
-            builder: (final context, final data) => TextLabel(
+            builder: (context, data) => TextLabel(
               icon: CommonIcons.finished,
               label: context.localize().finishedLabel,
               value: data.isEmpty
                   ? null
-                  : MaterialLocalizations.of(
-                          context,
-                        ).formatCompactDate(data.first.startDatetime) +
+                  : MaterialLocalizations.of(context)
+                            .formatCompactDate(data.first.startDatetime) +
                         (data.length > 1 ? '(+)' : ''),
             ),
           ),
@@ -545,7 +535,7 @@ class UserGameDetail extends StatelessWidget {
     );
   }
 
-  void _loadOnlyInitial<LB extends ListLoadBloc>(final BuildContext context) {
+  void _loadOnlyInitial<LB extends ListLoadBloc>(BuildContext context) {
     final lb = context.read<LB>();
     if (lb.state is ListInitial) {
       lb.add(ListSearchChanged(search: ListSearchDTO()));

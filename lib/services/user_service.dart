@@ -6,19 +6,16 @@ import 'utils.dart';
 class UserService {
   final UsersApi _api;
 
-  UserService(final ApiClient apiClient) : _api = UsersApi(apiClient);
+  UserService(ApiClient apiClient) : _api = UsersApi(apiClient);
 
   Future<PageResultDTO<UserDTO>> search(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     return _api.getUsers(search, q: quicksearch);
   }
 
-  Future<int> count(
-    final AggregateSearch search,
-    final String? quicksearch,
-  ) async {
+  Future<int> count(AggregateSearch search, String? quicksearch) async {
     final response = await _api.aggregateUsersWithHttpInfo(
       AggregateSearchDTO(
         aggr: AggregateMetricDTO(
@@ -32,19 +29,19 @@ class UserService {
     return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
-  Future<UserDTO> get(final String id) async {
+  Future<UserDTO> get(String id) async {
     return _api.getUser(id);
   }
 
-  Future<String> create(final NewUserDTO user, final String password) async {
+  Future<String> create(NewUserDTO user, String password) async {
     return _api.createUser(password, user);
   }
 
-  Future<void> update(final String id, final NewUserDTO user) async {
+  Future<void> update(String id, NewUserDTO user) async {
     return _api.updateUser(id, user);
   }
 
-  Future<void> delete(final String id) async {
+  Future<void> delete(String id) async {
     return _api.deleteUser(id);
   }
 
@@ -53,9 +50,9 @@ class UserService {
   }
 
   Future<void> changePassword(
-    final String id,
-    final String currentPassword,
-    final String newPassword,
+    String id,
+    String currentPassword,
+    String newPassword,
   ) async {
     return _api.changePassword(id, currentPassword, newPassword);
   }

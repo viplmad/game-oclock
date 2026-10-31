@@ -8,7 +8,7 @@ class UserFormBloc extends FormBloc<UserFormData, NewUser, UserDTO> {
   UserFormBloc({required super.data});
 
   @override
-  NewUser fromFormData(final UserFormData data) {
+  NewUser fromFormData(UserFormData data) {
     return NewUser(
       username: data.username.value!,
       password: data.password.value!,
@@ -16,7 +16,7 @@ class UserFormBloc extends FormBloc<UserFormData, NewUser, UserDTO> {
   }
 
   @override
-  void setFormValue(final UserFormData data, final UserDTO? value) {
+  void setFormValue(UserFormData data, UserDTO? value) {
     data.username.value = value?.username;
   }
 }
@@ -31,7 +31,7 @@ class UserChangePasswordFormBloc
   UserChangePasswordFormBloc({required super.data});
 
   @override
-  UserChangePassword fromFormData(final UserChangePasswordFormData data) {
+  UserChangePassword fromFormData(UserChangePasswordFormData data) {
     return UserChangePassword(
       currentPassword: data.currentPassword.value!,
       newPassword: data.newPassword.value!,
@@ -40,8 +40,8 @@ class UserChangePasswordFormBloc
 
   @override
   void setFormValue(
-    final UserChangePasswordFormData data,
-    final UserChangePassword? value,
+    UserChangePasswordFormData data,
+    UserChangePassword? value,
   ) {
     // Edit not allowed
   }

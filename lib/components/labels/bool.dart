@@ -8,7 +8,7 @@ class IconLabel extends StatelessWidget {
   final String label;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListTile(
       leading: icon,
       title: Text(label, style: Theme.of(context).textTheme.titleSmall),
@@ -29,7 +29,7 @@ class BoolLabel extends StatelessWidget {
   final bool? value;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListTile(
       leading: icon,
       title: Text(label, style: Theme.of(context).textTheme.titleSmall),

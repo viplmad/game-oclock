@@ -1,4 +1,3 @@
-bool isStringEmpty(final String? value) => value == null || value.isEmpty;
+bool isStringEmpty(String? value) => value == null || value.isEmpty;
 
-bool isStringBlank(final String? value) =>
-    value == null || value.trim().isEmpty;
+bool isStringBlank(String? value) => value == null || value.trim().isEmpty;

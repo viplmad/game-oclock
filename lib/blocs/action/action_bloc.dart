@@ -18,18 +18,14 @@ abstract class FunctionActionBloc<E, S>
     extends Bloc<ActionEvent<E>, ActionState<S>> {
   FunctionActionBloc() : super(ActionInitial<S>()) {
     on<ActionStarted<E>>(
-      (final event, final emit) async =>
-          await onActionStarted(event.data, emit),
+      (event, emit) async => await onActionStarted(event.data, emit),
     );
     on<ActionRestarted<E>>(
-      (final event, final emit) async => await onActionRestarted(emit),
+      (event, emit) async => await onActionRestarted(emit),
     );
   }
 
-  Future<void> onActionStarted(
-    final E event,
-    final Emitter<ActionState<S>> emit,
-  ) async {
+  Future<void> onActionStarted(E event, Emitter<ActionState<S>> emit) async {
     if (state is ActionInitial<S>) {
       emit(ActionInProgress<S>(data: null));
       emit(await _tryDoAction(event, null));
@@ -43,17 +39,14 @@ abstract class FunctionActionBloc<E, S>
     }
   }
 
-  Future<void> onActionRestarted(final Emitter<ActionState<S>> emit) async {
+  Future<void> onActionRestarted(Emitter<ActionState<S>> emit) async {
     if (state is ActionFinal<S, E>) {
       final lastEvent = (state as ActionFinal<S, E>).event;
       await onActionStarted(lastEvent, emit);
     }
   }
 
-  Future<ActionFinal<S, E>> _tryDoAction(
-    final E event,
-    final S? lastData,
-  ) async {
+  Future<ActionFinal<S, E>> _tryDoAction(E event, S? lastData) async {
     try {
       return ActionSuccess<S, E>(
         data: await doAction(event, lastData),
@@ -72,7 +65,7 @@ abstract class FunctionActionBloc<E, S>
     }
   }
 
-  Future<S> doAction(final E event, final S? lastData);
+  Future<S> doAction(E event, S? lastData);
 }
 
 abstract class ProducerActionBloc<S> extends FunctionActionBloc<void, S> {}

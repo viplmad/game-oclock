@@ -9,77 +9,77 @@ final List<String> _onlyAdmin = List.unmodifiable(<String>[roleAdmin]);
 
 final gamesNavDestination = NavDestination(
   icon: CommonIcons.games,
-  labelBuilder: (final context) => context.localize().gamesTitle,
+  labelBuilder: (context) => context.localize().gamesTitle,
   path: CommonPaths.gamesPath,
   guardRoles: _allUsers,
 );
 
 final locationsNavDestination = NavDestination(
   icon: CommonIcons.locations,
-  labelBuilder: (final context) => context.localize().locationsTitle,
+  labelBuilder: (context) => context.localize().locationsTitle,
   path: CommonPaths.locationsPath,
   guardRoles: _allUsers,
 );
 
 final devicesNavDestination = NavDestination(
   icon: CommonIcons.devices,
-  labelBuilder: (final context) => context.localize().devicesTitle,
+  labelBuilder: (context) => context.localize().devicesTitle,
   path: CommonPaths.devicesPath,
   guardRoles: _allUsers,
 );
 
 final tagsNavDestination = NavDestination(
   icon: CommonIcons.tags,
-  labelBuilder: (final context) => context.localize().tagsTitle,
+  labelBuilder: (context) => context.localize().tagsTitle,
   path: CommonPaths.tagsPath,
   guardRoles: _allUsers,
 );
 
 final playthroughsNavDestination = NavDestination(
   icon: CommonIcons.playthroughs,
-  labelBuilder: (final context) => context.localize().playthroughsTitle,
+  labelBuilder: (context) => context.localize().playthroughsTitle,
   path: CommonPaths.playthroughsPath,
   guardRoles: _allUsers,
 );
 
 final searchNavDestination = NavDestination(
   icon: CommonIcons.search,
-  labelBuilder: (final context) => context.localize().searchTitle,
+  labelBuilder: (context) => context.localize().searchTitle,
   path: CommonPaths.searchPath,
   guardRoles: _allUsers,
 );
 
 final calendarNavDestination = NavDestination(
   icon: CommonIcons.calendar,
-  labelBuilder: (final context) => context.localize().calendarTitle,
+  labelBuilder: (context) => context.localize().calendarTitle,
   path: CommonPaths.calendarPath,
   guardRoles: _allUsers,
 );
 
 final reviewNavDestination = NavDestination(
   icon: CommonIcons.review,
-  labelBuilder: (final context) => context.localize().yearInReviewTitle,
+  labelBuilder: (context) => context.localize().yearInReviewTitle,
   path: CommonPaths.reviewPath,
   guardRoles: _allUsers,
 );
 
 final usersNavDestination = NavDestination(
   icon: CommonIcons.users,
-  labelBuilder: (final context) => context.localize().usersTitle,
+  labelBuilder: (context) => context.localize().usersTitle,
   path: CommonPaths.usersPath,
   guardRoles: _onlyAdmin,
 );
 
 final logoutNavDestination = NavDestination(
   icon: CommonIcons.logout,
-  labelBuilder: (final context) => context.localize().logoutLabel,
+  labelBuilder: (context) => context.localize().logoutLabel,
   path: CommonPaths.logoutPath,
   guardRoles: _allUsers,
 );
 
 final settingsNavDestination = NavDestination(
   icon: CommonIcons.settings,
-  labelBuilder: (final context) => context.localize().settingsTitle,
+  labelBuilder: (context) => context.localize().settingsTitle,
   path: CommonPaths.settingsPath,
   guardRoles: _allUsers,
 );
@@ -92,15 +92,16 @@ final List<NavDestination> mainDestinations = List.unmodifiable(
   ],
 );
 
-final List<NavDestination> secondaryDestinations =
-    List.unmodifiable(<NavDestination>[
-      tagsNavDestination,
-      playthroughsNavDestination,
-      searchNavDestination,
-      calendarNavDestination,
-      reviewNavDestination,
-      usersNavDestination,
-    ]);
+final List<NavDestination> secondaryDestinations = List.unmodifiable(
+  <NavDestination>[
+    tagsNavDestination,
+    playthroughsNavDestination,
+    searchNavDestination,
+    calendarNavDestination,
+    reviewNavDestination,
+    usersNavDestination,
+  ],
+);
 
 final List<NavDestination> trailingDestinations = List.unmodifiable(
   <NavDestination>[logoutNavDestination, settingsNavDestination],

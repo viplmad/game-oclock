@@ -21,7 +21,7 @@ class DeviceCreateForm extends StatelessWidget {
   final String? initialName;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -62,7 +62,7 @@ class DeviceEditForm extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -102,9 +102,9 @@ class DeviceEditForm extends StatelessWidget {
 }
 
 Widget _fieldsBuilder(
-  final BuildContext context,
-  final DeviceFormData formData,
-  final bool readOnly,
+  BuildContext context,
+  DeviceFormData formData,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[

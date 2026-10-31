@@ -16,12 +16,12 @@ class SimpleBoolFormField extends StatelessWidget {
   final bool readOnly;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ReactiveValueListenableBuilder(
       formControl: formControl,
       builder: (_, _, _) => SwitchListTile(
         value: formControl.value ?? false,
-        onChanged: readOnly ? null : (final value) => formControl.value = value,
+        onChanged: readOnly ? null : (value) => formControl.value = value,
         title: FormFieldLabel(text: label),
       ),
     );

@@ -26,7 +26,7 @@ class GameTagCreateForm extends StatelessWidget {
   final String? tagId;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -81,7 +81,7 @@ class GameTagCreateForm extends StatelessWidget {
             GameTagCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: (final context, final formGroup, final readOnly) =>
+            fieldsBuilder: (context, formGroup, readOnly) =>
                 _fieldsCreateBuilder(
                   context,
                   gameId,
@@ -95,11 +95,11 @@ class GameTagCreateForm extends StatelessWidget {
 }
 
 Widget _fieldsCreateBuilder(
-  final BuildContext context,
-  final String? gameId,
-  final String? tagId,
-  final GameTagFormData formGroup,
-  final bool readOnly,
+  BuildContext context,
+  String? gameId,
+  String? tagId,
+  GameTagFormData formGroup,
+  bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[

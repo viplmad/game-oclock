@@ -40,13 +40,13 @@ import 'list/tile_list.dart';
 
 final OptionField<ListStyle> _listStyleTileOption = OptionTextField<ListStyle>(
   value: ListStyle.tile,
-  labelBuilder: (final context) => context.localize().listStyleTileLabel,
+  labelBuilder: (context) => context.localize().listStyleTileLabel,
   icon: CommonIcons.listStyleTile,
 );
 
 final OptionField<ListStyle> _listStyleGridOption = OptionTextField<ListStyle>(
   value: ListStyle.grid,
-  labelBuilder: (final context) => context.localize().listStyleGridLabel,
+  labelBuilder: (context) => context.localize().listStyleGridLabel,
   icon: CommonIcons.listStyleGrid,
 );
 
@@ -88,13 +88,13 @@ class ListDetailBuilder<
   final double itemAspectRatio;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
 
     return MultiBlocListener(
       listeners: [
         BlocListener<SB, ActionState<T?>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             final data = (state is ActionSuccess<T?, T?>) ? state.data : null;
 
             // Allow minimized if selected
@@ -104,7 +104,7 @@ class ListDetailBuilder<
           },
         ),
         BlocListener<CurrentListSearchGetBloc, ActionState<ListSearch>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionFinal<ListSearch, void>) {
               final currentSearch = (state is ActionSuccess<ListSearch, void>)
                   ? ListSearchDTO(
@@ -118,7 +118,7 @@ class ListDetailBuilder<
           },
         ),
         BlocListener<CurrentListSearchSaveBloc, ActionState<void>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionSuccess<void, ListSearch?>) {
               context.read<CurrentListSearchGetBloc>().add(
                 const ActionRestarted(),
@@ -127,7 +127,7 @@ class ListDetailBuilder<
           },
         ),
         BlocListener<CurrentListStyleSaveBloc, ActionState<void>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ActionSuccess<void, ListStyle?>) {
               context.read<CurrentListStyleGetBloc>().add(
                 const ActionRestarted(),
@@ -136,7 +136,7 @@ class ListDetailBuilder<
           },
         ),
         BlocListener<LB, ListState<T>>(
-          listener: (final context, final state) {
+          listener: (context, state) {
             if (state is ListLoadSuccess<T>) {
               final listData = state.data;
 
@@ -148,7 +148,7 @@ class ListDetailBuilder<
                   try {
                     final selectedId = idGetter(selectData);
                     final reloadedData = listData.firstWhere(
-                      (final el) => idGetter(el) == selectedId,
+                      (el) => idGetter(el) == selectedId,
                     );
                     context.read<SB>().add(ActionStarted(data: reloadedData));
                   } on StateError {
@@ -161,14 +161,14 @@ class ListDetailBuilder<
         ),
       ],
       child: BlocBuilder<CurrentListStyleGetBloc, ActionState<ListStyle>>(
-        builder: (final context, final listStyleState) {
+        builder: (context, listStyleState) {
           final selectedStyle =
               (listStyleState is ActionSuccess<ListStyle, void>)
               ? listStyleState.data
               : defaultListStyle;
 
           return BlocBuilder<SB, ActionState<T?>>(
-            builder: (final context, final selectState) {
+            builder: (context, selectState) {
               final selectedData = (selectState is ActionSuccess<T?, T?>)
                   ? selectState.data
                   : null;
@@ -217,9 +217,9 @@ class ListDetailBuilder<
   }
 
   Widget _detail(
-    final BuildContext context, {
-    required final T? selectedData,
-    required final SB selectBloc,
+    BuildContext context, {
+    required T? selectedData,
+    required SB selectBloc,
   }) {
     return selectedData == null
         ? _emptyDetail(context)
@@ -230,22 +230,21 @@ class ListDetailBuilder<
           );
   }
 
-  Widget _emptyDetail(final BuildContext context) {
+  Widget _emptyDetail(BuildContext context) {
     return Center(child: Text(context.localize().emptyListDetailLabel));
   }
 
   Widget _list(
-    final BuildContext context, {
-    required final T? selectedData,
-    required final ListStyle selectedStyle,
+    BuildContext context, {
+    required T? selectedData,
+    required ListStyle selectedStyle,
   }) {
     return NestedScrollView(
-      headerSliverBuilder: (final context, final innerBoxIsScrolled) =>
-          _appBarBuilder(
-            context,
-            innerBoxIsScrolled,
-            selectedStyle: selectedStyle,
-          ),
+      headerSliverBuilder: (context, innerBoxIsScrolled) => _appBarBuilder(
+        context,
+        innerBoxIsScrolled,
+        selectedStyle: selectedStyle,
+      ),
       body: Stack(
         alignment: Alignment.bottomRight,
         children: [
@@ -259,33 +258,31 @@ class ListDetailBuilder<
                     ),
                     itemAspectRatio: itemAspectRatio,
                     columns: (MediaQuery.sizeOf(context).width / 400).ceil(),
-                    itemBuilder: (final context, final data, final index) =>
-                        listItemBuilder(
-                          context,
-                          ListStyle.grid,
-                          data,
-                          () => _selectOrUnselectIfSame(
-                            context,
-                            selectBloc: context.read<SB>(),
-                            data: data,
-                            selectedData: selectedData,
-                          ),
-                        ),
+                    itemBuilder: (context, data, index) => listItemBuilder(
+                      context,
+                      ListStyle.grid,
+                      data,
+                      () => _selectOrUnselectIfSame(
+                        context,
+                        selectBloc: context.read<SB>(),
+                        data: data,
+                        selectedData: selectedData,
+                      ),
+                    ),
                   )
                 : TileListBuilder<T, LB>(
                     borderRadius: BorderRadius.zero,
-                    itemBuilder: (final context, final data, final index) =>
-                        listItemBuilder(
-                          context,
-                          ListStyle.tile,
-                          data,
-                          () => _selectOrUnselectIfSame(
-                            context,
-                            selectBloc: context.read<SB>(),
-                            data: data,
-                            selectedData: selectedData,
-                          ),
-                        ),
+                    itemBuilder: (context, data, index) => listItemBuilder(
+                      context,
+                      ListStyle.tile,
+                      data,
+                      () => _selectOrUnselectIfSame(
+                        context,
+                        selectBloc: context.read<SB>(),
+                        data: data,
+                        selectedData: selectedData,
+                      ),
+                    ),
                   ),
           ),
           Padding(
@@ -298,27 +295,27 @@ class ListDetailBuilder<
   }
 
   List<Widget> _appBarBuilder(
-    final BuildContext context,
-    final bool innerBoxIsScrolled, {
-    required final ListStyle selectedStyle,
+    BuildContext context,
+    bool innerBoxIsScrolled, {
+    required ListStyle selectedStyle,
   }) {
     return <Widget>[
       FullSearchSliverAppBar(
         title: Text(title),
         onAddPressed: onSearchAddPressed,
-        onSearchChanged: (final value) =>
+        onSearchChanged: (value) =>
             context.read<LB>().add(ListQuicksearchChanged(quicksearch: value)),
         actions: [
           if (availableStyles.length > 1)
             SegmentedButton<ListStyle>(
               segments: availableStyles
                   .map(
-                    (final style) => style == ListStyle.grid
+                    (style) => style == ListStyle.grid
                         ? _listStyleGridOption
                         : _listStyleTileOption,
                   )
                   .map(
-                    (final choice) => ButtonSegment<ListStyle>(
+                    (choice) => ButtonSegment<ListStyle>(
                       value: choice.value,
                       label: choice.widgetBuilder(context),
                       icon: choice.icon,
@@ -326,7 +323,7 @@ class ListDetailBuilder<
                   )
                   .toList(growable: false),
               selected: {selectedStyle},
-              onSelectionChanged: (final newSelection) {
+              onSelectionChanged: (newSelection) {
                 context.read<CurrentListStyleSaveBloc>().add(
                   ActionStarted(data: newSelection.first),
                 );
@@ -343,10 +340,10 @@ class ListDetailBuilder<
   }
 
   void _selectOrUnselectIfSame(
-    final BuildContext context, {
-    required final SB selectBloc,
-    required final T? data,
-    required final T? selectedData,
+    BuildContext context, {
+    required SB selectBloc,
+    required T? data,
+    required T? selectedData,
   }) {
     _select(
       selectBloc: context.read<SB>(),
@@ -356,7 +353,7 @@ class ListDetailBuilder<
     );
   }
 
-  void _select({required final SB selectBloc, required final T? data}) {
+  void _select({required SB selectBloc, required T? data}) {
     selectBloc.add(ActionStarted(data: data));
   }
 }
@@ -397,24 +394,23 @@ class ListCreateDetailBuilder<
   final double itemAspectRatio;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListDetailBuilder<T, SB, LB>(
       title: title,
       searchSpace: searchSpace,
       availableStyles: availableStyles,
-      onSearchAddPressed: (final quicksearch) async => showReturningDialog(
+      onSearchAddPressed: (quicksearch) async => showReturningDialog(
         context,
-        builder: (final context) => createFormBuilder(quicksearch),
-        onSuccess: (final context, _) =>
-            context.read<LB>().add(const ListReloaded()),
+        builder: (context) => createFormBuilder(quicksearch),
+        onSuccess: (context, _) => context.read<LB>().add(const ListReloaded()),
       ),
       idGetter: idGetter,
       floatingActionButton: FloatingActionButton(
         tooltip: context.localize().createLabel,
         onPressed: () async => showReturningDialog(
           context,
-          builder: (final context) => createFormBuilder(),
-          onSuccess: (final context, _) =>
+          builder: (context) => createFormBuilder(),
+          onSuccess: (context, _) =>
               context.read<LB>().add(const ListReloaded()),
         ),
         child: CommonIcons.add,
@@ -440,24 +436,23 @@ class RelationListBuilder<T extends Object, LB extends ListLoadBloc<T>>
   final Widget Function(BuildContext context, T data) itemBuilder;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListLayout(
       toolbar: ListFullSearchToolbar(
         onAddPressed:
             createFormBuilder == null || searchCreateFormBuilder == null
             ? null
-            : (final quicksearch) async => showReturningDialog(
+            : (quicksearch) async => showReturningDialog(
                 context,
-                builder: (final context) =>
-                    searchCreateFormBuilder!(quicksearch),
-                onSuccess: (final context, _) async => showReturningDialog(
+                builder: (context) => searchCreateFormBuilder!(quicksearch),
+                onSuccess: (context, _) async => showReturningDialog(
                   context,
-                  builder: (final context) => createFormBuilder!(quicksearch),
-                  onSuccess: (final context, _) =>
+                  builder: (context) => createFormBuilder!(quicksearch),
+                  onSuccess: (context, _) =>
                       context.read<LB>().add(const ListReloaded()),
                 ),
               ),
-        onSearchChanged: (final value) =>
+        onSearchChanged: (value) =>
             context.read<LB>().add(ListQuicksearchChanged(quicksearch: value)),
         actions: [
           if (createFormBuilder != null)
@@ -466,8 +461,8 @@ class RelationListBuilder<T extends Object, LB extends ListLoadBloc<T>>
               tooltip: context.localize().linkLabel,
               onPressed: () async => showReturningDialog(
                 context,
-                builder: (final context) => createFormBuilder!(),
-                onSuccess: (final context, _) =>
+                builder: (context) => createFormBuilder!(),
+                onSuccess: (context, _) =>
                     context.read<LB>().add(const ListReloaded()),
               ),
             ),
@@ -481,8 +476,7 @@ class RelationListBuilder<T extends Object, LB extends ListLoadBloc<T>>
       statusbar: ListTotalStatusbarBuilder<T, LB>(),
       child: TileListBuilder<T, LB>(
         borderRadius: BorderRadius.zero,
-        itemBuilder: (final context, final data, final index) =>
-            itemBuilder(context, data),
+        itemBuilder: (context, data, index) => itemBuilder(context, data),
       ),
     );
   }

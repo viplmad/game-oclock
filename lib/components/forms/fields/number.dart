@@ -19,7 +19,7 @@ class SimpleRatingFormField extends StatelessWidget {
   final Color? borderColor;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ReactiveValueListenableBuilder(
       formControl: formControl,
       builder: (_, _, _) => SmoothStarRating(
@@ -31,7 +31,7 @@ class SimpleRatingFormField extends StatelessWidget {
         size: 35.0,
         onRated: readOnly
             ? null
-            : (final double? newRating) {
+            : (double? newRating) {
                 formControl.value = newRating?.toInt();
               },
       ),

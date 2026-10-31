@@ -23,10 +23,10 @@ class SimpleSelectFormField extends StatelessWidget {
   final List<OptionTextField<String>> options;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ReactiveValueListenableBuilder(
       formControl: formControl,
-      builder: (final context, _, _) => DropdownMenuFormField<String>(
+      builder: (context, _, _) => DropdownMenuFormField<String>(
         enabled: !readOnly,
         initialSelection: formControl.value,
         enableFilter: true,
@@ -34,7 +34,7 @@ class SimpleSelectFormField extends StatelessWidget {
         label: FormFieldLabel(
           text: label,
           required: formControl.validators.any(
-            (final validator) => validator is NotEmptyValidator,
+            (validator) => validator is NotEmptyValidator,
           ),
         ),
         trailingIcon: readOnly || formControl.isNotNullOrEmpty
@@ -57,7 +57,7 @@ class SimpleSelectFormField extends StatelessWidget {
         },*/
         dropdownMenuEntries: options
             .map(
-              (final field) => DropdownMenuEntry<String>(
+              (field) => DropdownMenuEntry<String>(
                 value: field.value,
                 label: field.labelBuilder(context),
               ),
@@ -100,10 +100,10 @@ class _SimpleMultipleSelectFormFieldState
       validators: widget.formArray.validators,
     );
     textFormControl.setErrors(widget.formArray.errors, markAsDirty: false);
-    textListener = textFormControl.valueChanges.listen((final value) {
+    textListener = textFormControl.valueChanges.listen((value) {
       widget.formArray.value = value
           ?.split(separator)
-          .map((final e) => e.trim())
+          .map((e) => e.trim())
           .toList(growable: false);
     });
 
@@ -118,7 +118,7 @@ class _SimpleMultipleSelectFormFieldState
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SimpleTextFormField(
       formControl: textFormControl,
       readOnly: widget.readOnly,
@@ -130,7 +130,7 @@ class _SimpleMultipleSelectFormFieldState
     );
   }
 
-  String? _buildTextValue(final List<String?>? value) {
+  String? _buildTextValue(List<String?>? value) {
     return value?.join('$separator ');
   }
 }

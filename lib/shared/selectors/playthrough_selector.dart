@@ -21,7 +21,7 @@ class PlaythroughSelectorBuilder extends StatelessWidget {
   final bool readOnly;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SingleAutocompleteSelectorBuilder<
       Playthrough,
       PlaythroughGetBloc,
@@ -30,16 +30,16 @@ class PlaythroughSelectorBuilder extends StatelessWidget {
       formControl: formControl,
       label: label,
       readOnly: readOnly,
-      itemBuilder: (final context, final item, final index, final onSelected) =>
+      itemBuilder: (context, item, index, onSelected) =>
           PlaythroughTileListItem(data: item, onTap: onSelected),
-      keyGetter: (final item) => item.id,
-      displayString: (final item) => item.name,
-      onAddPressed: (final quicksearch, final onSelected) async =>
+      keyGetter: (item) => item.id,
+      displayString: (item) => item.name,
+      onAddPressed: (quicksearch, onSelected) async =>
           showReturningDialog<String>(
             context,
-            builder: (final context) =>
+            builder: (context) =>
                 PlaythroughCreateForm(initialName: quicksearch),
-            onSuccess: (final context, final data) => onSelected(data),
+            onSuccess: (context, data) => onSelected(data),
           ),
     );
   }

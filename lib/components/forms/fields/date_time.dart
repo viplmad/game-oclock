@@ -41,7 +41,7 @@ class _SimpleDateTimeFormFieldState extends State<SimpleDateTimeFormField> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SimpleTextFormField(
       formControl: textFormControl,
       label: widget.label,
@@ -67,7 +67,7 @@ class _SimpleDateTimeFormFieldState extends State<SimpleDateTimeFormField> {
       initialDate: widget.formControl.value ?? DateTime.now(),
       firstDate: widget.firstDate,
       lastDate: widget.lastDate,
-    ).then<void>((final dateValue) {
+    ).then<void>((dateValue) {
       if (dateValue != null && context.mounted) {
         return showTimePicker(
           // ignore: use_build_context_synchronously
@@ -75,7 +75,7 @@ class _SimpleDateTimeFormFieldState extends State<SimpleDateTimeFormField> {
           initialTime: widget.formControl.value == null
               ? TimeOfDay.now()
               : TimeOfDay.fromDateTime(widget.formControl.value!),
-        ).then<void>((final timeValue) {
+        ).then<void>((timeValue) {
           if (timeValue != null) {
             final value = dateValue.copyWith(
               hour: timeValue.hour,
@@ -92,7 +92,7 @@ class _SimpleDateTimeFormFieldState extends State<SimpleDateTimeFormField> {
     });
   }
 
-  String? _buildTextValue(final DateTime? value) {
+  String? _buildTextValue(DateTime? value) {
     if (value == null) {
       return null;
     }

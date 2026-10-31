@@ -8,7 +8,7 @@ class ImageSkeleton extends StatelessWidget {
   final int order;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Skeleton(order: order);
   }
 }

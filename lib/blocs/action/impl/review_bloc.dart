@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:game_oclock/models/models.dart'
     show
         AggregateGroupSearch,
@@ -19,7 +20,7 @@ import '../action.dart' show FunctionActionBloc, IdentityActionBloc;
 
 class ReviewYearSelectBloc extends IdentityActionBloc<int?> {
   @override
-  Future<int?> doAction(final int? event, final int? lastData) async => event;
+  Future<int?> doAction(int? event, int? lastData) async => event;
 }
 
 class ReviewTotalMediasGetBloc extends FunctionActionBloc<ReviewStartEnd, int> {
@@ -28,7 +29,7 @@ class ReviewTotalMediasGetBloc extends FunctionActionBloc<ReviewStartEnd, int> {
   final SessionService service;
 
   @override
-  Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
+  Future<int> doAction(ReviewStartEnd event, int? lastData) =>
       service.countDistinctMedias(
         AggregateSearch(
           filter: buildStartDateBetweenFilters(event.start, event.end),
@@ -45,7 +46,7 @@ class ReviewTotalFirstMediasGetBloc
   final SessionService service;
 
   @override
-  Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
+  Future<int> doAction(ReviewStartEnd event, int? lastData) =>
       service.countDistinctFirstTimeMedias(
         AggregateSearch(
           filter: buildStartDateBetweenFilters(event.start, event.end),
@@ -62,7 +63,7 @@ class ReviewTotalFinishedMediasGetBloc
   final SessionService service;
 
   @override
-  Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
+  Future<int> doAction(ReviewStartEnd event, int? lastData) =>
       service.countDistinctMedias(
         AggregateSearch(
           filter: List.unmodifiable(<FilterDTO>[
@@ -82,7 +83,7 @@ class ReviewTotalFirstFinishedMediasGetBloc
   final SessionService service;
 
   @override
-  Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
+  Future<int> doAction(ReviewStartEnd event, int? lastData) =>
       service.countDistinctFirstTimeMedias(
         AggregateSearch(
           filter: List.unmodifiable(<FilterDTO>[
@@ -102,16 +103,14 @@ class ReviewTotalTimeGetBloc
   final SessionService service;
 
   @override
-  Future<Duration> doAction(
-    final ReviewStartEnd event,
-    final Duration? lastData,
-  ) => service.sumTime(
-    AggregateSearch(
-      filter: buildStartDateBetweenFilters(event.start, event.end),
-    ),
-    null,
-    calculateOnCurrentYear(event.start),
-  );
+  Future<Duration> doAction(ReviewStartEnd event, Duration? lastData) =>
+      service.sumTime(
+        AggregateSearch(
+          filter: buildStartDateBetweenFilters(event.start, event.end),
+        ),
+        null,
+        calculateOnCurrentYear(event.start),
+      );
 }
 
 class ReviewTotalSessionsGetBloc
@@ -121,14 +120,13 @@ class ReviewTotalSessionsGetBloc
   final SessionService service;
 
   @override
-  Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
-      service.count(
-        AggregateSearch(
-          filter: buildStartDateBetweenFilters(event.start, event.end),
-        ),
-        null,
-        calculateOnCurrentYear(event.start),
-      );
+  Future<int> doAction(ReviewStartEnd event, int? lastData) => service.count(
+    AggregateSearch(
+      filter: buildStartDateBetweenFilters(event.start, event.end),
+    ),
+    null,
+    calculateOnCurrentYear(event.start),
+  );
 }
 
 class ReviewTotalDevicesGetBloc
@@ -138,7 +136,7 @@ class ReviewTotalDevicesGetBloc
   final SessionService service;
 
   @override
-  Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
+  Future<int> doAction(ReviewStartEnd event, int? lastData) =>
       service.countDistinctDevices(
         AggregateSearch(
           filter: List.unmodifiable(<FilterDTO>[
@@ -162,8 +160,8 @@ class ReviewMostUsedDeviceGetBloc
 
   @override
   Future<DeviceWithTime?> doAction(
-    final ReviewStartEnd event,
-    final DeviceWithTime? lastData,
+    ReviewStartEnd event,
+    DeviceWithTime? lastData,
   ) async {
     final aggr = await service
         .sumTimeByDevice(
@@ -182,7 +180,7 @@ class ReviewMostUsedDeviceGetBloc
           calculateOnCurrentYear(event.start),
         )
         .then(_removeZeroDurationEntries)
-        .then((final result) => result.firstOrNull);
+        .then((result) => result.firstOrNull);
     if (aggr == null) {
       return null;
     }
@@ -200,8 +198,8 @@ class ReviewFirstSessionGetBloc
 
   @override
   Future<MediaSessionDTO?> doAction(
-    final ReviewStartEnd event,
-    final MediaSessionDTO? lastData,
+    ReviewStartEnd event,
+    MediaSessionDTO? lastData,
   ) async {
     final firstSessions = await service
         .search(
@@ -215,7 +213,7 @@ class ReviewFirstSessionGetBloc
           null,
           // no mode, not so demanding query
         )
-        .then((final pageResult) => pageResult.data);
+        .then((pageResult) => pageResult.data);
     if (firstSessions.isEmpty) {
       return null;
     }
@@ -234,8 +232,8 @@ class ReviewLastSessionGetBloc
 
   @override
   Future<MediaSessionDTO?> doAction(
-    final ReviewStartEnd event,
-    final MediaSessionDTO? lastData,
+    ReviewStartEnd event,
+    MediaSessionDTO? lastData,
   ) async {
     final lastSessions = await service
         .search(
@@ -249,7 +247,7 @@ class ReviewLastSessionGetBloc
           null,
           // no mode, not so demanding query
         )
-        .then((final pageResult) => pageResult.data);
+        .then((pageResult) => pageResult.data);
     if (lastSessions.isEmpty) {
       return null;
     }
@@ -271,8 +269,8 @@ class ReviewLongestSessionGetBloc
 
   @override
   Future<MediaSessionDTO?> doAction(
-    final ReviewStartEnd event,
-    final MediaSessionDTO? lastData,
+    ReviewStartEnd event,
+    MediaSessionDTO? lastData,
   ) async {
     final longestSessions = await service
         .search(
@@ -286,7 +284,7 @@ class ReviewLongestSessionGetBloc
           null,
           // no mode, not so demanding query
         )
-        .then((final pageResult) => pageResult.data);
+        .then((pageResult) => pageResult.data);
     if (longestSessions.isEmpty) {
       return null;
     }
@@ -304,8 +302,8 @@ class ReviewLongestStreakGetBloc
 
   @override
   Future<SessionStreakDTO> doAction(
-    final ReviewStartEnd event,
-    final SessionStreakDTO? lastData,
+    ReviewStartEnd event,
+    SessionStreakDTO? lastData,
   ) => service
       .searchStreaks(
         ListSearchDTO(
@@ -315,7 +313,7 @@ class ReviewLongestStreakGetBloc
         null,
         calculateOnCurrentYear(event.start),
       )
-      .then((final pageResult) => pageResult.data.first);
+      .then((pageResult) => pageResult.data.first);
 }
 
 class ReviewTotalMediasGroupByReleaseDateYearGetBloc
@@ -330,8 +328,8 @@ class ReviewTotalMediasGroupByReleaseDateYearGetBloc
 
   @override
   Future<List<AggregateGroupResultDTO<int, int>>> doAction(
-    final ReviewStartEnd event,
-    final List<AggregateGroupResultDTO<int, int>>? lastData,
+    ReviewStartEnd event,
+    List<AggregateGroupResultDTO<int, int>>? lastData,
   ) => service.countDistinctMediasByReleaseDateYear(
     AggregateGroupSearch(
       filter: buildStartDateBetweenFilters(event.start, event.end),
@@ -362,8 +360,8 @@ class ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
 
   @override
   Future<List<AggregateGroupResultDTO<int, int>>> doAction(
-    final ReviewStartEnd event,
-    final List<AggregateGroupResultDTO<int, int>>? lastData,
+    ReviewStartEnd event,
+    List<AggregateGroupResultDTO<int, int>>? lastData,
   ) => service.countDistinctMediasByReleaseDateYear(
     AggregateGroupSearch(
       filter: List.unmodifiable(<FilterDTO>[
@@ -408,8 +406,8 @@ class ReviewTotalTimeGroupByMonthThenMediaGetBloc
     >
   >
   doAction(
-    final ReviewStartEnd event,
-    final List<
+    ReviewStartEnd event,
+    List<
       AggregateGroupResultDTO<
         int,
         List<AggregateGroupResultDTO<String, Duration>>
@@ -449,8 +447,8 @@ class ReviewTop5MediasByTotalTimeListBloc
 
   @override
   Future<List<MediaWithTime>> doAction(
-    final ReviewStartEnd event,
-    final List<MediaWithTime>? lastData,
+    ReviewStartEnd event,
+    List<MediaWithTime>? lastData,
   ) async {
     final aggr = await service
         .sumTimeByMedia(
@@ -476,10 +474,7 @@ class ReviewTop5MediasByTotalTimeListBloc
             field: idField.value,
             operator_: OperatorType.in_,
             value: SearchValue(
-              values: aggr
-                  .map((final el) => el.key)
-                  .toSet()
-                  .toList(growable: false),
+              values: aggr.map((el) => el.key).toSet().toList(growable: false),
             ),
             chainOperator: ChainOperatorType.and,
           ),
@@ -490,8 +485,8 @@ class ReviewTop5MediasByTotalTimeListBloc
     );
     return aggr
         .map(
-          (final el) => MediaWithTime(
-            media: search.data.firstWhere((final m) => m.media.id == el.key),
+          (el) => MediaWithTime(
+            media: search.data.firstWhere((m) => m.media.id == el.key),
             time: el.value,
           ),
         )
@@ -511,8 +506,8 @@ class ReviewTotalMediasGroupByRatingGetBloc
 
   @override
   Future<List<AggregateGroupResultDTO<int, int>>> doAction(
-    final ReviewStartEnd event,
-    final List<AggregateGroupResultDTO<int, int>>? lastData,
+    ReviewStartEnd event,
+    List<AggregateGroupResultDTO<int, int>>? lastData,
   ) => service.countDistinctMediasByRating(
     AggregateGroupSearch(
       filter: buildStartDateBetweenFilters(event.start, event.end),
@@ -541,8 +536,8 @@ class ReviewTotalMediasGroupByGenreGetBloc
 
   @override
   Future<List<AggregateGroupResultDTO<String, int>>> doAction(
-    final ReviewStartEnd event,
-    final List<AggregateGroupResultDTO<String, int>>? lastData,
+    ReviewStartEnd event,
+    List<AggregateGroupResultDTO<String, int>>? lastData,
   ) => service.countDistinctMediasByGenre(
     AggregateGroupSearch(
       filter: buildStartDateBetweenFilters(event.start, event.end),
@@ -572,8 +567,8 @@ class ReviewTotalFinishedMediasGroupByMonthGetBloc
 
   @override
   Future<List<AggregateGroupResultDTO<int, int>>> doAction(
-    final ReviewStartEnd event,
-    final List<AggregateGroupResultDTO<int, int>>? lastData,
+    ReviewStartEnd event,
+    List<AggregateGroupResultDTO<int, int>>? lastData,
   ) => service.countDistinctMediasByStartDateMonth(
     AggregateGroupSearch(
       filter: List.unmodifiable(<FilterDTO>[
@@ -605,8 +600,8 @@ class ReviewTotalTimeGroupByWeekdayGetBloc
 
   @override
   Future<List<AggregateGroupResultDTO<int, Duration>>> doAction(
-    final ReviewStartEnd event,
-    final List<AggregateGroupResultDTO<int, Duration>>? lastData,
+    ReviewStartEnd event,
+    List<AggregateGroupResultDTO<int, Duration>>? lastData,
   ) => service.sumTimeByStartDateWeekday(
     AggregateGroupSearch(
       filter: buildStartDateBetweenFilters(event.start, event.end),
@@ -635,8 +630,8 @@ class ReviewTotalTimeGroupByHourGetBloc
 
   @override
   Future<List<AggregateGroupResultDTO<int, Duration>>> doAction(
-    final ReviewStartEnd event,
-    final List<AggregateGroupResultDTO<int, Duration>>? lastData,
+    ReviewStartEnd event,
+    List<AggregateGroupResultDTO<int, Duration>>? lastData,
   ) => service.sumTimeByStartDateHour(
     AggregateGroupSearch(
       filter: buildStartDateBetweenFilters(event.start, event.end),
@@ -654,7 +649,5 @@ class ReviewTotalTimeGroupByHourGetBloc
 }
 
 List<AggregateGroupResultDTO<String, Duration>> _removeZeroDurationEntries(
-  final List<AggregateGroupResultDTO<String, Duration>> value,
-) => value
-    .where((final element) => !element.value.isZero())
-    .toList(growable: false);
+  List<AggregateGroupResultDTO<String, Duration>> value,
+) => value.where((element) => !element.value.isZero()).toList(growable: false);

@@ -11,11 +11,11 @@ class PlaythroughListBloc extends ListLoadBloc<Playthrough> {
 
   @override
   Future<PageResultDTO<Playthrough>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.searchForGame(search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) =>
       service.countForGame(search, quicksearch);
 }

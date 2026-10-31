@@ -8,7 +8,7 @@ class GameChildFormBloc
   GameChildFormBloc({required super.data});
 
   @override
-  GameChild fromFormData(final GameChildFormData data) {
+  GameChild fromFormData(GameChildFormData data) {
     return GameChild(
       parentGameId: data.parentGameId.value!,
       childGameId: data.childGameId.value!,
@@ -17,7 +17,7 @@ class GameChildFormBloc
   }
 
   @override
-  void setFormValue(final GameChildFormData data, final GameChild? value) {
+  void setFormValue(GameChildFormData data, GameChild? value) {
     data.parentGameId.value = value?.parentGameId;
     data.childGameId.value = value?.childGameId;
     data.order.value = value?.order?.toString();

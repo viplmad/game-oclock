@@ -10,8 +10,8 @@ class GameTagCreateBloc extends FunctionActionBloc<GameTag, (String, String)> {
 
   @override
   Future<(String, String)> doAction(
-    final GameTag event,
-    final (String, String)? lastData,
+    GameTag event,
+    (String, String)? lastData,
   ) => service
       .addTag(event.gameId, event.tagId)
       .then((_) => (event.gameId, event.tagId));

@@ -40,7 +40,7 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SimpleTextFormField(
       formControl: textFormControl,
       label: widget.label,
@@ -66,7 +66,7 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
       initialDate: widget.formControl.value ?? DateTime.now(),
       firstDate: widget.firstDate,
       lastDate: widget.lastDate,
-    ).then<void>((final value) {
+    ).then<void>((value) {
       if (value != null) {
         widget.formControl.value = value;
 
@@ -76,7 +76,7 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
     });
   }
 
-  String? _buildTextValue(final DateTime? value) {
+  String? _buildTextValue(DateTime? value) {
     if (value == null) {
       return null;
     }

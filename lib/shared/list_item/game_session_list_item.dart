@@ -18,7 +18,7 @@ class SessionTileListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TileListItem(
       title: _buildTitle(context, data, selectedDay),
       subtitle: context.localize().formatDuration(data.time),
@@ -58,7 +58,7 @@ class SessionWithMediaTileListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TileListItem(
       title: data.media.media.edition.isEmpty
           ? data.media.media.title
@@ -92,9 +92,9 @@ class SessionWithMediaTileListItem extends StatelessWidget {
 }
 
 String _buildTitle(
-  final BuildContext context,
-  final SessionDTO data,
-  final DateTime? selectedDay,
+  BuildContext context,
+  SessionDTO data,
+  DateTime? selectedDay,
 ) {
   if (selectedDay == null) {
     return '${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.startDatetime))} ⮕ ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.endDatetime))}';

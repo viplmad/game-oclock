@@ -11,8 +11,8 @@ class GameAvailableCreateBloc
 
   @override
   Future<(String, String)> doAction(
-    final GameAvailable event,
-    final (String, String)? lastData,
+    GameAvailable event,
+    (String, String)? lastData,
   ) => service
       .addAvailability(event.gameId, event.locationId, event.date)
       .then((_) => (event.gameId, event.locationId));

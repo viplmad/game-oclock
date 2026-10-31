@@ -23,11 +23,11 @@ class GridListBuilder<T extends Object, LB extends ListLoadBloc<T>>
 
   @override
   Widget listView({
-    required final List<T> items,
-    required final Widget Function(BuildContext context, T item, int index)
+    required List<T> items,
+    required Widget Function(BuildContext context, T item, int index)
     itemBuilder,
-    final Widget? trailing,
-    required final ScrollController controller,
+    Widget? trailing,
+    required ScrollController controller,
   }) {
     return GridList(
       items: items,
@@ -41,10 +41,7 @@ class GridListBuilder<T extends Object, LB extends ListLoadBloc<T>>
   }
 
   @override
-  Widget errorItemBuilder(
-    final BuildContext context,
-    final VoidCallback onTap,
-  ) {
+  Widget errorItemBuilder(BuildContext context, VoidCallback onTap) {
     return GridListErrorItem(
       title: context.localize().errorListPageLoadTitle,
       onRetryTap: onTap,
@@ -52,14 +49,14 @@ class GridListBuilder<T extends Object, LB extends ListLoadBloc<T>>
   }
 
   @override
-  Widget skeletonItemBuilder({final int order = 0}) {
+  Widget skeletonItemBuilder({int order = 0}) {
     return GridListSkeletonItem(order: order);
   }
 
   @override
   Widget skeletonListView() {
     return GridListSkeleton(
-      itemBuilder: (final index) => skeletonItemBuilder(order: index),
+      itemBuilder: (index) => skeletonItemBuilder(order: index),
       borderRadius: borderRadius,
       itemAspectRatio: itemAspectRatio,
       columns: columns,
@@ -88,7 +85,7 @@ class GridList<T> extends StatelessWidget {
   final int columns;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return _GridList(
       items: items,
       itemBuilder: itemBuilder,
@@ -124,7 +121,7 @@ class CenteredGridList<T> extends StatelessWidget {
   final int columns;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final count = countWithTrailing(items, trailing);
 
     return _GridList(
@@ -161,7 +158,7 @@ class _GridList<T> extends StatelessWidget {
   final SliverGridDelegate gridDelegate;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final count = countWithTrailing(items, trailing);
 
     return GridView.builder(
@@ -169,7 +166,7 @@ class _GridList<T> extends StatelessWidget {
       itemCount: count,
       controller: controller,
       gridDelegate: gridDelegate,
-      itemBuilder: (final context, final index) {
+      itemBuilder: (context, index) {
         Widget itemWidget;
         if (index == count - 1 && trailing != null) {
           itemWidget = trailing!;

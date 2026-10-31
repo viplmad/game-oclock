@@ -10,7 +10,7 @@ class CurrentListStyleGetBloc extends ProducerActionBloc<ListStyle> {
   final String space;
 
   @override
-  Future<ListStyle> doAction(final void event, final ListStyle? lastData) =>
+  Future<ListStyle> doAction(void event, ListStyle? lastData) =>
       service.getCurrent(space);
 }
 
@@ -21,8 +21,7 @@ class CurrentListStyleSaveBloc extends ConsumerActionBloc<ListStyle?> {
   final String space;
 
   @override
-  Future<void> doAction(final ListStyle? event, final void lastData) =>
-      event == null
+  Future<void> doAction(ListStyle? event, void lastData) => event == null
       ? service.removeCurrent(space)
       : service.saveCurrent(space, event);
 }

@@ -19,7 +19,7 @@ final Map<String, List<ListSearch>> defaultListSearch = Map.unmodifiable(
 final List<ListSearch> gameDefaultFilters = List.unmodifiable(<ListSearch>[
   ListSearch.internal(
     id: 'main',
-    labelBuilder: (final context) => context.localize().mainLabel,
+    labelBuilder: (context) => context.localize().mainLabel,
     filter: List.unmodifiable(<FilterDTO>[]),
     sort: List.unmodifiable(<SortDTO>[
       SortDTO(field: releaseDateField.value, order: OrderType.asc),
@@ -28,7 +28,7 @@ final List<ListSearch> gameDefaultFilters = List.unmodifiable(<ListSearch>[
   ),
   ListSearch.internal(
     id: 'lastAdded',
-    labelBuilder: (final context) => context.localize().lastAddedLabel,
+    labelBuilder: (context) => context.localize().lastAddedLabel,
     filter: List.unmodifiable(<FilterDTO>[]),
     sort: List.unmodifiable(<SortDTO>[
       SortDTO(field: addedDatetimeField.value, order: OrderType.desc),
@@ -36,7 +36,7 @@ final List<ListSearch> gameDefaultFilters = List.unmodifiable(<ListSearch>[
   ),
   ListSearch.internal(
     id: 'lastUpdated',
-    labelBuilder: (final context) => context.localize().lastUpdatedLabel,
+    labelBuilder: (context) => context.localize().lastUpdatedLabel,
     filter: List.unmodifiable(<FilterDTO>[]),
     sort: List.unmodifiable(<SortDTO>[
       SortDTO(field: updatedDatetimeField.value, order: OrderType.desc),
@@ -44,7 +44,7 @@ final List<ListSearch> gameDefaultFilters = List.unmodifiable(<ListSearch>[
   ),
   ListSearch.internal(
     id: 'playing',
-    labelBuilder: (final context) => context.localize().playingLabel,
+    labelBuilder: (context) => context.localize().playingLabel,
     filter: List.unmodifiable(<FilterDTO>[
       FilterDTO(
         field: statusField.value,
@@ -59,7 +59,7 @@ final List<ListSearch> gameDefaultFilters = List.unmodifiable(<ListSearch>[
   ),
   ListSearch.internal(
     id: 'nextUp',
-    labelBuilder: (final context) => context.localize().nextUpLabel,
+    labelBuilder: (context) => context.localize().nextUpLabel,
     filter: List.unmodifiable(<FilterDTO>[
       FilterDTO(
         field: statusField.value,

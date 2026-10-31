@@ -7,12 +7,12 @@ class DeviceFormBloc extends FormBloc<DeviceFormData, NewDeviceDTO, DeviceDTO> {
   DeviceFormBloc({required super.data});
 
   @override
-  NewDeviceDTO fromFormData(final DeviceFormData data) {
+  NewDeviceDTO fromFormData(DeviceFormData data) {
     return NewDeviceDTO(name: data.name.value!, imageUrl: data.imageUrl.value);
   }
 
   @override
-  void setFormValue(final DeviceFormData data, final DeviceDTO? value) {
+  void setFormValue(DeviceFormData data, DeviceDTO? value) {
     data.name.value = value?.name;
   }
 }

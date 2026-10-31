@@ -38,7 +38,7 @@ class _SimpleDurationFormFieldState extends State<SimpleDurationFormField> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SimpleTextFormField(
       formControl: textFormControl,
       label: widget.label,
@@ -62,7 +62,7 @@ class _SimpleDurationFormFieldState extends State<SimpleDurationFormField> {
     return showDurationPicker(
       context: context,
       initialTime: widget.formControl.value ?? Duration.zero,
-    ).then<void>((final value) {
+    ).then<void>((value) {
       if (value != null) {
         widget.formControl.value = value;
 
@@ -72,7 +72,7 @@ class _SimpleDurationFormFieldState extends State<SimpleDurationFormField> {
     });
   }
 
-  String? _buildTextValue(final Duration? value) {
+  String? _buildTextValue(Duration? value) {
     if (value == null) {
       return null;
     }

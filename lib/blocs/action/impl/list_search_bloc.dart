@@ -18,14 +18,11 @@ class CurrentListSearchGetBloc extends ProducerActionBloc<ListSearch> {
   final String? defaultId;
 
   @override
-  Future<ListSearch> doAction(
-    final void event,
-    final ListSearch? lastData,
-  ) async {
+  Future<ListSearch> doAction(void event, ListSearch? lastData) async {
     final currentId = await getOrDefault();
     try {
       return defaultListSearch[space]!.firstWhere(
-        (final element) => element.id == currentId,
+        (element) => element.id == currentId,
       );
     } on StateError {
       return service.get(space, currentId);
@@ -51,8 +48,7 @@ class CurrentListSearchSaveBloc extends ConsumerActionBloc<ListSearch?> {
   final String space;
 
   @override
-  Future<void> doAction(final ListSearch? event, final void lastData) =>
-      event == null
+  Future<void> doAction(ListSearch? event, void lastData) => event == null
       ? service.removeCurrent(space)
       : service.saveCurrent(space, event);
 }
@@ -64,7 +60,7 @@ class ListSearchGetBloc extends FunctionActionBloc<String, ListSearch> {
   final String space;
 
   @override
-  Future<ListSearch> doAction(final String event, final ListSearch? lastData) =>
+  Future<ListSearch> doAction(String event, ListSearch? lastData) =>
       service.get(space, event);
 }
 
@@ -75,7 +71,7 @@ class ListSearchCreateBloc extends FunctionActionBloc<ListSearch, String> {
   final String space;
 
   @override
-  Future<String> doAction(final ListSearch event, final String? lastData) =>
+  Future<String> doAction(ListSearch event, String? lastData) =>
       service.create(space, event);
 }
 
@@ -86,6 +82,6 @@ class ListSearchUpdateBloc extends ConsumerActionBloc<ListSearch> {
   final String space;
 
   @override
-  Future<void> doAction(final ListSearch event, final void lastData) =>
+  Future<void> doAction(ListSearch event, void lastData) =>
       service.update(space, event);
 }

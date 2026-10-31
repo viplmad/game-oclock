@@ -19,7 +19,7 @@ class CommonSpaces {
   static const user = 'user';
 }
 
-List<OptionTextField<String>> getSpaceFieldOptions(final String space) {
+List<OptionTextField<String>> getSpaceFieldOptions(String space) {
   return switch (space) {
     CommonSpaces.game => gameFieldOptions,
     CommonSpaces.location => locationFieldOptions,

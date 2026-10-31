@@ -6,15 +6,15 @@ import 'package:game_oclock/shared/year_picker_dialog.dart'
 import 'show_form_dialog.dart';
 
 Future<void> showConfirmationDialog(
-  final BuildContext context, {
-  required final ConfirmationDialog Function(BuildContext context) builder,
-  required final ValueChanged<BuildContext> onSuccess,
-  final ValueChanged<BuildContext>? onFailure,
+  BuildContext context, {
+  required ConfirmationDialog Function(BuildContext context) builder,
+  required ValueChanged<BuildContext> onSuccess,
+  ValueChanged<BuildContext>? onFailure,
 }) async {
   return showReturningDialog<bool>(
     context,
     builder: builder,
-    onSuccess: (final context, final data) {
+    onSuccess: (context, data) {
       if (data) {
         onSuccess(context);
       }
@@ -38,7 +38,7 @@ class ConfirmationDialog extends StatelessWidget {
   final String acceptLabel;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(title),
       content: ListTile(title: Text(message), subtitle: Text(subtitle)),
@@ -57,13 +57,13 @@ class ConfirmationDialog extends StatelessWidget {
 }
 
 Future<void> showYearPicker(
-  final BuildContext context, {
-  required final int year,
-  required final void Function(BuildContext context, int data) onSuccess,
+  BuildContext context, {
+  required int year,
+  required void Function(BuildContext context, int data) onSuccess,
 }) async {
   return showReturningDialog<int>(
     context,
-    builder: (final context) => YearPickerDialog(year: year),
+    builder: (context) => YearPickerDialog(year: year),
     onSuccess: onSuccess,
   );
 }
@@ -90,7 +90,7 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Dialog(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -127,7 +127,7 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
               lastDate: DateTime.now(),
               initialDate: _selectedDate,
               selectedDate: _selectedDate,
-              onChanged: (final newDate) {
+              onChanged: (newDate) {
                 setState(() {
                   _selectedDate = newDate;
                 });

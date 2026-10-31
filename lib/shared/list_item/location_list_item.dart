@@ -14,7 +14,7 @@ class LocationTileListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TileListItem(
       title: data.name,
       imageURL: data.imageUrl,
@@ -34,7 +34,7 @@ class LocationGridListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return GridListItem(
       title: data.name,
       imageURL: data.imageUrl,

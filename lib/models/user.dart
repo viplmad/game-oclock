@@ -10,17 +10,17 @@ const roleUser = 'ROLE_USER';
 final userRoleField = OptionDynamicField(
   value: 'role',
   type: FieldType.options,
-  labelBuilder: (final context) => context.localize().roleLabel,
+  labelBuilder: (context) => context.localize().roleLabel,
 );
 
 final userRoleUser = OptionTextField(
   value: roleUser,
-  labelBuilder: (final context) => context.localize().roleUserLabel,
+  labelBuilder: (context) => context.localize().roleUserLabel,
 );
 
 final userRoleAdmin = OptionTextField(
   value: roleAdmin,
-  labelBuilder: (final context) => context.localize().roleAdminLabel,
+  labelBuilder: (context) => context.localize().roleAdminLabel,
 );
 
 final List<OptionTextField<String>> userFieldOptions = List.unmodifiable(

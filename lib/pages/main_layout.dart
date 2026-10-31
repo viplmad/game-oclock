@@ -19,9 +19,9 @@ class MainLayout extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return BlocBuilder<CurrentUserGetBloc, ActionState<UserDTO>>(
-      builder: (final context, final currentUserState) {
+      builder: (context, currentUserState) {
         final user = (currentUserState is ActionSuccess<UserDTO, void>)
             ? currentUserState.data
             : null;
@@ -44,13 +44,13 @@ class MainLayout extends StatelessWidget {
   }
 
   List<NavDestination> _filterDestinationByUser(
-    final List<NavDestination> destinations,
-    final UserDTO? user,
+    List<NavDestination> destinations,
+    UserDTO? user,
   ) {
     return user == null
         ? destinations
         : destinations
-              .where((final dest) => dest.guardRoles.contains(user.role))
+              .where((dest) => dest.guardRoles.contains(user.role))
               .toList(growable: false);
   }
 }

@@ -22,27 +22,22 @@ import 'list.dart'
 abstract class ListLoadBloc<S extends Object>
     extends Bloc<ListEvent, ListState<S>> {
   ListLoadBloc() : super(ListInitial<S>()) {
-    on<ListReloaded>(
-      (final event, final emit) async => await onListReloaded(emit),
-    );
-    on<ListPageReloaded>(
-      (final event, final emit) async => await onListPageReloaded(emit),
-    );
+    on<ListReloaded>((event, emit) async => await onListReloaded(emit));
+    on<ListPageReloaded>((event, emit) async => await onListPageReloaded(emit));
     on<ListSearchChanged>(
-      (final event, final emit) async =>
-          await onListSearchChanged(event.search, emit),
+      (event, emit) async => await onListSearchChanged(event.search, emit),
     );
     on<ListQuicksearchChanged>(
-      (final event, final emit) async =>
+      (event, emit) async =>
           await onListQuicksearchChanged(event.quicksearch, emit),
       transformer: debounce(const Duration(milliseconds: 300)),
     );
     on<ListPageIncremented>(
-      (final event, final emit) async => await onListPageIncremented(emit),
+      (event, emit) async => await onListPageIncremented(emit),
     );
   }
 
-  Future<void> onListReloaded(final Emitter<ListState<S>> emit) async {
+  Future<void> onListReloaded(Emitter<ListState<S>> emit) async {
     if (state is ListFinal<S>) {
       final lastSearch = (state as ListFinal<S>).search;
       final lastQuicksearch = (state as ListFinal<S>).quicksearch;
@@ -58,7 +53,7 @@ abstract class ListLoadBloc<S extends Object>
     }
   }
 
-  Future<void> onListPageReloaded(final Emitter<ListState<S>> emit) async {
+  Future<void> onListPageReloaded(Emitter<ListState<S>> emit) async {
     if (state is ListFinal<S>) {
       final lastData = (state as ListFinal<S>).data;
       final lastTotal = (state as ListFinal<S>).total;
@@ -79,8 +74,8 @@ abstract class ListLoadBloc<S extends Object>
   }
 
   Future<void> onListQuicksearchChanged(
-    final String? quicksearch,
-    final Emitter<ListState<S>> emit,
+    String? quicksearch,
+    Emitter<ListState<S>> emit,
   ) async {
     if (state is ListInitial<S>) {
       final search = ListSearchDTO();
@@ -121,8 +116,8 @@ abstract class ListLoadBloc<S extends Object>
   }
 
   Future<void> onListSearchChanged(
-    final ListSearchDTO search,
-    final Emitter<ListState<S>> emit,
+    ListSearchDTO search,
+    Emitter<ListState<S>> emit,
   ) async {
     if (state is ListInitial<S>) {
       emit(
@@ -153,7 +148,7 @@ abstract class ListLoadBloc<S extends Object>
     }
   }
 
-  Future<void> onListPageIncremented(final Emitter<ListState<S>> emit) async {
+  Future<void> onListPageIncremented(Emitter<ListState<S>> emit) async {
     if (state is ListFinal<S>) {
       final lastData = (state as ListFinal<S>).data;
       final lastTotal = (state as ListFinal<S>).total;
@@ -186,10 +181,10 @@ abstract class ListLoadBloc<S extends Object>
   }
 
   Future<ListFinal<S>> _tryLoadList(
-    final ListSearchDTO search,
-    final String? quicksearch,
-    final List<S>? lastData,
-    final int? lastTotal,
+    ListSearchDTO search,
+    String? quicksearch,
+    List<S>? lastData,
+    int? lastTotal,
   ) async {
     try {
       final data = mergePageData(
@@ -228,10 +223,7 @@ abstract class ListLoadBloc<S extends Object>
     }
   }
 
-  Future<PageResultDTO<S>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
-  );
+  Future<PageResultDTO<S>> doLoad(ListSearchDTO search, String? quicksearch);
 
-  Future<int?> doCount(final ListSearchDTO search, final String? quicksearch);
+  Future<int?> doCount(ListSearchDTO search, String? quicksearch);
 }

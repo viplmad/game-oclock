@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import 'copy_to_clipboard.dart';
 
-void goBack(final BuildContext context, {final String? defaultPath}) {
+void goBack(BuildContext context, {String? defaultPath}) {
   final PathHistory history = RepositoryProvider.of(context);
   final historyPath = history.pop();
 
@@ -20,15 +20,15 @@ void goBack(final BuildContext context, {final String? defaultPath}) {
   }
 }
 
-void go(final BuildContext context, {required final String path}) {
+void go(BuildContext context, {required String path}) {
   GoRouter.of(context).go(path);
 }
 
 void showSnackBar(
-  final BuildContext context, {
-  required final String message,
-  final int seconds = 4, // Recommended 4-10 seconds
-  final SnackBarAction? snackBarAction,
+  BuildContext context, {
+  required String message,
+  int seconds = 4, // Recommended 4-10 seconds
+  SnackBarAction? snackBarAction,
 }) {
   final mediaQuerySize = MediaQuery.sizeOf(context);
   final layoutTier = layoutTierFromSize(mediaQuerySize);
@@ -61,9 +61,9 @@ void showSnackBar(
 }
 
 void showErrorSnackBar(
-  final BuildContext context, {
-  required final String name,
-  required final ErrorDTO error,
+  BuildContext context, {
+  required String name,
+  required ErrorDTO error,
 }) async {
   final String title = context.localize().errorCodeNameDataTitle(
     error.code,
@@ -82,17 +82,17 @@ void showErrorSnackBar(
 }
 
 SnackBarAction _errorSnackBarAction(
-  final BuildContext context, {
-  required final String label,
-  required final String title,
-  required final String content,
+  BuildContext context, {
+  required String label,
+  required String title,
+  required String content,
 }) {
   return backgroundSnackBarAction(
     context,
     label: label,
     onPressed: () async => await showDialog<bool>(
       context: context,
-      builder: (final BuildContext context) => AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
         title: Text(title),
         content: Text(content),
         actions: <Widget>[
@@ -115,9 +115,9 @@ SnackBarAction _errorSnackBarAction(
 }
 
 SnackBarAction backgroundSnackBarAction(
-  final BuildContext context, {
-  required final String label,
-  required final void Function() onPressed,
+  BuildContext context, {
+  required String label,
+  required void Function() onPressed,
 }) {
   return SnackBarAction(label: label, onPressed: onPressed);
 }

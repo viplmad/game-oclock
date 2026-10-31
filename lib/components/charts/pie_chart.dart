@@ -23,12 +23,12 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
   final ValueChanged<int>? onTap;
 
   @override
-  Widget build(final context) {
+  Widget build(context) {
     final String Function(String, N) labelAccessor =
-        valueFormatter ?? (_, final value) => value.toString();
+        valueFormatter ?? (_, value) => value.toString();
 
     final data = values.indexed
-        .map((final indexed) {
+        .map((indexed) {
           final entry = indexed.$2;
           final currentLabel = entry.key;
           final currentValue = entry.value;
@@ -43,13 +43,13 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
 
     final series = charts.Series<SeriesElement<N>, String>(
       id: id,
-      colorFn: (final element, _) => charts.ColorUtil.fromDartColor(
+      colorFn: (element, _) => charts.ColorUtil.fromDartColor(
         colourGetter(element.domainLabel, element.index),
       ),
-      domainFn: (final element, _) => element.domainLabel,
-      measureFn: (final element, _) => element.value,
+      domainFn: (element, _) => element.domainLabel,
+      measureFn: (element, _) => element.value,
       data: data,
-      labelAccessorFn: (final element, _) => element.value > 0
+      labelAccessorFn: (element, _) => element.value > 0
           ? labelAccessor(element.domainLabel, element.value)
           : '',
       outsideLabelStyleAccessorFn: (_, _) =>
@@ -69,7 +69,7 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
       selectionModels: onTap != null
           ? <charts.SelectionModelConfig<String>>[
               charts.SelectionModelConfig<String>(
-                updatedListener: (final model) {
+                updatedListener: (model) {
                   final firstDatum = model.selectedDatum.firstOrNull;
                   if (firstDatum != null && firstDatum.index != null) {
                     final domainIndex = firstDatum.index!;

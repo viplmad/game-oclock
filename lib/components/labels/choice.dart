@@ -17,7 +17,7 @@ class ChoiceLabel extends StatelessWidget {
   final List<OptionTextField<String>> options;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListTile(
       leading: icon,
       title: Text(label, style: Theme.of(context).textTheme.titleSmall),
@@ -39,12 +39,12 @@ class LabelChoiceChip extends StatelessWidget {
   final List<OptionTextField<String>> options;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final option = options.firstWhere(
-      (final element) => element.value == value,
+      (element) => element.value == value,
       orElse: () => OptionTextField(
         value: value ?? '',
-        labelBuilder: (final context) => value ?? '',
+        labelBuilder: (context) => value ?? '',
       ),
     );
 

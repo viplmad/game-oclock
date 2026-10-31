@@ -28,7 +28,7 @@ class DeviceListPage extends StatelessWidget {
   const DeviceListPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => DeviceSelectBloc()),
@@ -74,14 +74,14 @@ class _DeviceListDetailBuilder extends StatelessWidget {
   const _DeviceListDetailBuilder();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListCreateDetailBuilder<DeviceDTO, DeviceSelectBloc, DeviceListBloc>(
       title: context.localize().devicesTitle,
       searchSpace: _space,
-      createFormBuilder: ([final quicksearch]) =>
+      createFormBuilder: ([quicksearch]) =>
           DeviceCreateForm(initialName: quicksearch),
-      idGetter: (final data) => data.id,
-      detailBuilder: (final context, final data, final onClosed) {
+      idGetter: (data) => data.id,
+      detailBuilder: (context, data, onClosed) {
         return MultiBlocProvider(
           // Recreate on selection change
           key: Key(data.id),
@@ -97,10 +97,10 @@ class _DeviceListDetailBuilder extends StatelessWidget {
             data: data,
             extended: false,
             onBackPressed: onClosed,
-            onEditSucceeded: (final context) {
+            onEditSucceeded: (context) {
               context.read<DeviceListBloc>().add(const ListReloaded());
             },
-            onDeleteSucceeded: (final context) {
+            onDeleteSucceeded: (context) {
               context.read<DeviceListBloc>().add(const ListReloaded());
               context.read<DeviceSelectBloc>().add(
                 const ActionStarted(data: null),
@@ -109,8 +109,7 @@ class _DeviceListDetailBuilder extends StatelessWidget {
           ),
         );
       },
-      listItemBuilder: (final context, final style, final data, final onTap) =>
-          style == ListStyle.grid
+      listItemBuilder: (context, style, data, onTap) => style == ListStyle.grid
           ? DeviceGridListItem(data: data, onTap: onTap)
           : DeviceTileListItem(data: data, onTap: onTap),
       itemAspectRatio: 1, // Square aspect ratio

@@ -9,7 +9,7 @@ const int _animationDurationMilliseconds = 1000;
 const int _timeBetweenMilliseconds = 200;
 
 Animation<double> _createGradientAnimation(
-  final AnimationController animationController,
+  AnimationController animationController,
 ) {
   return Tween<double>(begin: 1.0, end: 0.2).animate(animationController);
 }
@@ -22,7 +22,7 @@ class RoundSkeleton extends StatelessWidget {
   final int order;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Skeleton(
       width: width,
       height: height,
@@ -85,7 +85,7 @@ class _SkeletonState extends State<Skeleton>
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Opacity(
       opacity: gradientAnimation.value,
       child: Container(

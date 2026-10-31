@@ -10,8 +10,8 @@ class ExternalGameListBloc extends ListLoadBloc<PotentialMediaDTO> {
 
   @override
   Future<PageResultDTO<PotentialMediaDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     if (quicksearch == null) {
       return PageResultDTO(page: 1, size: 0);
@@ -22,8 +22,5 @@ class ExternalGameListBloc extends ListLoadBloc<PotentialMediaDTO> {
   }
 
   @override
-  Future<int?> doCount(
-    final ListSearchDTO search,
-    final String? quicksearch,
-  ) async => null;
+  Future<int?> doCount(ListSearchDTO search, String? quicksearch) async => null;
 }

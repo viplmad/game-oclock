@@ -11,10 +11,8 @@ class PlaythroughGetBloc extends FunctionActionBloc<String, Playthrough> {
   final PlaythroughService service;
 
   @override
-  Future<Playthrough> doAction(
-    final String event,
-    final Playthrough? lastData,
-  ) => service.get(event);
+  Future<Playthrough> doAction(String event, Playthrough? lastData) =>
+      service.get(event);
 }
 
 class PlaythroughCreateBloc extends FunctionActionBloc<NewPlaythrough, String> {
@@ -23,7 +21,7 @@ class PlaythroughCreateBloc extends FunctionActionBloc<NewPlaythrough, String> {
   final PlaythroughService service;
 
   @override
-  Future<String> doAction(final NewPlaythrough event, final String? lastData) =>
+  Future<String> doAction(NewPlaythrough event, String? lastData) =>
       service.create(event);
 }
 
@@ -34,7 +32,7 @@ class PlaythroughUpdateBloc extends ConsumerActionBloc<NewPlaythrough> {
   final String id;
 
   @override
-  Future<void> doAction(final NewPlaythrough event, final void lastData) =>
+  Future<void> doAction(NewPlaythrough event, void lastData) =>
       service.update(id, event);
 }
 
@@ -44,14 +42,14 @@ class PlaythroughDeleteBloc extends ConsumerActionBloc<Playthrough> {
   final PlaythroughService service;
 
   @override
-  Future<void> doAction(final Playthrough event, final void lastData) =>
+  Future<void> doAction(Playthrough event, void lastData) =>
       service.delete(event.id);
 }
 
 class PlaythroughSelectBloc extends IdentityActionBloc<Playthrough?> {
   @override
   Future<Playthrough?> doAction(
-    final Playthrough? event,
-    final Playthrough? lastData,
+    Playthrough? event,
+    Playthrough? lastData,
   ) async => event;
 }

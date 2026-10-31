@@ -59,7 +59,7 @@ final class OptionTextField<T> extends OptionField<T> {
     required this.labelBuilder,
     required super.value,
     super.color,
-  }) : super(widgetBuilder: (final context) => Text(labelBuilder(context)));
+  }) : super(widgetBuilder: (context) => Text(labelBuilder(context)));
 }
 
 enum FieldType { text, integer, bool, duration, datetime, options }

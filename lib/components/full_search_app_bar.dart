@@ -22,7 +22,7 @@ class SimpleSliverAppBar extends StatelessWidget {
   final bool pinned;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
     final hasLeading = layoutTier == LayoutTier.compact;
 
@@ -82,7 +82,7 @@ class _FullSearchSliverAppBarState extends State<FullSearchSliverAppBar> {
   bool inSearch = false;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
     final hasLeading = layoutTier == LayoutTier.compact;
 

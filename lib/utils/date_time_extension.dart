@@ -18,15 +18,15 @@ extension DateTimeExtension on DateTime {
     }
   }
 
-  int daysDifference(final DateTime other) {
+  int daysDifference(DateTime other) {
     return normalizeDate().difference(other.normalizeDate()).inDays;
   }
 
-  bool isSameDay(final DateTime other) {
+  bool isSameDay(DateTime other) {
     return day == other.day && isInSameMonthAndYearOf(other);
   }
 
-  bool isInSameMonthAndYearOf(final DateTime other) {
+  bool isInSameMonthAndYearOf(DateTime other) {
     return month == other.month && year == other.year;
   }
 
@@ -35,7 +35,7 @@ extension DateTimeExtension on DateTime {
     return DateTime.utc(year, month, day);
   }
 
-  DateTime addDays(final int days) {
+  DateTime addDays(int days) {
     return add(Duration(days: days));
   }
 

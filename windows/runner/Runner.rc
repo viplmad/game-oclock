@@ -93,7 +93,7 @@ BEGIN
             VALUE "FileDescription", "game_oclock" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "game_oclock" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
             VALUE "OriginalFilename", "game_oclock.exe" "\0"
             VALUE "ProductName", "game_oclock" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

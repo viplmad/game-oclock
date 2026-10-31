@@ -25,11 +25,11 @@ class MainLayoutBuilder extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
 
     return BlocBuilder<MinimizedLayoutBloc, ActionState<bool>>(
-      builder: (final context, final minimizedState) {
+      builder: (context, minimizedState) {
         final minimized = (minimizedState is ActionSuccess<bool, bool>)
             ? minimizedState.data
             : false;
@@ -57,9 +57,9 @@ class MainLayoutBuilder extends StatelessWidget {
   }
 
   Widget body(
-    final BuildContext context, {
-    required final String selectedPath,
-    required final LayoutTier layoutTier,
+    BuildContext context, {
+    required String selectedPath,
+    required LayoutTier layoutTier,
   }) {
     if (layoutTier == LayoutTier.compact) {
       return child;
@@ -84,8 +84,8 @@ class MainLayoutBuilder extends StatelessWidget {
   }
 
   Widget navigationDrawer(
-    final BuildContext context, {
-    required final String selectedPath,
+    BuildContext context, {
+    required String selectedPath,
   }) {
     return RouterNavigationDrawer(
       selectedPath: selectedPath,
@@ -96,9 +96,9 @@ class MainLayoutBuilder extends StatelessWidget {
   }
 
   Widget navigationRail(
-    final BuildContext context, {
-    required final String selectedPath,
-    required final bool extended,
+    BuildContext context, {
+    required String selectedPath,
+    required bool extended,
   }) {
     return RouterNavigationRail(
       // Force extend change on tier change
@@ -111,10 +111,7 @@ class MainLayoutBuilder extends StatelessWidget {
     );
   }
 
-  Widget navigationBar(
-    final BuildContext context, {
-    required final String selectedPath,
-  }) {
+  Widget navigationBar(BuildContext context, {required String selectedPath}) {
     return RouterNavigationBar(
       selectedPath: selectedPath,
       destinations: mainDestinations,
@@ -123,29 +120,26 @@ class MainLayoutBuilder extends StatelessWidget {
 }
 
 ValueChanged<int> _goToSelectedPathCallback(
-  final BuildContext context, {
-  required final List<NavDestination> destinations,
+  BuildContext context, {
+  required List<NavDestination> destinations,
 }) {
-  return (final selectedIndex) {
+  return (selectedIndex) {
     final selectedDest = destinations.elementAt(selectedIndex);
     _goToSelectedPath(context, selectedDest);
   };
 }
 
-void _goToSelectedPath(
-  final BuildContext context,
-  final NavDestination destination,
-) {
+void _goToSelectedPath(BuildContext context, NavDestination destination) {
   go(context, path: destination.path);
   Scaffold.of(context).closeDrawer();
 }
 
 int? _selectedIndex({
-  required final String selectedPath,
-  required final List<NavDestination> destinations,
+  required String selectedPath,
+  required List<NavDestination> destinations,
 }) {
   final destinationIndex = destinations.indexWhere(
-    (final dest) => selectedPath.startsWith(dest.path),
+    (dest) => selectedPath.startsWith(dest.path),
   );
   return destinationIndex >= 0 ? destinationIndex : null;
 }
@@ -165,7 +159,7 @@ class RouterNavigationDrawer extends StatelessWidget {
   final List<NavDestination> trailingDestinations;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final destinations = [
       ...mainDestinations,
       ...secondaryDestinations,
@@ -187,14 +181,14 @@ class RouterNavigationDrawer extends StatelessWidget {
       ),
       children: [
         ...mainDestinations.map(
-          (final dest) => NavigationDrawerDestination(
+          (dest) => NavigationDrawerDestination(
             icon: dest.icon,
             label: Text(dest.labelBuilder(context)),
           ),
         ),
         const Divider(),
         ...secondaryDestinations.map(
-          (final dest) => NavigationDrawerDestination(
+          (dest) => NavigationDrawerDestination(
             icon: dest.icon,
             label: Text(dest.labelBuilder(context)),
           ),
@@ -215,11 +209,11 @@ class RouterNavigationBar extends StatelessWidget {
   final List<NavDestination> destinations;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return NavigationBar(
       destinations: destinations
           .map(
-            (final dest) => NavigationDestination(
+            (dest) => NavigationDestination(
               icon: dest.icon,
               label: dest.labelBuilder(context),
             ),
@@ -263,7 +257,7 @@ class _RouterNavigationRailState extends State<RouterNavigationRail> {
   bool? _extended;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final bool extended = _extended ?? widget.extended;
 
     final destinations = (extended
@@ -271,7 +265,7 @@ class _RouterNavigationRailState extends State<RouterNavigationRail> {
         : [
             ...widget.mainDestinations,
             ...widget.secondaryDestinations.where(
-              (final dest) => dest.path == widget.selectedPath,
+              (dest) => dest.path == widget.selectedPath,
             ),
           ]);
 
@@ -293,7 +287,7 @@ class _RouterNavigationRailState extends State<RouterNavigationRail> {
       ),
       destinations: destinations
           .map(
-            (final dest) => NavigationRailDestination(
+            (dest) => NavigationRailDestination(
               icon: dest.icon,
               label: Text(dest.labelBuilder(context)),
             ),
@@ -329,7 +323,7 @@ class RouterTrailingNavigation extends StatelessWidget {
   final List<NavDestination> destinations;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsetsDirectional.only(bottom: 8.0),
       child: Column(
@@ -337,7 +331,7 @@ class RouterTrailingNavigation extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: destinations
             .map(
-              (final dest) => selectedPath.startsWith(dest.path)
+              (dest) => selectedPath.startsWith(dest.path)
                   ? IconButton.filledTonal(
                       icon: dest.icon,
                       tooltip: dest.labelBuilder(context),

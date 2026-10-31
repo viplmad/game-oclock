@@ -11,12 +11,12 @@ class LocationListBloc extends ListLoadBloc<LocationDTO> {
 
   @override
   Future<PageResultDTO<LocationDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.search(search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) =>
       service.count(AggregateSearch(filter: search.filter), quicksearch);
 }
 
@@ -28,12 +28,12 @@ class LocationAvailableListBloc extends ListLoadBloc<LocationAvailableDTO> {
 
   @override
   Future<PageResultDTO<LocationAvailableDTO>> doLoad(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) => service.searchAvailable(gameId, search, quicksearch);
 
   @override
-  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(ListSearchDTO search, String? quicksearch) =>
       service.countAvailable(
         gameId,
         AggregateSearch(filter: search.filter),

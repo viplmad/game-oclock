@@ -10,10 +10,8 @@ class LocationGetBloc extends FunctionActionBloc<String, LocationDTO> {
   final LocationService service;
 
   @override
-  Future<LocationDTO> doAction(
-    final String event,
-    final LocationDTO? lastData,
-  ) => service.get(event);
+  Future<LocationDTO> doAction(String event, LocationDTO? lastData) =>
+      service.get(event);
 }
 
 class LocationCreateBloc extends FunctionActionBloc<NewLocationDTO, String> {
@@ -22,7 +20,7 @@ class LocationCreateBloc extends FunctionActionBloc<NewLocationDTO, String> {
   final LocationService service;
 
   @override
-  Future<String> doAction(final NewLocationDTO event, final String? lastData) =>
+  Future<String> doAction(NewLocationDTO event, String? lastData) =>
       service.create(event);
 }
 
@@ -33,7 +31,7 @@ class LocationUpdateBloc extends ConsumerActionBloc<NewLocationDTO> {
   final String id;
 
   @override
-  Future<void> doAction(final NewLocationDTO event, final void lastData) =>
+  Future<void> doAction(NewLocationDTO event, void lastData) =>
       service.update(id, event);
 }
 
@@ -43,14 +41,14 @@ class LocationDeleteBloc extends ConsumerActionBloc<LocationDTO> {
   final LocationService service;
 
   @override
-  Future<void> doAction(final LocationDTO event, final void lastData) =>
+  Future<void> doAction(LocationDTO event, void lastData) =>
       service.delete(event.id);
 }
 
 class LocationSelectBloc extends IdentityActionBloc<LocationDTO?> {
   @override
   Future<LocationDTO?> doAction(
-    final LocationDTO? event,
-    final LocationDTO? lastData,
+    LocationDTO? event,
+    LocationDTO? lastData,
   ) async => event;
 }

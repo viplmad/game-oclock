@@ -17,20 +17,19 @@ import 'utils.dart';
 class SessionService {
   final MediaSessionsApi _api;
 
-  SessionService(final ApiClient apiClient)
-    : _api = MediaSessionsApi(apiClient);
+  SessionService(ApiClient apiClient) : _api = MediaSessionsApi(apiClient);
 
   Future<PageResultDTO<SessionDTO>> search(
-    final ListSearchDTO search,
-    final String? quicksearch,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     return _api.getSessions(search, q: quicksearch);
   }
 
   Future<int> count(
-    final AggregateSearch search,
-    final String? quicksearch, [
-    final FetchMode? mode,
+    AggregateSearch search,
+    String? quicksearch, [
+    FetchMode? mode,
   ]) async {
     final response = await _api.aggregateSessionsWithHttpInfo(
       AggregateSearchDTO(
@@ -47,17 +46,17 @@ class SessionService {
   }
 
   Future<PageResultDTO<SessionDTO>> searchForGame(
-    final String gameId,
-    final ListSearchDTO search,
-    final String? quicksearch,
+    String gameId,
+    ListSearchDTO search,
+    String? quicksearch,
   ) async {
     return _api.getMediaSessions(gameId, search, q: quicksearch);
   }
 
   Future<int> countForGame(
-    final String gameId,
-    final AggregateSearch search,
-    final String? quicksearch,
+    String gameId,
+    AggregateSearch search,
+    String? quicksearch,
   ) async {
     final response = await _api.aggregateMediaSessionsWithHttpInfo(
       gameId,
@@ -74,9 +73,9 @@ class SessionService {
   }
 
   Future<Duration> sumTimeForGame(
-    final String gameId,
-    final AggregateSearch search,
-    final String? quicksearch,
+    String gameId,
+    AggregateSearch search,
+    String? quicksearch,
   ) async {
     final response = await _api.aggregateMediaSessionsWithHttpInfo(
       gameId,
@@ -93,9 +92,9 @@ class SessionService {
   }
 
   Future<Duration> sumTime(
-    final AggregateSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final response = await _api.aggregateSessionsWithHttpInfo(
       AggregateSearchDTO(
@@ -112,9 +111,9 @@ class SessionService {
   }
 
   Future<int> countDistinctMedias(
-    final AggregateSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final response = await _api.aggregateSessionsWithHttpInfo(
       AggregateSearchDTO(
@@ -132,9 +131,9 @@ class SessionService {
   }
 
   Future<int> countDistinctFirstTimeMedias(
-    final AggregateSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final response = await _api.aggregateFirstSessionsWithHttpInfo(
       AggregateSearchDTO(
@@ -152,9 +151,9 @@ class SessionService {
   }
 
   Future<int> countDistinctDevices(
-    final AggregateSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final response = await _api.aggregateSessionsWithHttpInfo(
       AggregateSearchDTO(
@@ -173,9 +172,9 @@ class SessionService {
 
   Future<List<AggregateGroupResultDTO<int, Duration>>>
   sumTimeByStartDateWeekday(
-    final AggregateGroupSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateGroupSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
@@ -199,9 +198,9 @@ class SessionService {
   }
 
   Future<List<AggregateGroupResultDTO<int, Duration>>> sumTimeByStartDateHour(
-    final AggregateGroupSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateGroupSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
@@ -233,9 +232,9 @@ class SessionService {
     >
   >
   sumTimeByStartDateMonthThenMedia(
-    final AggregateGroupSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateGroupSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
@@ -264,9 +263,9 @@ class SessionService {
 
   Future<List<AggregateGroupResultDTO<int, int>>>
   countDistinctMediasByReleaseDateYear(
-    final AggregateGroupSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateGroupSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final defaultValue = DateTime(1970);
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
@@ -291,15 +290,15 @@ class SessionService {
     );
     final data = await convertAggrGroupIntByInt(_api.apiClient, response);
     return data
-        .takeWhile((final val) => val.key != defaultValue.year)
+        .takeWhile((val) => val.key != defaultValue.year)
         .toList(growable: false);
   }
 
   Future<List<AggregateGroupResultDTO<int, int>>>
   countDistinctMediasByStartDateMonth(
-    final AggregateGroupSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateGroupSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
@@ -324,9 +323,9 @@ class SessionService {
   }
 
   Future<List<AggregateGroupResultDTO<int, int>>> countDistinctMediasByRating(
-    final AggregateGroupSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateGroupSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
@@ -350,9 +349,9 @@ class SessionService {
   }
 
   Future<List<AggregateGroupResultDTO<String, int>>> countDistinctMediasByGenre(
-    final AggregateGroupSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateGroupSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
@@ -376,9 +375,9 @@ class SessionService {
   }
 
   Future<List<AggregateGroupResultDTO<String, Duration>>> sumTimeByMedia(
-    final AggregateGroupSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateGroupSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
@@ -402,9 +401,9 @@ class SessionService {
   }
 
   Future<List<AggregateGroupResultDTO<String, Duration>>> sumTimeByDevice(
-    final AggregateGroupSearch search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    AggregateGroupSearch search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     final defaultValue = '00000000-0000-0000-0000-000000000000';
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
@@ -431,31 +430,31 @@ class SessionService {
       response,
     );
     return data
-        .takeWhile((final val) => val.key != defaultValue)
+        .takeWhile((val) => val.key != defaultValue)
         .toList(growable: false);
   }
 
   Future<PageResultDTO<SessionStreakDTO>> searchStreaks(
-    final ListSearchDTO search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    ListSearchDTO search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     return _api.getSessionStreaks(search, q: quicksearch, mode: mode);
   }
 
   Future<List<DateTime>> searchDates(
-    final ListSearchDTO search,
-    final String? quicksearch,
-    final FetchMode? mode,
+    ListSearchDTO search,
+    String? quicksearch,
+    FetchMode? mode,
   ) async {
     return _api.getSessionDates(search, q: quicksearch, mode: mode);
   }
 
-  Future<SessionDTO> get(final String gameId, final DateTime startDate) async {
+  Future<SessionDTO> get(String gameId, DateTime startDate) async {
     return _api.getMediaSession(gameId, DateTimeDTO(datetime: startDate));
   }
 
-  Future<void> create(final String gameId, final NewSessionDTO session) async {
+  Future<void> create(String gameId, NewSessionDTO session) async {
     return _api.createMediaSession(gameId, session);
   }
 }

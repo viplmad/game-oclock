@@ -12,15 +12,15 @@ class AuthService {
   Future<SavedLoginResponse> getCurrent() {
     return repository.get(
       _buildCurrentKey(),
-      (final value) => SavedLoginResponse.fromJson(json.decode(value)),
+      (value) => SavedLoginResponse.fromJson(json.decode(value)),
     );
   }
 
-  Future<void> saveCurrent(final SavedLoginResponse loginResponse) {
+  Future<void> saveCurrent(SavedLoginResponse loginResponse) {
     return repository.set(
       _buildCurrentKey(),
       loginResponse,
-      (final value) => json.encode(value.toJson()),
+      (value) => json.encode(value.toJson()),
     );
   }
 

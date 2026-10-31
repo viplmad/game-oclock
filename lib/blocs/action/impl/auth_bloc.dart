@@ -12,7 +12,7 @@ class CurrentUserGetBloc extends ProducerActionBloc<UserDTO> {
   final UserService service;
 
   @override
-  Future<UserDTO> doAction(final void event, final UserDTO? lastData) =>
+  Future<UserDTO> doAction(void event, UserDTO? lastData) =>
       service.getCurrent();
 }
 
@@ -24,8 +24,8 @@ class CurrentLoginResponseGetBloc
 
   @override
   Future<SavedLoginResponse> doAction(
-    final void event,
-    final SavedLoginResponse? lastData,
+    void event,
+    SavedLoginResponse? lastData,
   ) => service.getCurrent();
 }
 
@@ -35,10 +35,7 @@ class ApiClientInitBloc extends ConsumerActionBloc<SavedLoginResponse> {
   final RetryableApiClient apiClient;
 
   @override
-  Future<void> doAction(
-    final SavedLoginResponse event,
-    final void lastData,
-  ) async {
+  Future<void> doAction(SavedLoginResponse event, void lastData) async {
     if (apiClient.apiClient != null) {
       return;
     }
@@ -49,7 +46,7 @@ class ApiClientInitBloc extends ConsumerActionBloc<SavedLoginResponse> {
         accessToken: event.tokenResponse.accessToken,
         refreshToken: event.tokenResponse.refreshToken,
       ),
-      onRefresh: (final client, final oauth) async {
+      onRefresh: (client, oauth) async {
         final refreshResponse = await LoginService(
           ApiClient(basePath: client.basePath),
         ).refresh(oauth.refreshToken);
@@ -69,10 +66,9 @@ class LoginBloc extends ConsumerActionBloc<Login> {
   final RetryableApiClient apiClient;
 
   @override
-  Future<void> doAction(final Login event, final void lastData) async {
-    final loginResponse = await LoginService(
-      ApiClient(basePath: event.host),
-    ).login(event.username, event.password);
+  Future<void> doAction(Login event, void lastData) async {
+    final loginResponse = await LoginService(ApiClient(basePath: event.host))
+        .login(event.username, event.password);
     return service.saveCurrent(
       SavedLoginResponse(
         host: event.host,
@@ -90,7 +86,7 @@ class LogoutBloc extends IdentityActionBloc<void> {
   final RetryableApiClient apiClient;
 
   @override
-  Future<void> doAction(final void event, final void lastData) async {
+  Future<void> doAction(void event, void lastData) async {
     apiClient.update(
       basePath: 'fake',
       authentication: OAuth(accessToken: 'access', refreshToken: 'refresh'),

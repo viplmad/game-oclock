@@ -8,25 +8,25 @@ class ListStyleService {
 
   final SharedPreferencesRepository repository;
 
-  Future<ListStyle> getCurrent(final String space) {
+  Future<ListStyle> getCurrent(String space) {
     return repository.get(
       _buildCurrentKey(space),
-      (final value) => parseListStyle(value),
+      (value) => parseListStyle(value),
     );
   }
 
-  Future<void> saveCurrent(final String space, final ListStyle style) {
+  Future<void> saveCurrent(String space, ListStyle style) {
     return repository.set(
       _buildCurrentKey(space),
       style,
-      (final value) => listStyleToString(value),
+      (value) => listStyleToString(value),
     );
   }
 
-  Future<void> removeCurrent(final String space) {
+  Future<void> removeCurrent(String space) {
     return repository.remove(_buildCurrentKey(space));
   }
 
-  String _buildKey(final String space) => 'list-style#$space';
-  String _buildCurrentKey(final String space) => '${_buildKey(space)}#current';
+  String _buildKey(String space) => 'list-style#$space';
+  String _buildCurrentKey(String space) => '${_buildKey(space)}#current';
 }

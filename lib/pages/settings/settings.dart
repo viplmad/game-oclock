@@ -21,52 +21,52 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:intl/intl.dart';
 
-final List<OptionField<ThemeMode?>> _themeModeOptions =
-    List.unmodifiable(<OptionField<ThemeMode?>>[
-      OptionTextField(
-        value: null,
-        labelBuilder: (final context) => context.localize().systemDefaultLabel,
-      ),
-      OptionTextField(
-        icon: CommonIcons.light,
-        value: ThemeMode.light,
-        labelBuilder: (final context) => context.localize().lightLabel,
-      ),
-      OptionTextField(
-        icon: CommonIcons.dark,
-        value: ThemeMode.dark,
-        labelBuilder: (final context) => context.localize().darkLabel,
-      ),
-    ]);
+final List<OptionField<ThemeMode?>> _themeModeOptions = List.unmodifiable(
+  <OptionField<ThemeMode?>>[
+    OptionTextField(
+      value: null,
+      labelBuilder: (context) => context.localize().systemDefaultLabel,
+    ),
+    OptionTextField(
+      icon: CommonIcons.light,
+      value: ThemeMode.light,
+      labelBuilder: (context) => context.localize().lightLabel,
+    ),
+    OptionTextField(
+      icon: CommonIcons.dark,
+      value: ThemeMode.dark,
+      labelBuilder: (context) => context.localize().darkLabel,
+    ),
+  ],
+);
 
-final List<OptionField<Locale?>> _localeOptions =
-    List.unmodifiable(<OptionField<Locale?>>[
-      OptionTextField(
-        value: null,
-        labelBuilder: (final context) =>
-            context.localize().systemDefaultLabelData(
-              context.localize().formatLocale(Localizations.localeOf(context)),
-            ),
+final List<OptionField<Locale?>> _localeOptions = List.unmodifiable(
+  <OptionField<Locale?>>[
+    OptionTextField(
+      value: null,
+      labelBuilder: (context) => context.localize().systemDefaultLabelData(
+        context.localize().formatLocale(Localizations.localeOf(context)),
       ),
-      ...AppLocalizations.supportedLocales.map(
-        (final locale) => OptionTextField(
-          value: locale,
-          labelBuilder: (final context) =>
-              context.localize().formatLocale(locale),
-        ),
+    ),
+    ...AppLocalizations.supportedLocales.map(
+      (locale) => OptionTextField(
+        value: locale,
+        labelBuilder: (context) => context.localize().formatLocale(locale),
       ),
-    ]);
+    ),
+  ],
+);
 
 final List<OptionField<int?>> _startingDayOfWeekOptions = List.unmodifiable(
   <OptionField<int?>>[
     OptionField(
       value: null,
-      widgetBuilder: (final context) => Localizations.override(
+      widgetBuilder: (context) => Localizations.override(
         context: context,
         // Trick to show system default regardless
         delegates: [GlobalMaterialLocalizations.delegate],
         child: Builder(
-          builder: (final context) => Text(
+          builder: (context) => Text(
             context.localize().systemDefaultLabelData(
               _formatWeekday(
                 MaterialLocalizations.of(context).firstDayOfWeekIndex % 7,
@@ -85,15 +85,15 @@ final List<OptionField<int?>> _startingDayOfWeekOptions = List.unmodifiable(
       DateTime.saturday,
       DateTime.sunday,
     ].map(
-      (final weekday) => OptionTextField(
+      (weekday) => OptionTextField(
         value: weekday,
-        labelBuilder: (final context) => _formatWeekday(weekday),
+        labelBuilder: (context) => _formatWeekday(weekday),
       ),
     ),
   ],
 );
 
-String _formatWeekday(final int weekday) {
+String _formatWeekday(int weekday) {
   return DateFormat.EEEE().format(
     // Dec of 2025 starts on a monday, so can be used to format weekday easily
     DateTime(2025, DateTime.december, weekday),
@@ -107,16 +107,15 @@ final List<OptionField<String?>> _timeFormatOptions = List.unmodifiable(
   <OptionField<String?>>[
     OptionField(
       value: null,
-      widgetBuilder: (final context) => Localizations.override(
+      widgetBuilder: (context) => Localizations.override(
         context: context,
         // Trick to show system default regardless
         delegates: [GlobalMaterialLocalizations.delegate],
         child: Builder(
-          builder: (final context) => Text(
+          builder: (context) => Text(
             context.localize().systemDefaultLabelData(
-              MaterialLocalizations.of(
-                context,
-              ).formatTimeOfDay(TimeOfDay.fromDateTime(_sampleDateTime)),
+              MaterialLocalizations.of(context)
+                  .formatTimeOfDay(TimeOfDay.fromDateTime(_sampleDateTime)),
             ),
           ),
         ),
@@ -130,9 +129,9 @@ final List<OptionField<String?>> _timeFormatOptions = List.unmodifiable(
       'h:mm a',
       'a h:mm',
     ].map(
-      (final pattern) => OptionTextField(
+      (pattern) => OptionTextField(
         value: pattern,
-        labelBuilder: (final context) {
+        labelBuilder: (context) {
           return DateFormat(pattern).format(_sampleDateTime);
         },
       ),
@@ -144,16 +143,15 @@ final List<OptionField<String?>> _dateFormatOptions = List.unmodifiable(
   <OptionField<String?>>[
     OptionField(
       value: null,
-      widgetBuilder: (final context) => Localizations.override(
+      widgetBuilder: (context) => Localizations.override(
         context: context,
         // Trick to show system default regardless
         delegates: [GlobalMaterialLocalizations.delegate],
         child: Builder(
-          builder: (final context) => Text(
+          builder: (context) => Text(
             context.localize().systemDefaultLabelData(
-              MaterialLocalizations.of(
-                context,
-              ).formatCompactDate(_sampleDateTime),
+              MaterialLocalizations.of(context)
+                  .formatCompactDate(_sampleDateTime),
             ),
           ),
         ),
@@ -172,10 +170,9 @@ final List<OptionField<String?>> _dateFormatOptions = List.unmodifiable(
       'd.M.y',
       'y.M.d',
     ].map(
-      (final pattern) => OptionTextField(
+      (pattern) => OptionTextField(
         value: pattern,
-        labelBuilder: (final context) =>
-            DateFormat(pattern).format(_sampleDateTime),
+        labelBuilder: (context) => DateFormat(pattern).format(_sampleDateTime),
       ),
     ),
   ],
@@ -185,7 +182,7 @@ class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return _SettingsBuilder(title: context.localize().settingsTitle);
   }
 }
@@ -196,7 +193,7 @@ class _SettingsBuilder extends StatelessWidget {
   final String title;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return NestedScrollView(
       headerSliverBuilder: _appBarBuilder,
       body: SingleChildScrollView(
@@ -211,16 +208,13 @@ class _SettingsBuilder extends StatelessWidget {
     );
   }
 
-  List<Widget> _appBarBuilder(
-    final BuildContext context,
-    final bool innerBoxIsScrolled,
-  ) {
+  List<Widget> _appBarBuilder(BuildContext context, bool innerBoxIsScrolled) {
     return <Widget>[SimpleSliverAppBar(title: Text(title))];
   }
 
   Widget _themeSettingBuilder() {
     return BlocBuilder<ThemeModeGetBloc, ActionState<ThemeMode>>(
-      builder: (final context, final state) {
+      builder: (context, state) {
         final themeMode = (state is ActionSuccess<ThemeMode, void>)
             ? state.data
             : null;
@@ -230,7 +224,7 @@ class _SettingsBuilder extends StatelessWidget {
           label: context.localize().chooseThemeLabel,
           value: themeMode,
           options: _themeModeOptions,
-          onSuccess: (final context, final newValue) => context
+          onSuccess: (context, newValue) => context
               .read<ThemeModeSaveBloc>()
               .add(ActionStarted(data: newValue)),
         );
@@ -240,7 +234,7 @@ class _SettingsBuilder extends StatelessWidget {
 
   Widget _localeSettingBuilder() {
     return BlocBuilder<LocaleGetBloc, ActionState<Locale>>(
-      builder: (final context, final state) {
+      builder: (context, state) {
         final locale = (state is ActionSuccess<Locale, void>)
             ? state.data
             : null;
@@ -250,7 +244,7 @@ class _SettingsBuilder extends StatelessWidget {
           label: context.localize().chooseLanguageLabel,
           value: locale,
           options: _localeOptions,
-          onSuccess: (final context, final newValue) =>
+          onSuccess: (context, newValue) =>
               context.read<LocaleSaveBloc>().add(ActionStarted(data: newValue)),
         );
       },
@@ -259,7 +253,7 @@ class _SettingsBuilder extends StatelessWidget {
 
   Widget _dateSettingsBuilder() {
     return BlocBuilder<DateLocaleConfigGetBloc, ActionState<DateLocaleConfig>>(
-      builder: (final context, final state) {
+      builder: (context, state) {
         final dateConfig = (state is ActionSuccess<DateLocaleConfig, void>)
             ? state.data
             : const DateLocaleConfig.def();
@@ -270,7 +264,7 @@ class _SettingsBuilder extends StatelessWidget {
               label: context.localize().chooseStartingDayOfWeekLabel,
               value: dateConfig.startingDayOfWeek,
               options: _startingDayOfWeekOptions,
-              onSuccess: (final context, final newValue) =>
+              onSuccess: (context, newValue) =>
                   context.read<DateLocaleConfigSaveBloc>().add(
                     ActionStarted(
                       data: DateLocaleConfig(
@@ -285,7 +279,7 @@ class _SettingsBuilder extends StatelessWidget {
               label: context.localize().chooseTimeFormatLabel,
               value: dateConfig.timeFormat?.pattern,
               options: _timeFormatOptions,
-              onSuccess: (final context, final newValue) =>
+              onSuccess: (context, newValue) =>
                   context.read<DateLocaleConfigSaveBloc>().add(
                     ActionStarted(
                       data: DateLocaleConfig(
@@ -300,7 +294,7 @@ class _SettingsBuilder extends StatelessWidget {
               label: context.localize().chooseDateFormatLabel,
               value: dateConfig.dateFormat?.pattern,
               options: _dateFormatOptions,
-              onSuccess: (final context, final newValue) =>
+              onSuccess: (context, newValue) =>
                   context.read<DateLocaleConfigSaveBloc>().add(
                     ActionStarted(
                       data: DateLocaleConfig(
@@ -335,10 +329,8 @@ class _SettingRadioTile<T> extends StatelessWidget {
   final void Function(BuildContext context, T? newValue) onSuccess;
 
   @override
-  Widget build(final BuildContext context) {
-    final option = options.firstWhere(
-      (final element) => element.value == value,
-    );
+  Widget build(BuildContext context) {
+    final option = options.firstWhere((element) => element.value == value);
 
     return ListTile(
       leading: icon,
@@ -346,17 +338,17 @@ class _SettingRadioTile<T> extends StatelessWidget {
       subtitle: option.widgetBuilder(context),
       onTap: () async => await showReturningDialog<_Result<T?>>(
         context,
-        builder: (final context) => AlertDialog(
+        builder: (context) => AlertDialog(
           title: Text(label),
           content: RadioGroup<T?>(
             groupValue: value,
-            onChanged: (final value) => Navigator.pop(context, _Result(value)),
+            onChanged: (value) => Navigator.pop(context, _Result(value)),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: options
                     .map(
-                      (final option) => RadioListTile<T?>(
+                      (option) => RadioListTile<T?>(
                         secondary: option.icon,
                         title: option.widgetBuilder(context),
                         value: option.value,
@@ -376,8 +368,7 @@ class _SettingRadioTile<T> extends StatelessWidget {
             ),
           ],
         ),
-        onSuccess: (final context, final data) =>
-            onSuccess(context, data.value),
+        onSuccess: (context, data) => onSuccess(context, data.value),
       ),
     );
   }

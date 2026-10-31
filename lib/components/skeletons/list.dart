@@ -17,9 +17,9 @@ class TileListSkeleton extends StatelessWidget {
   final BorderRadiusGeometry? borderRadius;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final availableHeight = constraints.maxHeight;
 
         final itemHeight = kTileImageMinHeight;
@@ -28,7 +28,7 @@ class TileListSkeleton extends StatelessWidget {
 
         return TileList(
           items: List.filled(itemCount, 0, growable: false),
-          itemBuilder: (_, _, final index) => itemBuilder(index),
+          itemBuilder: (_, _, index) => itemBuilder(index),
           borderRadius: borderRadius,
         );
       },
@@ -51,9 +51,9 @@ class GridListSkeleton extends StatelessWidget {
   final int columns;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final availableWidth = constraints.maxWidth;
         final availableHeight = constraints.maxHeight;
 
@@ -67,7 +67,7 @@ class GridListSkeleton extends StatelessWidget {
 
         return GridList(
           items: List.filled(itemCount, 0, growable: false),
-          itemBuilder: (_, _, final index) {
+          itemBuilder: (_, _, index) {
             final column = index % columns;
             final row = (index / columns).floor();
             return itemBuilder(column + row);
@@ -98,12 +98,12 @@ class CenteredGridListSkeleton extends StatelessWidget {
   final int itemCount;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         return CenteredGridList(
           items: List.filled(itemCount, 0, growable: false),
-          itemBuilder: (_, _, final index) {
+          itemBuilder: (_, _, index) {
             final column = index % columns;
             final row = (index / columns).floor();
             return itemBuilder(column + row);
@@ -130,15 +130,14 @@ class StickyTopHeaderListSkeleton extends StatelessWidget {
   final BorderRadiusGeometry? borderRadius;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return StickyTopHeaderList(
       items: List.filled(3, 0, growable: false).fold(
         <int, List<int>>{},
-        (final prev, final el) =>
-            prev..[el] = List.filled(3, 0, growable: false),
+        (prev, el) => prev..[el] = List.filled(3, 0, growable: false),
       ),
       headerBuilder: (_) => headerBuilder(),
-      itemBuilder: (_, _, final index) => itemBuilder(index),
+      itemBuilder: (_, _, index) => itemBuilder(index),
       borderRadius: borderRadius,
     );
   }
@@ -150,7 +149,7 @@ class ListFilterToolbarSkeleton extends StatelessWidget {
   final int order;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return ListTile(
       title: TextSkeleton(width: 100.0, height: 14.0, order: order + 0),
     );
@@ -163,7 +162,7 @@ class ListTotalStatusbarSkeleton extends StatelessWidget {
   final int order;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
       height: kStatusbarHeight,

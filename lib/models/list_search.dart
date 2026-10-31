@@ -11,7 +11,7 @@ final class ListSearch extends Equatable {
   final List<SortDTO>? sort;
 
   String Function(BuildContext context) get labelBuilder =>
-      _labelBuilder ?? (final context) => name;
+      _labelBuilder ?? (context) => name;
 
   ListSearch.def() : this.manual(id: '-1', name: '-', filter: [], sort: []);
   const ListSearch.manual({
@@ -24,12 +24,11 @@ final class ListSearch extends Equatable {
 
   const ListSearch.internal({
     required this.id,
-    required final String Function(BuildContext context) labelBuilder,
+    required String Function(BuildContext context) this._labelBuilder,
     required this.filter,
     required this.sort,
   }) : internal = true,
-       name = id,
-       _labelBuilder = labelBuilder;
+       name = id;
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -40,7 +39,7 @@ final class ListSearch extends Equatable {
     return json;
   }
 
-  static ListSearch fromJson(final dynamic value) {
+  static ListSearch fromJson(dynamic value) {
     final json = value.cast<String, dynamic>();
 
     return ListSearch.manual(
