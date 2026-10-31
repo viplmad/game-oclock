@@ -332,7 +332,7 @@ FutureOr<bool> _goBackOnExit(
   String? defaultPath,
 }) {
   goBack(context, defaultPath: defaultPath);
-  return false;
+  return true;
 }
 
 GoRouterRedirect? _destinationGuardRedirect(NavDestination destination) {
