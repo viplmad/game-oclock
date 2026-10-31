@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+//import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionRestarted,
@@ -45,7 +45,7 @@ import 'package:game_oclock/utils/custom_material_localizations.dart';
 
 void main() {
   if (kIsWeb) {
-    usePathUrlStrategy();
+    //usePathUrlStrategy();
   }
   runApp(const GameOClockApp());
 }
