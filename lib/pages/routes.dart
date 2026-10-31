@@ -372,7 +372,8 @@ FutureOr<String?> _authGuardRedirect(
     return CommonPaths.loginPath;
   }
 
-  if (currentUserBloc.state is ActionInitial) {
+  if (currentUserBloc.state is ActionInitial ||
+      currentUserBloc.state is ActionFailure<UserDTO, void>) {
     currentUserBloc.add(ActionStarted.empty());
     await currentUserBloc.stream.firstWhere(
       (actionState) => actionState is ActionFinal<UserDTO, void>,
@@ -395,7 +396,8 @@ FutureOr<String?> _roleGuardRedirect(
 ) async {
   final currentUserBloc = context.read<CurrentUserGetBloc>();
 
-  if (currentUserBloc.state is ActionInitial) {
+  if (currentUserBloc.state is ActionInitial ||
+      currentUserBloc.state is ActionFailure<UserDTO, void>) {
     currentUserBloc.add(ActionStarted.empty());
     await currentUserBloc.stream.firstWhere(
       (actionState) => actionState is ActionFinal<UserDTO, void>,

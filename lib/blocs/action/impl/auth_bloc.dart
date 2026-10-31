@@ -36,7 +36,9 @@ class ApiClientInitBloc extends ConsumerActionBloc<SavedLoginResponse> {
 
   @override
   Future<void> doAction(SavedLoginResponse event, void lastData) async {
-    if (apiClient.apiClient != null) {
+    if (apiClient.apiClient != null &&
+        event.tokenResponse.accessToken ==
+            (apiClient.apiClient!.authentication as OAuth).accessToken) {
       return;
     }
 
