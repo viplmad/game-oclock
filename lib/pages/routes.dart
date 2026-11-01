@@ -36,7 +36,7 @@ import 'package:game_oclock/pages/tags/tag_detail.dart';
 import 'package:game_oclock/pages/tags/tag_list.dart';
 import 'package:game_oclock/pages/users/user_detail.dart';
 import 'package:game_oclock/pages/users/user_list.dart';
-//import 'package:game_oclock/utils/show_snackbar.dart';
+import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:game_oclock_client/api.dart';
 import 'package:go_router/go_router.dart';
 
@@ -331,7 +331,10 @@ FutureOr<bool> _goBackOnExit(
   GoRouterState state, {
   String? defaultPath,
 }) {
-  //goBack(context, defaultPath: defaultPath);
+  if(state.extra == null) {
+    goBack(context, defaultPath: defaultPath);
+    return false;
+  }
   return true;
 }
 
