@@ -331,7 +331,7 @@ FutureOr<bool> _goBackOnExit(
   GoRouterState state, {
   String? defaultPath,
 }) {
-  goBack(context, defaultPath: defaultPath);
+  //goBack(context, defaultPath: defaultPath);
   return true;
 }
 
