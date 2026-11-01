@@ -16,12 +16,12 @@ void goBack(BuildContext context, {String? defaultPath}) {
   if (path == null) {
     GoRouter.of(context).pop();
   } else {
-    GoRouter.of(context).go(path);
+    GoRouter.of(context).go(path, extra: 'test');
   }
 }
 
 void go(BuildContext context, {required String path}) {
-  GoRouter.of(context).go(path);
+  GoRouter.of(context).go(path, extra: 'test');
 }
 
 void showSnackBar(
