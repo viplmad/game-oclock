@@ -90,7 +90,6 @@ class GameOClockApp extends StatelessWidget {
         RepositoryProvider<ListStyleService>(
           create: (_) => ListStyleService(sharedPrefsRepository),
         ),
-        RepositoryProvider<PathHistory>(create: (_) => PathHistory()),
       ],
       child: MultiBlocProvider(
         providers: [

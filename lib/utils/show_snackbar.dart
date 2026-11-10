@@ -1,7 +1,7 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/models/models.dart' show ErrorDTO, LayoutTier;
-import 'package:game_oclock/pages/routes.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
@@ -9,19 +9,15 @@ import 'package:go_router/go_router.dart';
 import 'copy_to_clipboard.dart';
 
 void goBack(BuildContext context, {String? defaultPath}) {
-  final PathHistory history = RepositoryProvider.of(context);
-  final historyPath = history.pop();
-
-  final path = historyPath ?? defaultPath;
-  if (path == null) {
+  if (defaultPath != null) {
+    go(context, path: defaultPath);
+  } else if (GoRouter.of(context).canPop()) {
     GoRouter.of(context).pop();
-  } else {
-    GoRouter.of(context).go(path);
   }
 }
 
 void go(BuildContext context, {required String path}) {
-  GoRouter.of(context).go(path);
+  unawaited(GoRouter.of(context).push(path));
 }
 
 void showSnackBar(

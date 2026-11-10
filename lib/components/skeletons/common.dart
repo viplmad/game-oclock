@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:async' show unawaited;
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';

@@ -36,63 +36,13 @@ import 'package:game_oclock/pages/tags/tag_detail.dart';
 import 'package:game_oclock/pages/tags/tag_list.dart';
 import 'package:game_oclock/pages/users/user_detail.dart';
 import 'package:game_oclock/pages/users/user_list.dart';
-import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:game_oclock_client/api.dart';
 import 'package:go_router/go_router.dart';
-
-class PathHistory {
-  final history = <String>[];
-  bool ignoreNextPush = false;
-
-  void push(String path) {
-    if (ignoreNextPush) {
-      return;
-    }
-    history.add(path);
-  }
-
-  String? pop() {
-    if (history.isEmpty) {
-      return null;
-    }
-    ignoreNextPush = true;
-    return history.removeLast();
-  }
-}
-
-class _HistoryNavigatorObserver extends NavigatorObserver {
-  @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    if (previousRoute != null) {
-      final path = _buildPath(previousRoute);
-      if (path != null) {
-        final PathHistory history = RepositoryProvider.of(
-          route.navigator!.context,
-        );
-        history.push(path);
-      }
-    }
-
-    super.didPush(route, previousRoute);
-  }
-
-  static String? _buildPath(Route<dynamic> route) {
-    String? path = route.settings.name;
-    final args = route.settings.arguments;
-    if (path != null && args is Map<String, String>) {
-      for (final entry in args.entries) {
-        path = path!.replaceAll(':${entry.key}', entry.value);
-      }
-    }
-    return path;
-  }
-}
 
 // GoRouter configuration
 final routerConfig = GoRouter(
   initialLocation: CommonPaths.loginPath,
   redirect: _authGuardRedirect,
-  observers: [_HistoryNavigatorObserver()],
   routes: [
     GoRoute(
       path: CommonPaths.loginPath,
@@ -108,7 +58,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.gamesPath,
           redirect: _destinationGuardRedirect(gamesNavDestination),
-          onExit: _goBackOnExit,
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
@@ -119,7 +68,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.gamePath,
           redirect: _destinationGuardRedirect(gamesNavDestination),
-          onExit: _defaultGoBackOnExit(CommonPaths.gamesPath),
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: true),
@@ -131,7 +79,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.gameCalendarPath,
           redirect: _destinationGuardRedirect(gamesNavDestination),
-          onExit: _defaultGoBackOnExit(CommonPaths.gamesPath),
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: true),
@@ -144,7 +91,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.locationsPath,
           redirect: _destinationGuardRedirect(locationsNavDestination),
-          onExit: _goBackOnExit,
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
@@ -155,7 +101,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.locationPath,
           redirect: _destinationGuardRedirect(locationsNavDestination),
-          onExit: _defaultGoBackOnExit(CommonPaths.locationsPath),
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: true),
@@ -168,7 +113,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.devicesPath,
           redirect: _destinationGuardRedirect(devicesNavDestination),
-          onExit: _goBackOnExit,
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
@@ -179,7 +123,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.devicePath,
           redirect: _destinationGuardRedirect(devicesNavDestination),
-          onExit: _defaultGoBackOnExit(CommonPaths.devicesPath),
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: true),
@@ -192,7 +135,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.tagsPath,
           redirect: _destinationGuardRedirect(tagsNavDestination),
-          onExit: _goBackOnExit,
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
@@ -203,7 +145,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.tagPath,
           redirect: _destinationGuardRedirect(tagsNavDestination),
-          onExit: _defaultGoBackOnExit(CommonPaths.tagsPath),
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: true),
@@ -216,7 +157,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.playthroughsPath,
           redirect: _destinationGuardRedirect(playthroughsNavDestination),
-          onExit: _goBackOnExit,
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
@@ -227,7 +167,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.playthroughPath,
           redirect: _destinationGuardRedirect(playthroughsNavDestination),
-          onExit: _defaultGoBackOnExit(CommonPaths.playthroughsPath),
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: true),
@@ -240,7 +179,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.usersPath,
           redirect: _destinationGuardRedirect(usersNavDestination),
-          onExit: _goBackOnExit,
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
@@ -251,7 +189,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.userPath,
           redirect: _destinationGuardRedirect(usersNavDestination),
-          onExit: _defaultGoBackOnExit(CommonPaths.usersPath),
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: true),
@@ -264,7 +201,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.settingsPath,
           redirect: _destinationGuardRedirect(settingsNavDestination),
-          onExit: _goBackOnExit,
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
@@ -276,7 +212,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.searchPath,
           redirect: _destinationGuardRedirect(searchNavDestination),
-          onExit: _goBackOnExit,
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
@@ -288,7 +223,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.calendarPath,
           redirect: _destinationGuardRedirect(calendarNavDestination),
-          onExit: _goBackOnExit,
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
@@ -300,7 +234,6 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.reviewPath,
           redirect: _destinationGuardRedirect(reviewNavDestination),
-          onExit: _goBackOnExit,
           builder: (context, state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
@@ -321,20 +254,6 @@ final routerConfig = GoRouter(
   ],
 );
 
-ExitCallback _defaultGoBackOnExit(String? defaultPath) {
-  return (context, state) =>
-      _goBackOnExit(context, state, defaultPath: defaultPath);
-}
-
-FutureOr<bool> _goBackOnExit(
-  BuildContext context,
-  GoRouterState state, {
-  String? defaultPath,
-}) {
-  goBack(context, defaultPath: defaultPath);
-  return false;
-}
-
 GoRouterRedirect? _destinationGuardRedirect(NavDestination destination) {
   final guardRoles = destination.guardRoles;
   return (context, state) => _roleGuardRedirect(context, state, guardRoles);
@@ -354,7 +273,9 @@ FutureOr<String?> _authGuardRedirect(
   );
   if (currentLoginResponseBloc.state
       is ActionFailure<SavedLoginResponse, void>) {
-    return CommonPaths.loginPath;
+    return state.uri.path == CommonPaths.loginPath
+        ? null
+        : CommonPaths.buildLoginRedirectPath(state);
   }
 
   initApiBloc.add(
@@ -369,7 +290,9 @@ FutureOr<String?> _authGuardRedirect(
     (actionState) => actionState is ActionFinal<void, SavedLoginResponse>,
   );
   if (initApiBloc.state is ActionFailure<void, SavedLoginResponse>) {
-    return CommonPaths.loginPath;
+    return state.uri.path == CommonPaths.loginPath
+        ? null
+        : CommonPaths.buildLoginRedirectPath(state);
   }
 
   if (currentUserBloc.state is ActionInitial ||
@@ -380,12 +303,13 @@ FutureOr<String?> _authGuardRedirect(
     );
   }
   if (currentUserBloc.state is ActionFailure<UserDTO, void>) {
-    return CommonPaths.loginPath;
+    return state.uri.path == CommonPaths.loginPath
+        ? null
+        : CommonPaths.buildLoginRedirectPath(state);
   }
 
   return state.uri.path == CommonPaths.loginPath
-      ? CommonPaths
-            .homePath // TODO redirectUrl pathparam
+      ? CommonPaths.getRedirect(state) ?? CommonPaths.homePath
       : null;
 }
 
@@ -404,7 +328,7 @@ FutureOr<String?> _roleGuardRedirect(
     );
   }
   if (currentUserBloc.state is ActionFailure<UserDTO, void>) {
-    return CommonPaths.loginPath;
+    return CommonPaths.buildLoginRedirectPath(state);
   }
 
   return roles.contains(

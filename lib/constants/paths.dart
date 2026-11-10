@@ -30,6 +30,14 @@ class CommonPaths {
 
   static const String _idPath = ':$_idPathParam';
   static const String _idPathParam = 'id';
+  static const String _redirectQueryParam = 'redirect';
+
+  static String buildLoginRedirectPath(GoRouterState state) => Uri(
+    path: CommonPaths.loginPath,
+    queryParameters: state.uri.path == CommonPaths.loginPath
+        ? null
+        : {_redirectQueryParam: state.uri.path},
+  ).toString();
 
   static String buildGamePath(String id) => gamePath.replaceFirst(_idPath, id);
   static String buildGameCalendarPath(String id) =>
@@ -45,4 +53,6 @@ class CommonPaths {
 
   static String getIdParameter(GoRouterState state) =>
       state.pathParameters[CommonPaths._idPathParam]!;
+  static String? getRedirect(GoRouterState state) =>
+      state.uri.queryParameters[_redirectQueryParam];
 }
